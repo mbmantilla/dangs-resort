@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Dang's Resort</title>
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --dark: #1a1a1a;
+    --gold: #c5a880;
+    --muted: #aaa;
+    --shadow: 0 30px 80px rgba(0,0,0,0.45);
+    --radius: 28px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit',sans-serif; }
+
+html, body {
+    height:100%;
+    overflow-x:hidden;
+}
+
+/* Background with blur and overlay */
+body::before {
+    content:"";
+    position: fixed;
+    inset:0;
+    background: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    filter: blur(12px) brightness(0.45);
+    z-index:-2;
+}
+body::after {
+    content:"";
+    position: fixed;
+    inset:0;
+    background: rgba(0,0,0,0.65);
+    z-index:-1;
+}
+
+/* Container & card */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height:100vh;
+    padding:20px;
+    flex-direction: column;
+}
+
+.auth-card {
+    background: rgba(26,26,26,0.95);
+    padding: 60px 50px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 1s ease forwards;
+    position: relative;
+}
+
+@keyframes slideUp {
+    from { opacity:0; transform: translateY(50px); }
+    to { opacity:1; transform: translateY(0); }
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.back-btn:hover { color: var(--gold); }
+
+/* Logo & headings */
+.logo {
+    font-family: 'Tenor Sans', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 40px;
+}
+
+.auth-card h1 {
+    font-family: 'Tenor Sans', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: var(--gold);
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #ccc;
+    margin-bottom: 50px;
+}
+
+/* Inputs */
+.input-group { margin-bottom: 32px; }
+.input-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    color: var(--gold);
+}
+.input-group input {
+    width: 100%;
+    padding: 16px 18px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color:white;
+    font-size: 1rem;
+    outline:none;
+    transition: 0.3s ease, transform 0.2s ease;
+}
+.input-group input::placeholder { color: rgba(255,255,255,0.5); }
+.input-group input:focus { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+/* Button */
+.btn-auth {
+    width: 100%;
+    padding: 18px;
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: 0.35s ease;
+}
+.btn-auth:hover {
+    background: white;
+    color: var(--dark);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+/* Switch text */
+.switch-auth {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+.switch-auth a {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.switch-auth a:hover { color: white; }
+
+@media (max-width: 640px) {
+    .auth-card { padding: 50px 25px; }
+    .auth-card h1 { font-size: 2.4rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+    <a href="/" class="back-btn">← Back to Home</a>
+    <div class="auth-card">
+        <div class="logo">DANG'S<span>.</span></div>
+        <h1>Create Account</h1>
+        <p class="subtitle">Start your journey to serenity</p>
+
+        <form action="/register" method="POST">
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" name="username" placeholder="Enter your name" required>
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="name@example.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-auth">Register</button>
+        </form>
+
+        <p class="switch-auth">Already a member? <a href="/login">Sign In</a></p>
+    </div>
+</div>
+
+</body>
+</html>

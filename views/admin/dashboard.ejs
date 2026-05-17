@@ -1,0 +1,109 @@
+<section class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:24px; margin-bottom:40px;">
+    <div class="stat-card" style="background: linear-gradient(135deg, #0ea5e9, #2563eb); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">📅</div>
+        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Total Bookings</h3>
+        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.totalBookings %></div>
+    </div>
+
+    <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">🏠</div>
+        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Today's Arrivals</h3>
+        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.todayArrivals %></div>
+    </div>
+
+    <div class="stat-card" style="background: linear-gradient(135deg, #eab308, #facc15); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">⏳</div>
+        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Pending Payments</h3>
+        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.pendingPayments %></div>
+    </div>
+
+    <div class="stat-card" style="background: linear-gradient(135deg, #64748b, #1e293b); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
+        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">₱</div>
+        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Total Revenue</h3>
+        <div class="value" style="font-size:2rem; font-weight:700;">₱<%= stats.revenue.toLocaleString() %></div>
+    </div>
+</section>
+
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:32px; margin-bottom:40px;">
+    <!-- Revenue Trend Chart -->
+    <div class="admin-card" style="background:#fff; border-radius:20px; padding:28px; box-shadow:0 20px 50px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <h3 style="margin-top:0; color:#64748b; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">
+            Revenue Trend <span style="font-weight:400; text-transform:none; color:#94a3b8;">(Last 7 Days)</span>
+        </h3>
+        <div style="height:320px; margin-top:24px;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Bookings by Status Chart -->
+    <div class="admin-card" style="background:#fff; border-radius:20px; padding:28px; box-shadow:0 20px 50px rgba(0,0,0,0.1); transition: transform 0.3s;">
+        <h3 style="margin-top:0; color:#64748b; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">
+            Bookings by Status
+        </h3>
+        <div style="margin-top:24px;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Revenue Chart
+    const revCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revCtx, {
+        type: 'line',
+        data: {
+            labels: ['May 9','May 10','May 11','May 12','May 13','May 14','May 15'],
+            datasets: [{
+                label:'Revenue',
+                data:[12000,19000,15000,8000,12000,25000,<%= stats.revenue %>],
+                borderColor:'#0ea5e9',
+                backgroundColor:'rgba(14,165,233,0.15)',
+                fill:true,
+                tension:0.4,
+                pointRadius:4,
+                pointBackgroundColor:'#0ea5e9'
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{
+                y:{ beginAtZero:true, grid:{ color:'#f1f5f9' } },
+                x:{ grid:{ display:false } }
+            } 
+        }
+    });
+
+    // Status Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const chartData = <%- JSON.stringify(stats.chartData || []) %>;
+
+    const getCount = status => {
+        const found = chartData.find(item => item.status.toLowerCase() === status.toLowerCase());
+        return found ? found.count : 0;
+    };
+
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels:['Approved','Pending','Rejected'],
+            datasets:[{
+                data:[getCount('approved'), getCount('pending'), getCount('rejected')],
+                backgroundColor:['#22c55e','#eab308','#ef4444'],
+                borderWidth:0,
+                cutout:'70%'
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                legend:{ 
+                    position:'bottom',
+                    labels:{ usePointStyle:true, padding:20, color:'#64748b' }
+                }
+            }
+        }
+    });
+</script>

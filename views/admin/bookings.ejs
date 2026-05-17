@@ -1,0 +1,285 @@
+<style>
+/* --- Main Admin Card --- */
+.admin-card { 
+    background: white; 
+    padding: 32px; 
+    border-radius: 20px; 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.08); 
+    border: 1px solid #e2e8f0; 
+    transition: transform 0.3s ease;
+}
+.admin-card:hover { transform: translateY(-3px); }
+
+/* --- Table Styling --- */
+.admin-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 14px; 
+    margin-top: -14px; 
+}
+.admin-table th { 
+    text-align: left; 
+    padding: 14px 24px; 
+    color: #475569; 
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+    font-weight: 700; 
+    border: none;
+}
+.admin-table td { 
+    padding: 16px 24px; 
+    vertical-align: middle;
+    border-top: none;
+    border-bottom: none;
+    font-size: 0.85rem;
+}
+.admin-table tbody tr { 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+    transition: all 0.3s ease;
+}
+.admin-table tbody tr:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    background: #f8fafc;
+}
+
+/* --- Status Badges --- */
+.status-badge { 
+    padding: 6px 14px; 
+    border-radius: 12px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+.status-pending { background: #fef9c3; color: #854d0e; border: 1px solid #facc15; }
+.status-approved { background: #dcfce7; color: #166534; border: 1px solid #22c55e; }
+.status-rejected { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+
+/* --- Action Buttons --- */
+.btn-approve { 
+    background: linear-gradient(135deg, #22c55e, #16a34a); 
+    color: white; 
+    border: none; 
+    padding: 8px 16px; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+.btn-approve:hover { background: linear-gradient(135deg, #16a34a, #15803d); transform: scale(1.05); }
+
+.btn-reject { 
+    background: linear-gradient(135deg, #ef4444, #dc2626); 
+    color: white; 
+    border: none; 
+    padding: 8px 16px; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+.btn-reject:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); transform: scale(1.05); }
+
+.btn-details { 
+    background: #f1f5f9; 
+    color: #475569; 
+    border: none; 
+    padding: 8px 16px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.85rem;
+}
+.btn-details:hover { background: #e2e8f0; }
+
+/* --- Filter Dropdown --- */
+#statusFilter {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    color: #475569;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* --- Modal Overlay --- */
+#detailsModal { 
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.65); 
+    align-items: center; 
+    justify-content: center; 
+    backdrop-filter: blur(5px); 
+}
+#detailsModal .admin-card { 
+    max-width: 500px; 
+    padding: 32px; 
+    border-radius: 24px; 
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+}
+
+/* --- Modal content styling --- */
+#modalContent { 
+    margin-top: 16px; 
+    font-size: 0.9rem; 
+    color: #1e293b;
+}
+#detailsModal h3 { 
+    margin-top: 0; 
+    font-size: 1.5rem; 
+    color: #0ea5e9;
+}
+#detailsModal button { 
+    margin-top: 20px; 
+    padding: 10px 20px; 
+    border: none; 
+    background: #0ea5e9; 
+    color: #fff; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    font-weight: 600;
+}
+#detailsModal button:hover { background: #2563eb; }
+</style>
+
+<div class="admin-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <div>
+            <h2 style="margin:0;">Reservation Management</h2>
+            <p style="margin:5px 0 0;">Manage guest check-ins and booking statuses</p>
+        </div>
+        <div>
+            <label>Filter:</label>
+            <select id="statusFilter" onchange="filterBookings()">
+                <option value="all">All Bookings</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Ref Code</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bookings.forEach(b => { %>
+            <tr class="booking-row" data-status="<%= (b.status || 'pending').toLowerCase() %>">
+                <td>
+                    <%= b.guest_name || 'Walk-in Guest' %><br>
+                    <small><%= b.phone || 'No Phone' %></small>
+                </td>
+                <td><%= b.room_name || 'Unknown' %> (<%= b.room_type || 'Unknown' %>)</td>
+                <td><%= b.check_in ? new Date(b.check_in).toLocaleDateString() : 'Not Set' %></td>
+                <td><%= b.check_out ? new Date(b.check_out).toLocaleDateString() : 'Not Set' %></td>
+                <td><%= b.ref_code || '---' %></td>
+                <td>
+                    <span class="status-badge status-<%= (b.status || 'pending').toLowerCase() %>">
+                        <%= (b.status || 'PENDING').toUpperCase() %>
+                    </span>
+                </td>
+                <td>
+                    <div style="display:flex; gap:8px;">
+                        <% if((b.status || 'pending').toLowerCase() === 'pending'){ %>
+                            <button class="btn-approve" onclick="updateStatus('<%= b.booking_id %>', 'Approved')">Approve</button>
+                            <button class="btn-reject" onclick="updateStatus('<%= b.booking_id %>', 'Rejected')">Reject</button>
+                        <% } %>
+                        <button class="btn-details" onclick="viewDetails('<%= b.booking_id %>')">Details</button>
+                    </div>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<!-- Details Modal -->
+<div id="detailsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:999;">
+    <div class="admin-card" style="max-width:550px; padding:30px; position:relative;">
+        <span onclick="closeModal()" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px;">×</span>
+        <h3>Reservation Details</h3>
+        <div id="modalContent" style="margin-top:20px;"></div>
+        <button onclick="closeModal()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<script>
+// Update Booking Status
+function updateStatus(id, status) {
+    fetch(`/admin/booking/status/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({status})
+    })
+    .then(res => {
+        if(res.ok) window.location.reload();
+        else alert('Error updating status');
+    });
+}
+
+// View Details in Modal
+function viewDetails(id) {
+    const modal = document.getElementById('detailsModal');
+    const content = document.getElementById('modalContent');
+    modal.style.display = 'flex';
+    content.innerHTML = '<p>Loading...</p>';
+
+    fetch(`/admin/booking/details/${id}`)
+    .then(res => res.json())
+    .then(data => {
+        content.innerHTML = `
+            <div style="display:grid; grid-template-columns:130px 1fr; gap:10px; row-gap:8px;">
+                <strong>Guest:</strong> <span>${data.guest_name || 'Walk-in Guest'}</span>
+                <strong>Phone:</strong> <span>${data.phone || 'No Phone'}</span>
+                <strong>Room:</strong> <span>${data.room_name || 'Unknown'} (${data.room_type || 'Unknown'})</span>
+                <strong>Ref Code:</strong> <span>${data.ref_code || '---'}</span>
+                <strong>Check-in:</strong> <span>${data.check_in ? new Date(data.check_in).toLocaleDateString() : 'Not Set'}</span>
+                <strong>Check-out:</strong> <span>${data.check_out ? new Date(data.check_out).toLocaleDateString() : 'Not Set'}</span>
+                <strong>Status:</strong> <span>${data.status || 'PENDING'}</span>
+                <strong>Special Requests:</strong> <span>${data.requests || 'None'}</span>
+                <strong>Total Price:</strong> <span>${data.total_price ? '₱' + Number(data.total_price).toLocaleString() : '₱0'}</span>
+                <strong>Booking Date:</strong> <span>${data.booking_date ? new Date(data.booking_date).toLocaleDateString() : 'Not Set'}</span>
+            </div>
+        `;
+    })
+    .catch(err => content.innerHTML = '<p style="color:red;">Failed to load data.</p>');
+}
+
+// Close Modal
+function closeModal() {
+    document.getElementById('detailsModal').style.display = 'none';
+}
+
+// Filter Bookings
+function filterBookings() {
+    const filter = document.getElementById('statusFilter').value;
+    document.querySelectorAll('.booking-row').forEach(row => {
+        const status = row.getAttribute('data-status');
+        row.style.display = (filter === 'all' || status === filter) ? '' : 'none';
+    });
+}
+
+// Close modal when clicking outside
+window.onclick = function(e) {
+    const modal = document.getElementById('detailsModal');
+    if(e.target == modal) closeModal();
+}
+</script>

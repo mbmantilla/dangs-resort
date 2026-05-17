@@ -1,0 +1,153 @@
+<div class="admin-card">
+    <h2>System Settings</h2>
+    <p>Manage payment details and resort status.</p>
+
+    <% if (path.includes('success')) { %>
+        <div class="success-msg">
+            ✅ Settings updated successfully!
+        </div>
+    <% } %>
+
+    <form action="/admin/settings/update" method="POST">
+
+        <!-- Payment Configuration -->
+        <div class="section-heading">Payment Configuration</div>
+        <div class="form-group">
+            <label>GCash Name</label>
+            <input type="text" name="gcash_name" value="<%= settings.gcash_name %>" placeholder="Enter GCash Name">
+        </div>
+        <div class="form-group">
+            <label>GCash Number</label>
+            <input type="text" name="gcash_number" value="<%= settings.gcash_number %>" placeholder="Enter GCash Number">
+        </div>
+
+        <!-- Resort Status -->
+        <div class="section-heading">Resort Status</div>
+        <div class="maintenance-row">
+            <div>
+                <span>Maintenance Mode</span>
+                <small>Disable bookings temporarily</small>
+            </div>
+            <select name="maintenance_mode">
+                <option value="off" <%= settings.maintenance_mode === 'off' ? 'selected' : '' %>>Active</option>
+                <option value="on" <%= settings.maintenance_mode === 'on' ? 'selected' : '' %>>Maintenance</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+</div>
+
+<style>
+/* Admin Settings Card */
+.admin-card {
+    max-width: 650px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 40px 32px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease;
+}
+.admin-card:hover { transform: translateY(-2px); }
+
+.admin-card h2 {
+    font-family: 'Tenor Sans', serif;
+    font-size: 2rem;
+    color: #0ea5e9;
+    margin-bottom: 10px;
+}
+
+.admin-card p {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* Success Message */
+.success-msg {
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Section Headings */
+.section-heading {
+    font-size: 1rem;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Form Fields */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: 0.3s ease;
+}
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 8px rgba(14,165,233,0.3);
+}
+
+/* Maintenance Row */
+.maintenance-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.maintenance-row span {
+    font-weight: 600;
+    display: block;
+}
+.maintenance-row small {
+    color: #64748b;
+}
+
+/* Gradient Button */
+.btn-primary {
+    width: 100%;
+    padding: 16px 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0284c7, #1d4ed8);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+</style>

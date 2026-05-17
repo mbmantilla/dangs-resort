@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Sanctuary | Dang's Resort</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --gold: #c5a880;
+    --dark: #1a1a1a;
+    --soft-bg: #fdfdfd;
+}
+
+body {
+    background: var(--soft-bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    margin: 0;
+}
+
+.dash-nav {
+    padding: 30px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-family: 'Tenor Sans';
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+.logo span { color: var(--gold); }
+
+.container { max-width: 1200px; margin: 60px auto; padding: 0 5%; }
+
+.welcome-hero h1 { font-family: 'Tenor Sans'; font-size: 3rem; margin: 10px 0; font-weight: 400; }
+.tagline { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 12px; }
+
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+.section-header h2 { font-family: 'Tenor Sans'; font-size: 1.8rem; margin: 0; }
+
+.residence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 80px; }
+.residence-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: transform 0.3s; }
+.residence-card:hover { transform: translateY(-5px); }
+.res-img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
+.res-content { padding: 25px; }
+.res-type { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+.res-price { float: right; font-weight: 600; }
+
+.status-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+.status-table th { text-align: left; padding: 20px; background: #f9f9f9; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.status-table td { padding: 20px; border-top: 1px solid #eee; font-size: 14px; }
+.badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; font-weight: 600; }
+.badge.pending { background: #fff8e1; color: #b78103; }
+.badge.confirmed { background: #e8f5e9; color: #2e7d32; }
+.badge.cancelled { background: #ffe6e6; color: #c62828; }
+
+.btn-book {
+    display: block;
+    width: 100%;
+    background: var(--dark);
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-align: center;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.btn-book:hover { background: var(--gold); }
+
+/* Disabled Cancel button for Cancelled bookings */
+.btn-disabled {
+    background: #ccc !important;
+    cursor: not-allowed;
+    color: #666 !important;
+}
+
+@media (max-width: 768px) {
+    .residence-grid { grid-template-columns: 1fr; }
+    .dash-nav { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="dash-nav">
+    <div class="logo">DANG'S<span>.</span></div>
+    <div class="nav-links">
+        <a href="/dashboard" style="text-decoration:none; color:var(--dark); margin-right:30px; font-size:12px; font-weight:600; text-transform:uppercase;">Home</a>
+        <a href="/logout" style="text-decoration:none; color:var(--gold); font-size:12px; font-weight:600; text-transform:uppercase;">Sign Out</a>
+    </div>
+</nav>
+
+<main class="container">
+
+<header class="welcome-hero">
+    <span class="tagline">Welcome to your Sanctuary</span>
+    <h1>Hello, <%= user.username || user.name %><span>.</span></h1>
+</header>
+
+<!-- Available Residences -->
+<section>
+    <div class="section-header">
+        <h2>Available Residences</h2>
+        <p style="font-size: 13px; color: #888;">Discover your next escape.</p>
+    </div>
+    <div class="residence-grid">
+        <% rooms.forEach(room => { %>
+            <div class="residence-card">
+                <img src="<%= room.image_url || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80' %>" class="res-img">
+                <div class="res-content">
+                    <span class="res-type"><%= room.type %></span>
+                    <span class="res-price">₱<%= room.price %></span>
+                    <h3 style="margin: 10px 0; font-family: 'Tenor Sans';"><%= room.name || 'Unknown Residence' %></h3>
+                    <a href="/book/<%= room.id %>" class="btn-book">Reserve Selection</a>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</section>
+
+<!-- User Reservations -->
+<section>
+    <div class="section-header">
+        <h2>Your Reservations</h2>
+        <p style="font-size: 13px; color: #888;">Current status of your retreats.</p>
+    </div>
+
+    <% if (bookings.length > 0) { %>
+    <table class="status-table">
+        <thead>
+            <tr>
+                <th>Residence</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bookings.forEach(b => { %>
+            <tr>
+                <td><strong><%= b.room_name || 'Unknown Residence' %></strong><br><small><%= b.room_type || 'Unknown Type' %></small></td>
+                <td><%= b.booking_date ? new Date(b.booking_date).toLocaleDateString() : 'N/A' %></td>
+                <td><span class="badge <%= b.status.toLowerCase() %>"><%= b.status %></span></td>
+                <td>
+                    <% if(b.status.toLowerCase() === 'pending') { %>
+                        <form action="/client/booking/<%= b.booking_id %>/cancel" method="POST">
+                            <button type="submit" class="btn-book" style="background:#b78103;">Cancel</button>
+                        </form>
+                    <% } else { %>
+                        <button class="btn-book btn-disabled" disabled>Cancel</button>
+                    <% } %>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <div style="text-align:center; padding: 60px; background:white; border: 1px dashed #ddd; color: #888;">
+            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 12px;">No active reservations found.</p>
+            <a href="#available" style="color: var(--gold); font-size: 11px; text-decoration: none; font-weight: 600;">EXPLORE RESIDENCES</a>
+        </div>
+    <% } %>
+</section>
+
+</main>
+</body>
+</html>
