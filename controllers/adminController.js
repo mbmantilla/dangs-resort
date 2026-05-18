@@ -144,23 +144,36 @@ const adminController = {
             }
         );
     },
-    updateFacility: (req, res) => {
+        updateFacility: (req, res) => {
         const { id } = req.params;
-        const { name,type,price,status } = req.body;
-        let sql, params;
-        if(req.file){
+        const { name, type, price, status } = req.body;
+
+        if (!id || !name || !type || price === undefined || !status) {
+            console.log("Missing facility update data:", { id, body: req.body, file: req.file });
+            return res.status(400).send("Missing facility update data");
+        }
+
+        let sql;
+        let params;
+
+        if (req.file) {
             const image_url = `/uploads/${req.file.filename}`;
             sql = "UPDATE rooms SET name=?, type=?, price=?, status=?, image_url=? WHERE id=?";
-            params = [name,type,price,status,image_url,id];
+            params = [name, type, price, status, image_url, id];
         } else {
             sql = "UPDATE rooms SET name=?, type=?, price=?, status=? WHERE id=?";
-            params = [name,type,price,status,id];
+            params = [name, type, price, status, id];
         }
-        db.query(sql, params, (err)=>{ if(err) return res.status(500).send("Error updating facility"); res.redirect('/admin/facilities?success=updated'); });
-    },
-    deleteFacility: (req, res) => {
-        const { id } = req.params;
-        db.query("DELETE FROM rooms WHERE id=?", [id], (err)=>{ if(err) return res.status(500).send("Error deleting facility"); res.redirect('/admin/facilities?success=deleted'); });
+
+        db.query(sql, params, (err) => {
+            if (err) {
+                console.error("Facility update error:", err);
+                console.error("Facility update values:", params);
+                return res.status(500).send("Error updating facility: " + err.message);
+            }
+
+            res.redirect('/admin/facilities?success=updated');
+        });
     },
 
     // --- Bookings ---
