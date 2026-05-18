@@ -1,165 +1,2332 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Client Booking History | Dang's Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;700&display=swap" rel="stylesheet">
-<style>
-body {
-    font-family: 'Outfit', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f1f5f9;
-    color: #1e293b;
-}
+    <meta charset="UTF-8">
 
-.container {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
+    <meta 
+        name="viewport" 
+        content="width=device-width, initial-scale=1.0"
+    >
 
-h2 {
-    font-size: 1.8rem;
-    color: #0ea5e9;
-    margin-bottom: 20px;
-}
+    <meta 
+        name="theme-color" 
+        content="#0891b2"
+    >
 
-.table-card {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
-}
+    <title>Client Booking History | Dang's Admin</title>
 
-.history-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 12px;
-    margin-top: 20px;
-}
+    <!-- Google Fonts -->
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Tenor+Sans&display=swap" 
+        rel="stylesheet"
+    >
 
-.history-table th {
-    text-align: left;
-    padding: 12px 16px;
-    color: #94a3b8;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 700;
-}
+    <!-- Font Awesome Icons -->
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
 
-.history-table td {
-    padding: 14px 16px;
-    background: #ffffff;
-    border-top: 1px solid #f1f5f9;
-    border-bottom: 1px solid #f1f5f9;
-    border-radius: 12px;
-}
+    <style>
+        :root {
+            --hist-font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --hist-font-display: 'Tenor Sans', Georgia, serif;
 
-.history-table tbody tr:hover {
-    background: #f8fafc;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.05);
-}
+            --hist-ocean-50: #ecfeff;
+            --hist-ocean-100: #cffafe;
+            --hist-ocean-200: #a5f3fc;
+            --hist-ocean-300: #67e8f9;
+            --hist-ocean-400: #22d3ee;
+            --hist-ocean-500: #06b6d4;
+            --hist-ocean-600: #0891b2;
+            --hist-ocean-700: #0e7490;
+            --hist-ocean-800: #155e75;
+            --hist-ocean-900: #164e63;
 
-.room-thumb {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 10px;
-    flex-shrink: 0;
-    border: 1px solid #e2e8f0;
-}
+            --hist-sea-50: #f0fdfa;
+            --hist-sea-100: #ccfbf1;
+            --hist-sea-200: #99f6e4;
+            --hist-sea-300: #5eead4;
+            --hist-sea-400: #2dd4bf;
+            --hist-sea-500: #14b8a6;
+            --hist-sea-600: #0d9488;
+            --hist-sea-700: #0f766e;
+            --hist-sea-800: #115e59;
+            --hist-sea-900: #134e4a;
 
-.room-name-cell {
-    display: flex;
-    align-items: center;
-}
+            --hist-sand-50: #fffaf0;
+            --hist-sand-100: #fef3c7;
+            --hist-sand-200: #fde68a;
+            --hist-sand-300: #fcd34d;
+            --hist-sand-400: #fbbf24;
+            --hist-sand-500: #f59e0b;
+            --hist-sand-600: #d97706;
+            --hist-sand-700: #b45309;
+            --hist-sand-800: #92400e;
 
-.status-pill {
-    padding: 6px 14px;
-    border-radius: 99px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
+            --hist-rose-50: #fff1f2;
+            --hist-rose-100: #ffe4e6;
+            --hist-rose-200: #fecdd3;
+            --hist-rose-500: #f43f5e;
+            --hist-rose-600: #e11d48;
+            --hist-rose-700: #be123c;
 
-.status-approved { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-.status-pending  { background: #fef3c7; color: #a16207; border: 1px solid #fde68a; }
-.status-rejected { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+            --hist-emerald-50: #ecfdf5;
+            --hist-emerald-100: #d1fae5;
+            --hist-emerald-200: #a7f3d0;
+            --hist-emerald-500: #10b981;
+            --hist-emerald-600: #059669;
+            --hist-emerald-700: #047857;
 
-.back-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #0ea5e9;
-    color: white;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s ease;
-}
-.back-btn:hover { background: #0369a1; }
+            --hist-indigo-50: #eef2ff;
+            --hist-indigo-100: #e0e7ff;
+            --hist-indigo-500: #6366f1;
+            --hist-indigo-600: #4f46e5;
+            --hist-indigo-700: #4338ca;
 
-@media (max-width: 768px) {
-    .table-card { padding: 20px; }
-    h2 { font-size: 1.5rem; }
-    .room-thumb { width: 36px; height: 36px; }
-}
-</style>
+            --hist-slate-50: #f8fafc;
+            --hist-slate-100: #f1f5f9;
+            --hist-slate-200: #e2e8f0;
+            --hist-slate-300: #cbd5e1;
+            --hist-slate-400: #94a3b8;
+            --hist-slate-500: #64748b;
+            --hist-slate-600: #475569;
+            --hist-slate-700: #334155;
+            --hist-slate-800: #1e293b;
+            --hist-slate-900: #0f172a;
+            --hist-slate-950: #020617;
+
+            --hist-white: #ffffff;
+            --hist-black: #000000;
+
+            --hist-card: rgba(255, 255, 255, 0.88);
+            --hist-card-solid: #ffffff;
+            --hist-card-muted: rgba(248, 250, 252, 0.82);
+            --hist-border: rgba(148, 163, 184, 0.22);
+            --hist-border-strong: rgba(148, 163, 184, 0.40);
+
+            --hist-text-main: #0f172a;
+            --hist-text-soft: #475569;
+            --hist-text-muted: #94a3b8;
+            --hist-text-white: #f8fafc;
+
+            --hist-shadow-xs: 0 4px 12px rgba(15, 23, 42, 0.06);
+            --hist-shadow-sm: 0 10px 28px rgba(15, 23, 42, 0.08);
+            --hist-shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
+            --hist-shadow-lg: 0 30px 80px rgba(15, 23, 42, 0.16);
+            --hist-shadow-xl: 0 44px 120px rgba(15, 23, 42, 0.22);
+            --hist-shadow-ocean: 0 24px 56px rgba(8, 145, 178, 0.24);
+            --hist-shadow-teal: 0 24px 56px rgba(20, 184, 166, 0.22);
+
+            --hist-radius-xs: 8px;
+            --hist-radius-sm: 12px;
+            --hist-radius-md: 18px;
+            --hist-radius-lg: 24px;
+            --hist-radius-xl: 32px;
+            --hist-radius-2xl: 42px;
+            --hist-radius-full: 999px;
+
+            --hist-ease: cubic-bezier(0.22, 1, 0.36, 1);
+            --hist-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+            --hist-container: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--hist-text-main);
+            font-family: var(--hist-font-main);
+            background:
+                radial-gradient(circle at 8% 8%, rgba(103, 232, 249, 0.30), transparent 28%),
+                radial-gradient(circle at 94% 12%, rgba(45, 212, 191, 0.26), transparent 30%),
+                radial-gradient(circle at 52% 100%, rgba(251, 191, 36, 0.14), transparent 36%),
+                linear-gradient(135deg, #f8fcff 0%, #ecfeff 38%, #f0fdfa 100%);
+            overflow-x: hidden;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        ::selection {
+            background: rgba(6, 182, 212, 0.22);
+            color: var(--hist-slate-950);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(226, 232, 240, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--hist-ocean-500), var(--hist-sea-500));
+            border-radius: var(--hist-radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--hist-ocean-600), var(--hist-sea-600));
+        }
+
+        .history-page {
+            position: relative;
+            min-height: 100vh;
+            isolation: isolate;
+            overflow: hidden;
+        }
+
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -5;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(8, 145, 178, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(8, 145, 178, 0.045) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 84%);
+        }
+
+        .glow-orb {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: var(--hist-radius-full);
+            filter: blur(26px);
+            opacity: 0.42;
+            animation: orbDrift 16s var(--hist-ease) infinite alternate;
+        }
+
+        .glow-orb.orb-one {
+            top: -140px;
+            left: -110px;
+            background: rgba(34, 211, 238, 0.48);
+        }
+
+        .glow-orb.orb-two {
+            top: 120px;
+            right: -160px;
+            background: rgba(20, 184, 166, 0.42);
+            animation-delay: -5s;
+        }
+
+        .glow-orb.orb-three {
+            width: 500px;
+            height: 500px;
+            left: 35%;
+            bottom: -260px;
+            background: rgba(251, 191, 36, 0.20);
+            animation-delay: -9s;
+        }
+
+        .floating-shape {
+            position: fixed;
+            z-index: -3;
+            pointer-events: none;
+            border-radius: var(--hist-radius-full);
+            border: 1px solid rgba(14, 116, 144, 0.12);
+            background: rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(10px);
+            animation: shapeFloat 10s ease-in-out infinite;
+        }
+
+        .floating-shape.shape-one {
+            width: 74px;
+            height: 74px;
+            left: 8%;
+            top: 34%;
+        }
+
+        .floating-shape.shape-two {
+            width: 46px;
+            height: 46px;
+            right: 12%;
+            top: 46%;
+            animation-delay: -3s;
+        }
+
+        .floating-shape.shape-three {
+            width: 96px;
+            height: 96px;
+            right: 20%;
+            bottom: 12%;
+            animation-delay: -6s;
+        }
+
+        .page-noise {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 25% 25%, #000 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, #000 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        @keyframes orbDrift {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(44px, 30px, 0) scale(1.08);
+            }
+
+            100% {
+                transform: translate3d(-28px, 60px, 0) scale(0.95);
+            }
+        }
+
+        @keyframes shapeFloat {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-22px) rotate(8deg);
+            }
+        }
+
+        .history-container {
+            width: min(var(--hist-container), calc(100% - 32px));
+            margin: 0 auto;
+            padding: 36px 0 80px;
+        }
+
+        .history-hero {
+            position: relative;
+            min-height: 340px;
+            padding: clamp(28px, 5vw, 58px);
+            border-radius: var(--hist-radius-2xl);
+            overflow: hidden;
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(8, 145, 178, 0.96), rgba(20, 184, 166, 0.88)),
+                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--hist-shadow-lg);
+            isolation: isolate;
+            animation: heroRise 0.8s var(--hist-ease) both;
+        }
+
+        .history-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.24), transparent 22%),
+                linear-gradient(120deg, rgba(2, 6, 23, 0.20), transparent 58%);
+        }
+
+        .history-hero::after {
+            content: "";
+            position: absolute;
+            right: -120px;
+            bottom: -150px;
+            width: 430px;
+            height: 430px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            animation: heroOrb 8s ease-in-out infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+            gap: 28px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 38px;
+            padding: 0 15px;
+            border-radius: var(--hist-radius-full);
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(14px);
+        }
+
+        .history-hero h1 {
+            margin: 22px 0 14px;
+            font-family: var(--hist-font-display);
+            font-size: clamp(2.3rem, 5.6vw, 4.7rem);
+            line-height: 0.98;
+            font-weight: 400;
+            letter-spacing: -0.05em;
+        }
+
+        .history-hero h1 span {
+            color: var(--hist-sand-200);
+        }
+
+        .hero-copy {
+            max-width: 660px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: clamp(0.98rem, 1.8vw, 1.15rem);
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        .hero-btn,
+        .back-btn {
+            min-height: 54px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: var(--hist-radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--hist-slate-950);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 950;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: white;
+            box-shadow: 0 18px 38px rgba(2, 6, 23, 0.20);
+            cursor: pointer;
+            transition:
+                transform 0.25s var(--hist-ease),
+                box-shadow 0.25s var(--hist-ease),
+                background 0.25s var(--hist-ease);
+        }
+
+        .hero-btn:hover,
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 52px rgba(2, 6, 23, 0.26);
+        }
+
+        .hero-btn.ghost {
+            color: white;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px);
+        }
+
+        .client-card {
+            position: relative;
+            min-height: 240px;
+            padding: 24px;
+            border-radius: 34px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.10),
+                0 24px 60px rgba(2, 6, 23, 0.18);
+            backdrop-filter: blur(18px);
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        .client-card::before {
+            content: "";
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 190px;
+            height: 190px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .client-card-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 22px;
+            display: grid;
+            place-items: center;
+            color: var(--hist-slate-950);
+            background: linear-gradient(135deg, white, var(--hist-ocean-50));
+            box-shadow: 0 18px 44px rgba(2, 6, 23, 0.18);
+            margin-bottom: 18px;
+        }
+
+        .client-card-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.70);
+            font-size: 0.74rem;
+            font-weight: 950;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .client-card-value {
+            display: block;
+            margin-top: 8px;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1;
+            font-weight: 950;
+        }
+
+        .client-card-copy {
+            margin: 14px 0 0;
+            color: rgba(255, 255, 255, 0.78);
+            line-height: 1.7;
+            font-size: 0.90rem;
+        }
+
+        .summary-strip {
+            position: relative;
+            z-index: 4;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin: -38px clamp(18px, 4vw, 42px) 42px;
+        }
+
+        .summary-pill {
+            min-height: 106px;
+            padding: 20px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--hist-shadow-md);
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform 0.28s var(--hist-ease),
+                box-shadow 0.28s var(--hist-ease);
+            animation: statPop 0.75s var(--hist-ease-bounce) both;
+        }
+
+        .summary-pill:nth-child(1) {
+            animation-delay: 0.12s;
+        }
+
+        .summary-pill:nth-child(2) {
+            animation-delay: 0.20s;
+        }
+
+        .summary-pill:nth-child(3) {
+            animation-delay: 0.28s;
+        }
+
+        .summary-pill:nth-child(4) {
+            animation-delay: 0.36s;
+        }
+
+        .summary-pill:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--hist-shadow-lg);
+        }
+
+        .summary-pill::after {
+            content: "";
+            position: absolute;
+            right: -45px;
+            top: -45px;
+            width: 120px;
+            height: 120px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(6, 182, 212, 0.10);
+        }
+
+        .summary-icon {
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: linear-gradient(135deg, var(--hist-ocean-500), var(--hist-sea-500));
+            box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+        }
+
+        .summary-icon.approved {
+            background: linear-gradient(135deg, var(--hist-emerald-500), var(--hist-sea-600));
+        }
+
+        .summary-icon.pending {
+            background: linear-gradient(135deg, var(--hist-sand-500), var(--hist-sand-700));
+        }
+
+        .summary-icon.rejected {
+            background: linear-gradient(135deg, var(--hist-rose-500), var(--hist-rose-700));
+        }
+
+        .summary-copy {
+            min-width: 0;
+        }
+
+        .summary-copy strong {
+            display: block;
+            color: var(--hist-text-main);
+            font-size: 1.48rem;
+            line-height: 1;
+            font-weight: 950;
+        }
+
+        .summary-copy span {
+            display: block;
+            margin-top: 8px;
+            color: var(--hist-text-muted);
+            font-size: 0.70rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            margin: 46px 0 22px;
+        }
+
+        .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--hist-ocean-700);
+            font-size: 0.72rem;
+            font-weight: 950;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            color: var(--hist-text-main);
+            font-family: var(--hist-font-display);
+            font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+            font-weight: 400;
+            letter-spacing: -0.04em;
+        }
+
+        .section-heading p {
+            max-width: 460px;
+            margin: 0;
+            color: var(--hist-text-soft);
+            text-align: right;
+            line-height: 1.7;
+            font-size: 0.92rem;
+        }
+
+        .toolbar-card {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: minmax(240px, 1fr) minmax(170px, 240px) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 18px;
+            border-radius: 28px;
+            margin-bottom: 22px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--hist-shadow-sm);
+            backdrop-filter: blur(18px);
+            animation: cardRise 0.72s var(--hist-ease) both;
+        }
+
+        .search-wrap,
+        .filter-wrap {
+            position: relative;
+        }
+
+        .search-wrap i,
+        .filter-wrap i {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            color: var(--hist-ocean-600);
+            pointer-events: none;
+        }
+
+        .search-input,
+        .filter-select {
+            width: 100%;
+            min-height: 52px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 18px;
+            outline: none;
+            color: var(--hist-text-main);
+            background: rgba(248, 250, 252, 0.86);
+            padding: 0 16px 0 46px;
+            font-weight: 750;
+            transition:
+                border-color 0.25s var(--hist-ease),
+                box-shadow 0.25s var(--hist-ease),
+                background 0.25s var(--hist-ease);
+        }
+
+        .filter-select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .search-input:focus,
+        .filter-select:focus {
+            background: white;
+            border-color: rgba(6, 182, 212, 0.48);
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.11);
+        }
+
+        .table-card {
+            position: relative;
+            padding: 0;
+            border-radius: 34px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--hist-shadow-md);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+            animation: cardRise 0.8s var(--hist-ease) both;
+        }
+
+        .table-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.08), transparent 30%),
+                radial-gradient(circle at 100% 100%, rgba(20, 184, 166, 0.09), transparent 30%);
+        }
+
+        .table-card-inner {
+            position: relative;
+            z-index: 2;
+            padding: 26px;
+        }
+
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 28px;
+        }
+
+        .history-table {
+            width: 100%;
+            min-width: 980px;
+            border-collapse: separate;
+            border-spacing: 0 14px;
+        }
+
+        .history-table th {
+            padding: 0 18px 12px;
+            color: var(--hist-text-muted);
+            text-align: left;
+            font-size: 0.70rem;
+            font-weight: 950;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .history-table tbody tr {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            transition:
+                transform 0.26s var(--hist-ease),
+                box-shadow 0.26s var(--hist-ease),
+                background 0.26s var(--hist-ease);
+        }
+
+        .history-table tbody tr:hover {
+            transform: translateY(-4px);
+            background: white;
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+        }
+
+        .history-table td {
+            padding: 18px;
+            vertical-align: middle;
+            border: none;
+            color: var(--hist-text-soft);
+            font-size: 0.86rem;
+        }
+
+        .history-table td:first-child {
+            border-radius: 22px 0 0 22px;
+        }
+
+        .history-table td:last-child {
+            border-radius: 0 22px 22px 0;
+        }
+
+        .booking-id-chip,
+        .date-chip,
+        .ref-chip,
+        .price-chip {
+            min-height: 38px;
+            padding: 0 12px;
+            border-radius: var(--hist-radius-full);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--hist-text-soft);
+            background: var(--hist-slate-50);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            font-size: 0.76rem;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .booking-id-chip {
+            color: var(--hist-ocean-700);
+            background: var(--hist-ocean-50);
+        }
+
+        .price-chip {
+            color: var(--hist-emerald-700);
+            background: var(--hist-emerald-50);
+        }
+
+        .room-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 230px;
+        }
+
+        .room-thumb {
+            width: 58px;
+            height: 58px;
+            min-width: 58px;
+            border-radius: 20px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--hist-ocean-100), var(--hist-sea-100));
+            border: 3px solid white;
+            box-shadow: 0 14px 30px rgba(8, 145, 178, 0.18);
+        }
+
+        .room-thumb-fallback {
+            width: 58px;
+            height: 58px;
+            min-width: 58px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-weight: 950;
+            background: linear-gradient(135deg, var(--hist-ocean-500), var(--hist-sea-500));
+            border: 3px solid white;
+            box-shadow: 0 14px 30px rgba(8, 145, 178, 0.18);
+        }
+
+        .room-name-main {
+            display: block;
+            color: var(--hist-text-main);
+            font-size: 0.98rem;
+            line-height: 1.2;
+            font-weight: 950;
+        }
+
+        .room-type-sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            color: var(--hist-ocean-700);
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .status-pill {
+            min-height: 38px;
+            padding: 0 13px;
+            border-radius: var(--hist-radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.70rem;
+            font-weight: 950;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .status-approved {
+            color: var(--hist-emerald-700);
+            background: var(--hist-emerald-100);
+            border-color: rgba(16, 185, 129, 0.18);
+        }
+
+        .status-pending {
+            color: var(--hist-sand-800);
+            background: var(--hist-sand-100);
+            border-color: rgba(245, 158, 11, 0.20);
+        }
+
+        .status-rejected {
+            color: var(--hist-rose-700);
+            background: var(--hist-rose-100);
+            border-color: rgba(244, 63, 94, 0.18);
+        }
+
+        .status-neutral {
+            color: var(--hist-slate-700);
+            background: var(--hist-slate-100);
+            border-color: rgba(148, 163, 184, 0.22);
+        }
+
+        .btn-details,
+        .btn-soft {
+            min-height: 42px;
+            padding: 0 14px;
+            border: 0;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--hist-ocean-700);
+            background: var(--hist-ocean-50);
+            border: 1px solid rgba(6, 182, 212, 0.16);
+            font-size: 0.72rem;
+            font-weight: 950;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition:
+                transform 0.22s var(--hist-ease),
+                box-shadow 0.22s var(--hist-ease),
+                background 0.22s var(--hist-ease);
+        }
+
+        .btn-details:hover,
+        .btn-soft:hover {
+            transform: translateY(-2px);
+            background: var(--hist-ocean-100);
+            box-shadow: 0 12px 28px rgba(8, 145, 178, 0.15);
+        }
+
+        .mobile-history-grid {
+            display: none;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .history-card {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--hist-shadow-sm);
+            backdrop-filter: blur(18px);
+            transition:
+                transform 0.28s var(--hist-ease),
+                box-shadow 0.28s var(--hist-ease);
+        }
+
+        .history-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--hist-shadow-md);
+        }
+
+        .history-card-top {
+            position: relative;
+            min-height: 190px;
+            padding: 20px;
+            color: white;
+            background:
+                radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.20), transparent 30%),
+                linear-gradient(135deg, var(--hist-ocean-700), var(--hist-sea-700));
+            overflow: hidden;
+        }
+
+        .history-card-top.has-image {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .history-card-top.has-image::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(8, 145, 178, 0.82), rgba(20, 184, 166, 0.70)),
+                linear-gradient(to bottom, rgba(2, 6, 23, 0.10), rgba(2, 6, 23, 0.46));
+        }
+
+        .history-card-top::after {
+            content: "";
+            position: absolute;
+            right: -65px;
+            bottom: -85px;
+            width: 180px;
+            height: 180px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .history-card-head {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .history-card-room {
+            position: relative;
+            z-index: 2;
+            margin-top: 26px;
+        }
+
+        .history-card-room strong {
+            display: block;
+            color: white;
+            font-size: 1.28rem;
+            font-weight: 950;
+            line-height: 1.2;
+        }
+
+        .history-card-room span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .history-card-body {
+            padding: 20px;
+        }
+
+        .history-meta-list {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .history-meta-row {
+            min-height: 42px;
+            padding: 0 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--hist-text-soft);
+            background: var(--hist-slate-50);
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .history-meta-row i {
+            color: var(--hist-ocean-600);
+        }
+
+        .empty-state {
+            position: relative;
+            padding: 56px 24px;
+            text-align: center;
+            border-radius: 34px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px dashed rgba(8, 145, 178, 0.30);
+            box-shadow: var(--hist-shadow-sm);
+            overflow: hidden;
+        }
+
+        .empty-state::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -90px;
+            width: 240px;
+            height: 240px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(6, 182, 212, 0.10);
+        }
+
+        .empty-icon {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 18px;
+            border-radius: 28px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--hist-ocean-500), var(--hist-sea-500));
+            box-shadow: var(--hist-shadow-ocean);
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+            color: var(--hist-text-main);
+            font-family: var(--hist-font-display);
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+
+        .empty-state p {
+            max-width: 460px;
+            margin: 0 auto 22px;
+            color: var(--hist-text-soft);
+            line-height: 1.7;
+        }
+
+        .history-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(15, 23, 42, 0.56);
+            backdrop-filter: blur(10px);
+        }
+
+        .history-modal.show {
+            display: flex;
+            animation: fadeIn 0.24s ease both;
+        }
+
+        .history-modal-card {
+            position: relative;
+            width: min(680px, 100%);
+            max-height: calc(100vh - 44px);
+            overflow-y: auto;
+            border-radius: 34px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--hist-shadow-xl);
+            animation: modalPop 0.36s var(--hist-ease-bounce) both;
+        }
+
+        .history-modal-header {
+            position: relative;
+            padding: 28px 28px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .history-modal-title-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .history-modal-icon {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: linear-gradient(135deg, var(--hist-ocean-500), var(--hist-sea-500));
+            box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+        }
+
+        .history-modal-title {
+            margin: 0;
+            color: var(--hist-text-main);
+            font-size: 1.35rem;
+            font-weight: 950;
+            letter-spacing: -0.02em;
+        }
+
+        .history-modal-subtitle {
+            margin: 6px 0 0;
+            color: var(--hist-text-muted);
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        .modal-close {
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            color: var(--hist-text-soft);
+            background: var(--hist-slate-100);
+            transition:
+                transform 0.22s var(--hist-ease),
+                background 0.22s var(--hist-ease);
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: white;
+            background: var(--hist-rose-500);
+        }
+
+        .history-modal-content {
+            padding: 26px 28px 28px;
+        }
+
+        .history-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .history-detail-item {
+            min-height: 74px;
+            padding: 16px;
+            border-radius: 22px;
+            background: var(--hist-card-muted);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        .history-detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .history-detail-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--hist-ocean-700);
+            font-size: 0.68rem;
+            font-weight: 950;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .history-detail-value {
+            color: var(--hist-text-main);
+            font-size: 0.94rem;
+            font-weight: 850;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 1100;
+            min-width: min(440px, calc(100% - 32px));
+            padding: 15px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: var(--hist-shadow-lg);
+            backdrop-filter: blur(18px);
+            transform: translate(-50%, 30px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                transform 0.28s var(--hist-ease),
+                opacity 0.28s var(--hist-ease);
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--hist-sand-300);
+        }
+
+        .footer-history {
+            position: relative;
+            margin-top: 28px;
+            padding: 28px;
+            border-radius: 34px;
+            color: white;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, var(--hist-slate-950), var(--hist-ocean-900) 52%, var(--hist-sea-800));
+            box-shadow: var(--hist-shadow-lg);
+        }
+
+        .footer-history::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -120px;
+            top: -150px;
+            border-radius: var(--hist-radius-full);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .footer-history-content {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-history h3 {
+            margin: 0 0 8px;
+            font-family: var(--hist-font-display);
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+
+        .footer-history p {
+            margin: 0;
+            color: rgba(226, 232, 240, 0.76);
+            line-height: 1.7;
+        }
+
+        @keyframes shineSweep {
+            0% {
+                transform: translateX(-120%) rotate(20deg);
+            }
+
+            45%,
+            100% {
+                transform: translateX(130%) rotate(20deg);
+            }
+        }
+
+        @keyframes heroRise {
+            from {
+                opacity: 0;
+                transform: translateY(26px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes heroOrb {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(-28px, -16px) scale(1.05);
+            }
+        }
+
+        @keyframes floatCard {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes statPop {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes cardRise {
+            from {
+                opacity: 0;
+                transform: translateY(26px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 1120px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                margin-top: 20px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .history-container {
+                width: min(100% - 24px, var(--hist-container));
+                padding-top: 22px;
+            }
+
+            .history-hero {
+                min-height: auto;
+                padding: 28px;
+                border-radius: 32px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section-heading p {
+                text-align: left;
+                max-width: 100%;
+            }
+
+            .toolbar-card {
+                grid-template-columns: 1fr;
+            }
+
+            .history-table {
+                display: none;
+            }
+
+            .mobile-history-grid {
+                display: grid;
+            }
+
+            .footer-history-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .summary-strip,
+            .mobile-history-grid,
+            .history-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .hero-btn,
+            .back-btn {
+                width: 100%;
+            }
+
+            .history-hero h1 {
+                font-size: clamp(2.15rem, 12vw, 3.6rem);
+            }
+
+            .table-card-inner {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .history-hero {
+                padding: 22px;
+                border-radius: 26px;
+            }
+
+            .eyebrow,
+            .section-kicker {
+                font-size: 0.62rem;
+                letter-spacing: 0.10em;
+            }
+
+            .hero-copy {
+                font-size: 0.92rem;
+            }
+
+            .summary-pill {
+                min-height: 96px;
+                border-radius: 24px;
+            }
+
+            .table-card,
+            .history-card,
+            .history-modal-card {
+                border-radius: 26px;
+            }
+
+            .history-modal {
+                padding: 14px;
+            }
+
+            .footer-history {
+                padding: 22px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .ambient-bg,
+            .floating-shape,
+            .page-noise,
+            .hero-actions,
+            .toolbar-card,
+            .history-modal,
+            .toast,
+            .footer-history {
+                display: none !important;
+            }
+
+            .history-container {
+                width: 100%;
+                padding: 0;
+            }
+
+            .history-hero,
+            .table-card,
+            .summary-pill,
+            .history-card {
+                box-shadow: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <%
+        const safeBookings = typeof bookings !== 'undefined' && Array.isArray(bookings) ? bookings : [];
+        const safeClientId = typeof clientId !== 'undefined' ? clientId : 'Unknown';
 
-<div class="container">
-    <h2>Booking History for Client #<%= clientId %></h2>
+        const normalizeStatus = function (statusValue) {
+            const status = String(statusValue || 'pending').toLowerCase();
 
-    <div class="table-card">
-        <table class="history-table">
-            <thead>
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Room</th>
-                    <th>Check-in</th>
-                    <th>Ref Code</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% bookings.forEach(b => { %>
-                <tr>
-                    <td>#<%= b.booking_id %></td>
-                    <td class="room-name-cell">
-                        <% if(b.room_image && b.room_image.trim() !== '') { %>
-                            <img src="<%= b.room_image %>" alt="<%= b.room_name %>" class="room-thumb">
-                        <% } else { %>
-                            <div class="room-thumb" style="display:flex;align-items:center;justify-content:center;font-weight:700;color:#1e293b;background:#e2e8f0;">
-                                <%= b.room_name ? b.room_name.charAt(0).toUpperCase() : '?' %>
-                            </div>
-                        <% } %>
-                        <span><%= b.room_name %> (<%= b.room_type %>)</span>
-                    </td>
-                    <td><%= b.booking_date ? new Date(b.booking_date).toLocaleDateString() : 'TBD' %></td>
-                    <td><%= b.ref_code %></td>
-                    <td>
-                        <span class="status-pill 
-                            <% if(b.status.toLowerCase() === 'approved'){ %>status-approved<% } %>
-                            <% if(b.status.toLowerCase() === 'pending'){ %>status-pending<% } %>
-                            <% if(b.status.toLowerCase() === 'rejected'){ %>status-rejected<% } %>">
-                            <%= b.status.toUpperCase() %>
+            if (status === 'approved' || status === 'confirmed') return 'approved';
+            if (status === 'pending') return 'pending';
+            if (status === 'rejected' || status === 'cancelled' || status === 'canceled' || status === 'declined') return 'rejected';
+
+            return 'neutral';
+        };
+
+        const statusIcon = function (statusValue) {
+            const status = normalizeStatus(statusValue);
+
+            if (status === 'approved') return 'fa-solid fa-circle-check';
+            if (status === 'pending') return 'fa-solid fa-hourglass-half';
+            if (status === 'rejected') return 'fa-solid fa-circle-xmark';
+
+            return 'fa-solid fa-circle-info';
+        };
+
+        const readableDate = function (dateValue) {
+            if (!dateValue) return 'TBD';
+
+            const parsedDate = new Date(dateValue);
+
+            if (isNaN(parsedDate.getTime())) return 'TBD';
+
+            return parsedDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        };
+
+        const pesoFormat = function (value) {
+            return Number(value || 0).toLocaleString('en-PH', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+        };
+
+        const approvedCount = safeBookings.filter(function (booking) {
+            return normalizeStatus(booking.status) === 'approved';
+        }).length;
+
+        const pendingCount = safeBookings.filter(function (booking) {
+            return normalizeStatus(booking.status) === 'pending';
+        }).length;
+
+        const rejectedCount = safeBookings.filter(function (booking) {
+            return normalizeStatus(booking.status) === 'rejected';
+        }).length;
+
+        const totalValue = safeBookings.reduce(function (sum, booking) {
+            return sum + Number(booking.total_price || 0);
+        }, 0);
+    %>
+
+    <div class="history-page">
+        <div class="ambient-bg">
+            <span class="glow-orb orb-one"></span>
+            <span class="glow-orb orb-two"></span>
+            <span class="glow-orb orb-three"></span>
+        </div>
+
+        <span class="floating-shape shape-one"></span>
+        <span class="floating-shape shape-two"></span>
+        <span class="floating-shape shape-three"></span>
+
+        <div class="page-noise"></div>
+
+        <main class="history-container">
+            <header class="history-hero">
+                <div class="hero-content">
+                    <div>
+                        <span class="eyebrow">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            Client Booking History
                         </span>
-                    </td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
 
-        <a href="/admin/clients" class="back-btn">← Back to Clients</a>
+                        <h1>
+                            Client #<%= safeClientId %><span>.</span>
+                        </h1>
+
+                        <p class="hero-copy">
+                            Review this client's previous reservations, room selections, reference codes, booking status, and total booking value.
+                        </p>
+
+                        <div class="hero-actions">
+                            <a href="/admin/clients" class="hero-btn">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                Back to Clients
+                            </a>
+
+                            <button type="button" class="hero-btn ghost" onclick="window.print()">
+                                <i class="fa-solid fa-print"></i>
+                                Print History
+                            </button>
+                        </div>
+                    </div>
+
+                    <article class="client-card">
+                        <div class="client-card-icon">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+
+                        <span class="client-card-label">
+                            History Records
+                        </span>
+
+                        <strong class="client-card-value">
+                            <%= safeBookings.length %>
+                        </strong>
+
+                        <p class="client-card-copy">
+                            Total reservations found for this client profile.
+                        </p>
+                    </article>
+                </div>
+            </header>
+
+            <section class="summary-strip" aria-label="Booking history summary">
+                <article class="summary-pill">
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-bookmark"></i>
+                    </div>
+
+                    <div class="summary-copy">
+                        <strong><%= safeBookings.length %></strong>
+                        <span>Total Bookings</span>
+                    </div>
+                </article>
+
+                <article class="summary-pill">
+                    <div class="summary-icon approved">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+
+                    <div class="summary-copy">
+                        <strong><%= approvedCount %></strong>
+                        <span>Approved</span>
+                    </div>
+                </article>
+
+                <article class="summary-pill">
+                    <div class="summary-icon pending">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+
+                    <div class="summary-copy">
+                        <strong><%= pendingCount %></strong>
+                        <span>Pending</span>
+                    </div>
+                </article>
+
+                <article class="summary-pill">
+                    <div class="summary-icon rejected">
+                        <i class="fa-solid fa-peso-sign"></i>
+                    </div>
+
+                    <div class="summary-copy">
+                        <strong>₱<%= pesoFormat(totalValue) %></strong>
+                        <span>Total Value</span>
+                    </div>
+                </article>
+            </section>
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">
+                        <i class="fa-solid fa-list-check"></i>
+                        Reservation Timeline
+                    </span>
+
+                    <h2>
+                        Booking records
+                    </h2>
+                </div>
+
+                <p>
+                    Search or filter this client's booking history. Mobile view uses cards so each booking remains readable.
+                </p>
+            </div>
+
+            <section class="toolbar-card">
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input 
+                        type="search" 
+                        id="historySearch" 
+                        class="search-input" 
+                        placeholder="Search room, ref code, status, or booking ID..."
+                    >
+                </div>
+
+                <div class="filter-wrap">
+                    <i class="fa-solid fa-filter"></i>
+
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn-soft" onclick="window.location.reload()">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Refresh
+                </button>
+            </section>
+
+            <% if (safeBookings.length > 0) { %>
+                <section class="table-card">
+                    <div class="table-card-inner">
+                        <div class="table-scroll">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Room</th>
+                                        <th>Check-in</th>
+                                        <th>Ref Code</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% safeBookings.forEach(function (b) { 
+                                        const status = normalizeStatus(b.status);
+                                        const bookingId = b.booking_id || b.id || '---';
+                                        const roomName = b.room_name || 'Unknown Room';
+                                        const roomType = b.room_type || 'Unknown Type';
+                                        const checkDate = b.check_in || b.booking_date;
+                                        const historyPayload = {
+                                            booking_id: String(bookingId),
+                                            room_name: String(roomName),
+                                            room_type: String(roomType),
+                                            check_in: String(b.check_in || ''),
+                                            check_out: String(b.check_out || ''),
+                                            booking_date: String(b.booking_date || ''),
+                                            ref_code: String(b.ref_code || '---'),
+                                            status: String(b.status || 'Pending'),
+                                            total_price: String(b.total_price || '0'),
+                                            requests: String(b.requests || 'None')
+                                        };
+                                        const searchable = [
+                                            bookingId,
+                                            roomName,
+                                            roomType,
+                                            b.ref_code || '',
+                                            b.status || '',
+                                            b.total_price || ''
+                                        ].join(' ').toLowerCase();
+                                    %>
+                                        <tr 
+                                            class="history-row"
+                                            data-status="<%= status %>"
+                                            data-search="<%= searchable %>"
+                                        >
+                                            <td>
+                                                <span class="booking-id-chip">
+                                                    <i class="fa-solid fa-hashtag"></i>
+                                                    <%= bookingId %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <div class="room-name-cell">
+                                                    <% if (b.room_image && String(b.room_image).trim() !== '') { %>
+                                                        <img 
+                                                            src="<%= b.room_image %>" 
+                                                            alt="<%= roomName %>" 
+                                                            class="room-thumb"
+                                                            onerror="this.onerror=null; this.style.display='none';"
+                                                        >
+                                                    <% } else { %>
+                                                        <div class="room-thumb-fallback">
+                                                            <%= roomName ? roomName.charAt(0).toUpperCase() : '?' %>
+                                                        </div>
+                                                    <% } %>
+
+                                                    <div>
+                                                        <span class="room-name-main">
+                                                            <%= roomName %>
+                                                        </span>
+
+                                                        <span class="room-type-sub">
+                                                            <i class="fa-solid fa-bed"></i>
+                                                            <%= roomType %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span class="date-chip">
+                                                    <i class="fa-regular fa-calendar"></i>
+                                                    <%= readableDate(checkDate) %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="ref-chip">
+                                                    <i class="fa-solid fa-receipt"></i>
+                                                    <%= b.ref_code || '---' %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="price-chip">
+                                                    <i class="fa-solid fa-peso-sign"></i>
+                                                    ₱<%= pesoFormat(b.total_price) %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="status-pill status-<%= status %>">
+                                                    <i class="<%= statusIcon(b.status) %>"></i>
+                                                    <%= String(b.status || 'Pending').toUpperCase() %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <button 
+                                                    type="button" 
+                                                    class="btn-details history-details-btn"
+                                                    data-history="<%- encodeURIComponent(JSON.stringify(historyPayload)) %>"
+                                                >
+                                                    <i class="fa-solid fa-eye"></i>
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mobile-history-grid">
+                            <% safeBookings.forEach(function (b) { 
+                                const status = normalizeStatus(b.status);
+                                const bookingId = b.booking_id || b.id || '---';
+                                const roomName = b.room_name || 'Unknown Room';
+                                const roomType = b.room_type || 'Unknown Type';
+                                const checkDate = b.check_in || b.booking_date;
+                                const hasImage = b.room_image && String(b.room_image).trim() !== '';
+                                const historyPayload = {
+                                    booking_id: String(bookingId),
+                                    room_name: String(roomName),
+                                    room_type: String(roomType),
+                                    check_in: String(b.check_in || ''),
+                                    check_out: String(b.check_out || ''),
+                                    booking_date: String(b.booking_date || ''),
+                                    ref_code: String(b.ref_code || '---'),
+                                    status: String(b.status || 'Pending'),
+                                    total_price: String(b.total_price || '0'),
+                                    requests: String(b.requests || 'None')
+                                };
+                                const searchable = [
+                                    bookingId,
+                                    roomName,
+                                    roomType,
+                                    b.ref_code || '',
+                                    b.status || '',
+                                    b.total_price || ''
+                                ].join(' ').toLowerCase();
+                            %>
+                                <article 
+                                    class="history-card history-row"
+                                    data-status="<%= status %>"
+                                    data-search="<%= searchable %>"
+                                >
+                                    <div 
+                                        class="history-card-top <%= hasImage ? 'has-image' : '' %>"
+                                        <% if (hasImage) { %>
+                                            style="background-image:url('<%= b.room_image %>');"
+                                        <% } %>
+                                    >
+                                        <div class="history-card-head">
+                                            <span class="booking-id-chip">
+                                                <i class="fa-solid fa-hashtag"></i>
+                                                <%= bookingId %>
+                                            </span>
+
+                                            <span class="status-pill status-<%= status %>">
+                                                <i class="<%= statusIcon(b.status) %>"></i>
+                                                <%= String(b.status || 'Pending').toUpperCase() %>
+                                            </span>
+                                        </div>
+
+                                        <div class="history-card-room">
+                                            <strong><%= roomName %></strong>
+                                            <span>
+                                                <i class="fa-solid fa-bed"></i>
+                                                <%= roomType %>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="history-card-body">
+                                        <div class="history-meta-list">
+                                            <div class="history-meta-row">
+                                                <i class="fa-regular fa-calendar"></i>
+                                                <span>Check-in: <%= readableDate(checkDate) %></span>
+                                            </div>
+
+                                            <div class="history-meta-row">
+                                                <i class="fa-solid fa-receipt"></i>
+                                                <span>Ref: <%= b.ref_code || '---' %></span>
+                                            </div>
+
+                                            <div class="history-meta-row">
+                                                <i class="fa-solid fa-peso-sign"></i>
+                                                <span>Total: ₱<%= pesoFormat(b.total_price) %></span>
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            type="button" 
+                                            class="btn-details history-details-btn"
+                                            data-history="<%- encodeURIComponent(JSON.stringify(historyPayload)) %>"
+                                            style="width:100%;"
+                                        >
+                                            <i class="fa-solid fa-eye"></i>
+                                            View Details
+                                        </button>
+                                    </div>
+                                </article>
+                            <% }) %>
+                        </div>
+                    </div>
+                </section>
+            <% } else { %>
+                <section class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-calendar-xmark"></i>
+                    </div>
+
+                    <h3>No booking history found</h3>
+
+                    <p>
+                        This client does not have any booking records yet. Once reservations are made, they will appear here.
+                    </p>
+
+                    <a href="/admin/clients" class="hero-btn" style="margin:0 auto;">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back to Clients
+                    </a>
+                </section>
+            <% } %>
+
+            <section class="footer-history">
+                <div class="footer-history-content">
+                    <div>
+                        <h3>
+                            Keep client records clear.
+                        </h3>
+
+                        <p>
+                            Booking history helps admins understand client activity, payment references, and reservation patterns.
+                        </p>
+                    </div>
+
+                    <a href="/admin/clients" class="hero-btn">
+                        <i class="fa-solid fa-users"></i>
+                        Client Directory
+                    </a>
+                </div>
+            </section>
+        </main>
     </div>
-</div>
 
+    <div class="history-modal" id="historyModal">
+        <div class="history-modal-card">
+            <div class="history-modal-header">
+                <div class="history-modal-title-wrap">
+                    <div class="history-modal-icon">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="history-modal-title">
+                            Booking Details
+                        </h3>
+
+                        <p class="history-modal-subtitle">
+                            Full reservation information for this client booking.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="button" class="modal-close" onclick="closeHistoryModal()" aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="history-modal-content" id="historyModalContent">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="historyToast">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="historyToastMessage">Action completed.</span>
+    </div>
+
+    <script>
+        const historySearch = document.getElementById('historySearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const historyModal = document.getElementById('historyModal');
+        const historyModalContent = document.getElementById('historyModalContent');
+        const historyToast = document.getElementById('historyToast');
+        const historyToastMessage = document.getElementById('historyToastMessage');
+
+        function showToast(message) {
+            if (!historyToast || !historyToastMessage) return;
+
+            historyToastMessage.textContent = message;
+            historyToast.classList.add('show');
+
+            setTimeout(function () {
+                historyToast.classList.remove('show');
+            }, 3000);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function formatDate(value) {
+            if (!value) return 'TBD';
+
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return 'TBD';
+            }
+
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function formatPeso(value) {
+            return '₱' + Number(value || 0).toLocaleString('en-PH', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function normalizeStatus(status) {
+            const value = String(status || 'pending').toLowerCase();
+
+            if (value === 'approved' || value === 'confirmed') return 'approved';
+            if (value === 'pending') return 'pending';
+            if (value === 'rejected' || value === 'cancelled' || value === 'canceled' || value === 'declined') return 'rejected';
+
+            return 'neutral';
+        }
+
+        function filterHistory() {
+            const keyword = historySearch ? historySearch.value.trim().toLowerCase() : '';
+            const filterValue = statusFilter ? statusFilter.value.toLowerCase() : 'all';
+            const rows = document.querySelectorAll('.history-row');
+
+            rows.forEach(function (row) {
+                const status = row.dataset.status || '';
+                const searchable = row.dataset.search || '';
+
+                const matchesKeyword = !keyword || searchable.includes(keyword);
+                const matchesStatus = filterValue === 'all' || status === filterValue;
+
+                row.style.display = matchesKeyword && matchesStatus ? '' : 'none';
+            });
+        }
+
+        function openHistoryModal(history) {
+            if (!historyModal || !historyModalContent || !history) return;
+
+            const status = normalizeStatus(history.status);
+
+            historyModalContent.innerHTML = `
+                <div class="history-detail-grid">
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-hashtag"></i>
+                            Booking ID
+                        </div>
+                        <div class="history-detail-value">#${escapeHtml(history.booking_id || '---')}</div>
+                    </div>
+
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-signal"></i>
+                            Status
+                        </div>
+                        <div class="history-detail-value">
+                            <span class="status-pill status-${status}">
+                                ${escapeHtml(history.status || 'Pending')}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="history-detail-item full">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-bed"></i>
+                            Room
+                        </div>
+                        <div class="history-detail-value">
+                            ${escapeHtml(history.room_name || 'Unknown Room')} (${escapeHtml(history.room_type || 'Unknown Type')})
+                        </div>
+                    </div>
+
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-regular fa-calendar"></i>
+                            Check-in
+                        </div>
+                        <div class="history-detail-value">${formatDate(history.check_in || history.booking_date)}</div>
+                    </div>
+
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-regular fa-calendar-check"></i>
+                            Check-out
+                        </div>
+                        <div class="history-detail-value">${formatDate(history.check_out)}</div>
+                    </div>
+
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-receipt"></i>
+                            Reference Code
+                        </div>
+                        <div class="history-detail-value">${escapeHtml(history.ref_code || '---')}</div>
+                    </div>
+
+                    <div class="history-detail-item">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-peso-sign"></i>
+                            Total Price
+                        </div>
+                        <div class="history-detail-value">${formatPeso(history.total_price)}</div>
+                    </div>
+
+                    <div class="history-detail-item full">
+                        <div class="history-detail-label">
+                            <i class="fa-solid fa-message"></i>
+                            Special Requests
+                        </div>
+                        <div class="history-detail-value">${escapeHtml(history.requests || 'None')}</div>
+                    </div>
+                </div>
+            `;
+
+            historyModal.classList.add('show');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeHistoryModal() {
+            if (!historyModal) return;
+
+            historyModal.classList.remove('show');
+            document.body.classList.remove('modal-open');
+        }
+
+        document.querySelectorAll('.history-details-btn').forEach(function (button) {
+            button.addEventListener('click', function () {
+                try {
+                    const payload = JSON.parse(decodeURIComponent(button.dataset.history || '{}'));
+                    openHistoryModal(payload);
+                } catch (error) {
+                    console.error('Failed to read booking history data:', error);
+                    showToast('Unable to open booking details.');
+                }
+            });
+        });
+
+        if (historySearch) {
+            historySearch.addEventListener('input', filterHistory);
+        }
+
+        if (statusFilter) {
+            statusFilter.addEventListener('change', filterHistory);
+        }
+
+        if (historyModal) {
+            historyModal.addEventListener('click', function (event) {
+                if (event.target === historyModal) {
+                    closeHistoryModal();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeHistoryModal();
+            }
+        });
+    </script>
 </body>
+
 </html>

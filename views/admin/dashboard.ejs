@@ -1,109 +1,2174 @@
-<section class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:24px; margin-bottom:40px;">
-    <div class="stat-card" style="background: linear-gradient(135deg, #0ea5e9, #2563eb); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
-        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">📅</div>
-        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Total Bookings</h3>
-        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.totalBookings %></div>
-    </div>
+<%
+    const safeStats = typeof stats !== 'undefined' && stats ? stats : {};
 
-    <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
-        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">🏠</div>
-        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Today's Arrivals</h3>
-        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.todayArrivals %></div>
-    </div>
+    const totalBookings = Number(safeStats.totalBookings || 0);
+    const todayArrivals = Number(safeStats.todayArrivals || 0);
+    const pendingPayments = Number(safeStats.pendingPayments || 0);
+    const totalRevenue = Number(safeStats.revenue || 0);
+    const registeredGuests = Number(safeStats.registeredGuests || 0);
+    const activeFacilities = Number(safeStats.activeFacilities || 0);
 
-    <div class="stat-card" style="background: linear-gradient(135deg, #eab308, #facc15); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
-        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">⏳</div>
-        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Pending Payments</h3>
-        <div class="value" style="font-size:2rem; font-weight:700;"><%= stats.pendingPayments %></div>
-    </div>
+    const safeChartData = Array.isArray(safeStats.chartData) ? safeStats.chartData : [];
+    const safeRevenueTrend = Array.isArray(safeStats.revenueTrend) ? safeStats.revenueTrend : [];
 
-    <div class="stat-card" style="background: linear-gradient(135deg, #64748b, #1e293b); color:#fff; border-radius:20px; padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; box-shadow:0 15px 40px rgba(0,0,0,0.25); transition: transform 0.3s;">
-        <div class="stat-icon" style="background: rgba(255,255,255,0.2); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">₱</div>
-        <h3 style="margin:0; font-size:0.85rem; font-weight:600;">Total Revenue</h3>
-        <div class="value" style="font-size:2rem; font-weight:700;">₱<%= stats.revenue.toLocaleString() %></div>
-    </div>
-</section>
+    const pesoFormat = function (value) {
+        return Number(value || 0).toLocaleString('en-PH', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    };
 
-<div style="display:grid; grid-template-columns:2fr 1fr; gap:32px; margin-bottom:40px;">
-    <!-- Revenue Trend Chart -->
-    <div class="admin-card" style="background:#fff; border-radius:20px; padding:28px; box-shadow:0 20px 50px rgba(0,0,0,0.1); transition: transform 0.3s;">
-        <h3 style="margin-top:0; color:#64748b; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">
-            Revenue Trend <span style="font-weight:400; text-transform:none; color:#94a3b8;">(Last 7 Days)</span>
-        </h3>
-        <div style="height:320px; margin-top:24px;">
-            <canvas id="revenueChart"></canvas>
+    const getStatusCountServer = function (statusName) {
+        const found = safeChartData.find(function (item) {
+            const itemStatus = String(item.status || item.booking_status || '').toLowerCase();
+            return itemStatus === statusName.toLowerCase();
+        });
+
+        return Number(found ? found.count || found.total || found.total_bookings || 0 : 0);
+    };
+
+    const approvedCount = getStatusCountServer('approved');
+    const pendingCount = getStatusCountServer('pending');
+    const rejectedCount = getStatusCountServer('rejected');
+    const statusTotal = approvedCount + pendingCount + rejectedCount;
+
+    const approvedPercentage = statusTotal > 0 ? Math.round((approvedCount / statusTotal) * 100) : 0;
+    const pendingPercentage = statusTotal > 0 ? Math.round((pendingCount / statusTotal) * 100) : 0;
+    const rejectedPercentage = statusTotal > 0 ? Math.round((rejectedCount / statusTotal) * 100) : 0;
+%>
+
+<link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+>
+
+<style>
+    :root {
+        --dash-font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --dash-font-display: 'Tenor Sans', Georgia, serif;
+
+        --dash-ocean-50: #ecfeff;
+        --dash-ocean-100: #cffafe;
+        --dash-ocean-200: #a5f3fc;
+        --dash-ocean-300: #67e8f9;
+        --dash-ocean-400: #22d3ee;
+        --dash-ocean-500: #06b6d4;
+        --dash-ocean-600: #0891b2;
+        --dash-ocean-700: #0e7490;
+        --dash-ocean-800: #155e75;
+        --dash-ocean-900: #164e63;
+
+        --dash-sea-50: #f0fdfa;
+        --dash-sea-100: #ccfbf1;
+        --dash-sea-200: #99f6e4;
+        --dash-sea-300: #5eead4;
+        --dash-sea-400: #2dd4bf;
+        --dash-sea-500: #14b8a6;
+        --dash-sea-600: #0d9488;
+        --dash-sea-700: #0f766e;
+        --dash-sea-800: #115e59;
+        --dash-sea-900: #134e4a;
+
+        --dash-sand-50: #fffaf0;
+        --dash-sand-100: #fef3c7;
+        --dash-sand-200: #fde68a;
+        --dash-sand-300: #fcd34d;
+        --dash-sand-400: #fbbf24;
+        --dash-sand-500: #f59e0b;
+        --dash-sand-600: #d97706;
+        --dash-sand-700: #b45309;
+        --dash-sand-800: #92400e;
+
+        --dash-rose-50: #fff1f2;
+        --dash-rose-100: #ffe4e6;
+        --dash-rose-200: #fecdd3;
+        --dash-rose-500: #f43f5e;
+        --dash-rose-600: #e11d48;
+        --dash-rose-700: #be123c;
+
+        --dash-emerald-50: #ecfdf5;
+        --dash-emerald-100: #d1fae5;
+        --dash-emerald-200: #a7f3d0;
+        --dash-emerald-500: #10b981;
+        --dash-emerald-600: #059669;
+        --dash-emerald-700: #047857;
+
+        --dash-indigo-50: #eef2ff;
+        --dash-indigo-100: #e0e7ff;
+        --dash-indigo-500: #6366f1;
+        --dash-indigo-600: #4f46e5;
+        --dash-indigo-700: #4338ca;
+
+        --dash-slate-50: #f8fafc;
+        --dash-slate-100: #f1f5f9;
+        --dash-slate-200: #e2e8f0;
+        --dash-slate-300: #cbd5e1;
+        --dash-slate-400: #94a3b8;
+        --dash-slate-500: #64748b;
+        --dash-slate-600: #475569;
+        --dash-slate-700: #334155;
+        --dash-slate-800: #1e293b;
+        --dash-slate-900: #0f172a;
+        --dash-slate-950: #020617;
+
+        --dash-white: #ffffff;
+        --dash-black: #000000;
+
+        --dash-card: rgba(255, 255, 255, 0.86);
+        --dash-card-solid: #ffffff;
+        --dash-card-muted: rgba(248, 250, 252, 0.82);
+        --dash-border: rgba(148, 163, 184, 0.22);
+        --dash-border-strong: rgba(148, 163, 184, 0.40);
+
+        --dash-text-main: #0f172a;
+        --dash-text-soft: #475569;
+        --dash-text-muted: #94a3b8;
+        --dash-text-white: #f8fafc;
+
+        --dash-shadow-xs: 0 4px 12px rgba(15, 23, 42, 0.06);
+        --dash-shadow-sm: 0 10px 28px rgba(15, 23, 42, 0.08);
+        --dash-shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
+        --dash-shadow-lg: 0 30px 80px rgba(15, 23, 42, 0.16);
+        --dash-shadow-xl: 0 44px 120px rgba(15, 23, 42, 0.22);
+        --dash-shadow-ocean: 0 24px 56px rgba(8, 145, 178, 0.24);
+        --dash-shadow-teal: 0 24px 56px rgba(20, 184, 166, 0.22);
+        --dash-shadow-sand: 0 24px 56px rgba(245, 158, 11, 0.20);
+
+        --dash-radius-xs: 8px;
+        --dash-radius-sm: 12px;
+        --dash-radius-md: 18px;
+        --dash-radius-lg: 24px;
+        --dash-radius-xl: 32px;
+        --dash-radius-2xl: 42px;
+        --dash-radius-full: 999px;
+
+        --dash-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --dash-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dashboard-page {
+        position: relative;
+        min-height: 100%;
+        color: var(--dash-text-main);
+        isolation: isolate;
+        overflow: hidden;
+        padding-bottom: 42px;
+    }
+
+    .dashboard-page * {
+        box-sizing: border-box;
+    }
+
+    .dashboard-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -4;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 8% 8%, rgba(103, 232, 249, 0.22), transparent 30%),
+            radial-gradient(circle at 92% 12%, rgba(45, 212, 191, 0.18), transparent 32%),
+            radial-gradient(circle at 52% 100%, rgba(251, 191, 36, 0.11), transparent 40%);
+    }
+
+    .dashboard-page::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        pointer-events: none;
+        background-image:
+            linear-gradient(rgba(8, 145, 178, 0.038) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(8, 145, 178, 0.038) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black 0%, transparent 86%);
+    }
+
+    .dashboard-orb {
+        position: fixed;
+        z-index: -2;
+        pointer-events: none;
+        width: 420px;
+        height: 420px;
+        border-radius: var(--dash-radius-full);
+        filter: blur(26px);
+        opacity: 0.38;
+        animation: dashOrbDrift 16s var(--dash-ease) infinite alternate;
+    }
+
+    .dashboard-orb.one {
+        top: -160px;
+        left: 18%;
+        background: rgba(34, 211, 238, 0.46);
+    }
+
+    .dashboard-orb.two {
+        right: -170px;
+        top: 28%;
+        background: rgba(20, 184, 166, 0.42);
+        animation-delay: -5s;
+    }
+
+    .dashboard-orb.three {
+        width: 510px;
+        height: 510px;
+        left: 34%;
+        bottom: -290px;
+        background: rgba(251, 191, 36, 0.18);
+        animation-delay: -9s;
+    }
+
+    .dashboard-noise {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.045;
+        background-image:
+            radial-gradient(circle at 25% 25%, #000 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, #000 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+
+    @keyframes dashOrbDrift {
+        0% {
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate3d(42px, 32px, 0) scale(1.08);
+        }
+
+        100% {
+            transform: translate3d(-28px, 58px, 0) scale(0.96);
+        }
+    }
+
+    .dashboard-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 330px;
+        padding: clamp(28px, 4vw, 54px);
+        border-radius: var(--dash-radius-2xl);
+        color: white;
+        background:
+            linear-gradient(135deg, rgba(8, 145, 178, 0.96), rgba(20, 184, 166, 0.88)),
+            url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--dash-shadow-lg);
+        isolation: isolate;
+        animation: dashHeroRise 0.76s var(--dash-ease) both;
+    }
+
+    .dashboard-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+            radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.24), transparent 23%),
+            linear-gradient(120deg, rgba(2, 6, 23, 0.24), transparent 58%);
+    }
+
+    .dashboard-hero::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        bottom: -160px;
+        width: 450px;
+        height: 450px;
+        border-radius: var(--dash-radius-full);
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        animation: dashHeroOrb 8s ease-in-out infinite;
+    }
+
+    @keyframes dashHeroRise {
+        from {
+            opacity: 0;
+            transform: translateY(28px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes dashHeroOrb {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(-26px, -18px) scale(1.05);
+        }
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 28px;
+        align-items: center;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 38px;
+        padding: 0 15px;
+        border-radius: var(--dash-radius-full);
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        backdrop-filter: blur(14px);
+    }
+
+    .hero-title {
+        margin: 20px 0 14px;
+        font-family: var(--dash-font-display);
+        font-size: clamp(2.3rem, 5vw, 4.6rem);
+        line-height: 0.98;
+        font-weight: 400;
+        letter-spacing: -0.055em;
+    }
+
+    .hero-title span {
+        color: var(--dash-sand-200);
+    }
+
+    .hero-copy {
+        max-width: 680px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: clamp(0.96rem, 1.5vw, 1.12rem);
+        line-height: 1.78;
+    }
+
+    .hero-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+    }
+
+    .hero-btn {
+        min-height: 54px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: var(--dash-radius-full);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: var(--dash-slate-950);
+        text-decoration: none;
+        font-size: 0.80rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: white;
+        box-shadow: 0 18px 38px rgba(2, 6, 23, 0.20);
+        transition:
+            transform 0.25s var(--dash-ease),
+            box-shadow 0.25s var(--dash-ease),
+            background 0.25s var(--dash-ease);
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 24px 52px rgba(2, 6, 23, 0.26);
+    }
+
+    .hero-btn.ghost {
+        color: white;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(14px);
+    }
+
+    .hero-live-card {
+        position: relative;
+        min-height: 250px;
+        padding: 24px;
+        border-radius: 34px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.10),
+            0 24px 60px rgba(2, 6, 23, 0.18);
+        backdrop-filter: blur(18px);
+        animation: dashFloatCard 4s ease-in-out infinite;
+    }
+
+    .hero-live-card::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 190px;
+        height: 190px;
+        border-radius: var(--dash-radius-full);
+        background: rgba(255, 255, 255, 0.16);
+    }
+
+    @keyframes dashFloatCard {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .live-card-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        color: var(--dash-slate-950);
+        background: linear-gradient(135deg, white, var(--dash-ocean-50));
+        box-shadow: 0 18px 44px rgba(2, 6, 23, 0.18);
+        margin-bottom: 18px;
+    }
+
+    .live-card-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 0.74rem;
+        font-weight: 950;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .live-card-value {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1;
+        font-weight: 950;
+    }
+
+    .live-card-copy {
+        margin: 14px 0 0;
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.7;
+        font-size: 0.90rem;
+    }
+
+    .dashboard-overview-strip {
+        position: relative;
+        z-index: 4;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin: -38px clamp(18px, 4vw, 42px) 42px;
+    }
+
+    .overview-pill {
+        min-height: 106px;
+        padding: 20px;
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--dash-shadow-md);
+        backdrop-filter: blur(18px);
+        position: relative;
+        overflow: hidden;
+        transition:
+            transform 0.28s var(--dash-ease),
+            box-shadow 0.28s var(--dash-ease);
+        animation: dashStatPop 0.75s var(--dash-ease-bounce) both;
+    }
+
+    .overview-pill:nth-child(1) {
+        animation-delay: 0.12s;
+    }
+
+    .overview-pill:nth-child(2) {
+        animation-delay: 0.20s;
+    }
+
+    .overview-pill:nth-child(3) {
+        animation-delay: 0.28s;
+    }
+
+    .overview-pill:nth-child(4) {
+        animation-delay: 0.36s;
+    }
+
+    .overview-pill:hover {
+        transform: translateY(-7px);
+        box-shadow: var(--dash-shadow-lg);
+    }
+
+    .overview-pill::after {
+        content: "";
+        position: absolute;
+        right: -45px;
+        top: -45px;
+        width: 120px;
+        height: 120px;
+        border-radius: var(--dash-radius-full);
+        background: rgba(6, 182, 212, 0.10);
+    }
+
+    .overview-icon {
+        width: 54px;
+        height: 54px;
+        min-width: 54px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--dash-ocean-500), var(--dash-sea-500));
+        box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+    }
+
+    .overview-copy {
+        min-width: 0;
+    }
+
+    .overview-copy strong {
+        display: block;
+        color: var(--dash-text-main);
+        font-size: 1.48rem;
+        line-height: 1;
+        font-weight: 950;
+    }
+
+    .overview-copy span {
+        display: block;
+        margin-top: 8px;
+        color: var(--dash-text-muted);
+        font-size: 0.70rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    @keyframes dashStatPop {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+        margin: 46px 0 22px;
+    }
+
+    .section-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--dash-ocean-700);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: var(--dash-text-main);
+        font-family: var(--dash-font-display);
+        font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+        font-weight: 400;
+        letter-spacing: -0.04em;
+    }
+
+    .section-heading p {
+        max-width: 460px;
+        margin: 0;
+        color: var(--dash-text-soft);
+        text-align: right;
+        line-height: 1.7;
+        font-size: 0.92rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 38px;
+    }
+
+    .stat-card {
+        position: relative;
+        min-height: 190px;
+        padding: 24px;
+        border-radius: 32px;
+        overflow: hidden;
+        color: white;
+        box-shadow: var(--dash-shadow-md);
+        transition:
+            transform 0.32s var(--dash-ease),
+            box-shadow 0.32s var(--dash-ease),
+            filter 0.32s var(--dash-ease);
+        animation: dashCardRise 0.72s var(--dash-ease) both;
+    }
+
+    .stat-card:nth-child(1) {
+        animation-delay: 0.08s;
+    }
+
+    .stat-card:nth-child(2) {
+        animation-delay: 0.16s;
+    }
+
+    .stat-card:nth-child(3) {
+        animation-delay: 0.24s;
+    }
+
+    .stat-card:nth-child(4) {
+        animation-delay: 0.32s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--dash-shadow-xl);
+        filter: saturate(1.08);
+    }
+
+    .stat-card.bookings {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 28%),
+            linear-gradient(135deg, var(--dash-ocean-500), var(--dash-indigo-600));
+    }
+
+    .stat-card.arrivals {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 28%),
+            linear-gradient(135deg, var(--dash-emerald-500), var(--dash-sea-700));
+    }
+
+    .stat-card.pending {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 28%),
+            linear-gradient(135deg, var(--dash-sand-500), var(--dash-sand-700));
+    }
+
+    .stat-card.revenue {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 28%),
+            linear-gradient(135deg, var(--dash-slate-800), var(--dash-slate-950));
+    }
+
+    .stat-card::before {
+        content: "";
+        position: absolute;
+        right: -70px;
+        top: -80px;
+        width: 190px;
+        height: 190px;
+        border-radius: var(--dash-radius-full);
+        background: rgba(255, 255, 255, 0.16);
+        transition: transform 0.4s var(--dash-ease);
+    }
+
+    .stat-card:hover::before {
+        transform: scale(1.16);
+    }
+
+    .stat-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        transform: translateX(-120%);
+        transition: transform 0.6s var(--dash-ease);
+    }
+
+    .stat-card:hover::after {
+        transform: translateX(120%);
+    }
+
+    .stat-top {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .stat-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 1.22rem;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(14px);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .stat-trend {
+        min-height: 34px;
+        padding: 0 10px;
+        border-radius: var(--dash-radius-full);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(255, 255, 255, 0.16);
+        font-size: 0.68rem;
+        font-weight: 950;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+    }
+
+    .stat-label {
+        position: relative;
+        z-index: 2;
+        margin: 0 0 10px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.74rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        position: relative;
+        z-index: 2;
+        display: block;
+        font-size: clamp(2rem, 3.5vw, 3.2rem);
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: -0.05em;
+    }
+
+    .stat-subtext {
+        position: relative;
+        z-index: 2;
+        margin: 12px 0 0;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 0.82rem;
+        line-height: 1.55;
+    }
+
+    @keyframes dashCardRise {
+        from {
+            opacity: 0;
+            transform: translateY(26px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.95fr);
+        gap: 24px;
+        margin-bottom: 26px;
+    }
+
+    .admin-card {
+        position: relative;
+        min-width: 0;
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--dash-shadow-md);
+        backdrop-filter: blur(18px);
+        overflow: hidden;
+        animation: dashCardRise 0.8s var(--dash-ease) both;
+    }
+
+    .admin-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.08), transparent 30%),
+            radial-gradient(circle at 100% 100%, rgba(20, 184, 166, 0.09), transparent 30%);
+    }
+
+    .admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--dash-shadow-lg);
+        transition:
+            transform 0.28s var(--dash-ease),
+            box-shadow 0.28s var(--dash-ease);
+    }
+
+    .card-inner {
+        position: relative;
+        z-index: 2;
+        padding: 26px;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .card-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--dash-ocean-700);
+        font-size: 0.70rem;
+        font-weight: 950;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .card-title {
+        margin: 0;
+        color: var(--dash-text-main);
+        font-size: 1.18rem;
+        font-weight: 950;
+        letter-spacing: -0.02em;
+    }
+
+    .card-copy {
+        margin: 6px 0 0;
+        color: var(--dash-text-muted);
+        font-size: 0.86rem;
+        line-height: 1.6;
+    }
+
+    .card-chip {
+        min-height: 38px;
+        padding: 0 13px;
+        border-radius: var(--dash-radius-full);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--dash-ocean-700);
+        background: var(--dash-ocean-50);
+        border: 1px solid rgba(6, 182, 212, 0.16);
+        font-size: 0.68rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .chart-wrap {
+        position: relative;
+        height: 330px;
+    }
+
+    .chart-wrap.small {
+        height: 278px;
+    }
+
+    .status-summary {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .status-row {
+        padding: 16px;
+        border-radius: 22px;
+        display: grid;
+        gap: 12px;
+        background: var(--dash-card-muted);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        transition:
+            transform 0.24s var(--dash-ease),
+            background 0.24s var(--dash-ease);
+    }
+
+    .status-row:hover {
+        transform: translateX(5px);
+        background: white;
+    }
+
+    .status-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .status-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--dash-text-main);
+        font-size: 0.88rem;
+        font-weight: 950;
+    }
+
+    .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: var(--dash-radius-full);
+        background: var(--status-color);
+        box-shadow: 0 0 0 6px var(--status-soft);
+    }
+
+    .status-value {
+        color: var(--dash-text-main);
+        font-size: 1.2rem;
+        font-weight: 950;
+    }
+
+    .status-track {
+        height: 9px;
+        border-radius: var(--dash-radius-full);
+        overflow: hidden;
+        background: rgba(226, 232, 240, 0.82);
+    }
+
+    .status-fill {
+        display: block;
+        height: 100%;
+        width: var(--status-width);
+        border-radius: inherit;
+        background: var(--status-color);
+        animation: dashFill 1.2s var(--dash-ease) both;
+    }
+
+    @keyframes dashFill {
+        from {
+            width: 0%;
+        }
+
+        to {
+            width: var(--status-width);
+        }
+    }
+
+    .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 26px;
+    }
+
+    .insight-card {
+        position: relative;
+        padding: 24px;
+        border-radius: 30px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--dash-shadow-sm);
+        backdrop-filter: blur(18px);
+        transition:
+            transform 0.28s var(--dash-ease),
+            box-shadow 0.28s var(--dash-ease);
+        animation: dashCardRise 0.76s var(--dash-ease) both;
+    }
+
+    .insight-card:hover {
+        transform: translateY(-7px);
+        box-shadow: var(--dash-shadow-md);
+    }
+
+    .insight-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 19px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--dash-ocean-500), var(--dash-sea-500));
+        box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+        margin-bottom: 18px;
+    }
+
+    .insight-card h3 {
+        margin: 0 0 8px;
+        color: var(--dash-text-main);
+        font-size: 1rem;
+        font-weight: 950;
+    }
+
+    .insight-card p {
+        margin: 0;
+        color: var(--dash-text-soft);
+        line-height: 1.7;
+        font-size: 0.86rem;
+    }
+
+    .activity-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+        gap: 24px;
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .action-card {
+        min-height: 126px;
+        padding: 20px;
+        border-radius: 26px;
+        text-decoration: none;
+        color: var(--dash-text-main);
+        background: var(--dash-card-muted);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        transition:
+            transform 0.25s var(--dash-ease),
+            background 0.25s var(--dash-ease),
+            box-shadow 0.25s var(--dash-ease);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        background: white;
+        box-shadow: var(--dash-shadow-sm);
+    }
+
+    .action-icon {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        border-radius: 17px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--dash-ocean-500), var(--dash-sea-500));
+        box-shadow: 0 14px 30px rgba(8, 145, 178, 0.18);
+    }
+
+    .action-card strong {
+        display: block;
+        font-size: 0.96rem;
+        font-weight: 950;
+        margin-bottom: 6px;
+    }
+
+    .action-card span {
+        display: block;
+        color: var(--dash-text-muted);
+        font-size: 0.80rem;
+        line-height: 1.55;
+    }
+
+    .health-list {
+        display: grid;
+        gap: 14px;
+    }
+
+    .health-row {
+        padding: 16px;
+        border-radius: 22px;
+        background: var(--dash-card-muted);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .health-row-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 11px;
+    }
+
+    .health-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--dash-text-main);
+        font-size: 0.84rem;
+        font-weight: 950;
+    }
+
+    .health-value {
+        color: var(--dash-ocean-700);
+        font-size: 0.80rem;
+        font-weight: 950;
+    }
+
+    .health-track {
+        height: 9px;
+        overflow: hidden;
+        border-radius: var(--dash-radius-full);
+        background: rgba(226, 232, 240, 0.86);
+    }
+
+    .health-fill {
+        display: block;
+        height: 100%;
+        width: var(--health-width);
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--dash-ocean-500), var(--dash-sea-500));
+        animation: dashFillHealth 1.2s var(--dash-ease) both;
+    }
+
+    @keyframes dashFillHealth {
+        from {
+            width: 0%;
+        }
+
+        to {
+            width: var(--health-width);
+        }
+    }
+
+    .mobile-status-cards {
+        display: none;
+        gap: 14px;
+    }
+
+    .mobile-status-card {
+        padding: 18px;
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--dash-shadow-sm);
+    }
+
+    .footer-dashboard {
+        position: relative;
+        margin-top: 28px;
+        padding: 28px;
+        border-radius: 34px;
+        color: white;
+        overflow: hidden;
+        background:
+            linear-gradient(135deg, var(--dash-slate-950), var(--dash-ocean-900) 52%, var(--dash-sea-800));
+        box-shadow: var(--dash-shadow-lg);
+    }
+
+    .footer-dashboard::before {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -120px;
+        top: -150px;
+        border-radius: var(--dash-radius-full);
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-dashboard-content {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .footer-dashboard h3 {
+        margin: 0 0 8px;
+        font-family: var(--dash-font-display);
+        font-size: 1.8rem;
+        font-weight: 400;
+    }
+
+    .footer-dashboard p {
+        margin: 0;
+        color: rgba(226, 232, 240, 0.76);
+        line-height: 1.7;
+    }
+
+    .floating-refresh {
+        position: fixed;
+        right: 26px;
+        bottom: 26px;
+        z-index: 60;
+        width: 58px;
+        height: 58px;
+        border: 0;
+        border-radius: 22px;
+        color: white;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--dash-ocean-600), var(--dash-sea-500));
+        box-shadow:
+            0 22px 48px rgba(8, 145, 178, 0.28),
+            0 0 0 8px rgba(6, 182, 212, 0.10);
+        transition:
+            transform 0.25s var(--dash-ease),
+            box-shadow 0.25s var(--dash-ease);
+        animation: dashFloating 3s ease-in-out infinite;
+    }
+
+    .floating-refresh:hover {
+        transform: translateY(-5px) scale(1.04);
+        box-shadow:
+            0 30px 60px rgba(8, 145, 178, 0.36),
+            0 0 0 10px rgba(6, 182, 212, 0.12);
+    }
+
+    @keyframes dashFloating {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    @media (max-width: 1280px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .dashboard-grid,
+        .activity-panel {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-wrap.small {
+            height: 330px;
+        }
+    }
+
+    @media (max-width: 980px) {
+        .hero-inner {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-overview-strip {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .insight-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-heading p {
+            text-align: left;
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .dashboard-hero {
+            border-radius: 30px;
+            padding: 26px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.1rem, 12vw, 3.5rem);
+        }
+
+        .hero-actions {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .hero-btn {
+            width: 100%;
+        }
+
+        .dashboard-overview-strip,
+        .stats-grid,
+        .action-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-inner {
+            padding: 22px;
+        }
+
+        .card-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .chart-wrap,
+        .chart-wrap.small {
+            height: 280px;
+        }
+
+        .floating-refresh {
+            right: 18px;
+            bottom: 18px;
+        }
+
+        .footer-dashboard-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .dashboard-hero {
+            padding: 22px;
+            border-radius: 26px;
+        }
+
+        .hero-eyebrow,
+        .section-kicker,
+        .card-kicker {
+            font-size: 0.62rem;
+            letter-spacing: 0.10em;
+        }
+
+        .hero-copy {
+            font-size: 0.92rem;
+        }
+
+        .stat-card {
+            min-height: 172px;
+            border-radius: 26px;
+            padding: 20px;
+        }
+
+        .admin-card,
+        .insight-card {
+            border-radius: 26px;
+        }
+
+        .overview-pill {
+            min-height: 94px;
+            border-radius: 24px;
+        }
+    }
+
+    @media print {
+        .dashboard-orb,
+        .dashboard-noise,
+        .floating-refresh,
+        .hero-actions {
+            display: none !important;
+        }
+
+        .dashboard-page::before,
+        .dashboard-page::after {
+            display: none !important;
+        }
+
+        .dashboard-hero,
+        .admin-card,
+        .stat-card,
+        .insight-card,
+        .footer-dashboard {
+            box-shadow: none !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dashboard-page *,
+        .dashboard-page *::before,
+        .dashboard-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+
+<div class="dashboard-page">
+    <span class="dashboard-orb one"></span>
+    <span class="dashboard-orb two"></span>
+    <span class="dashboard-orb three"></span>
+    <div class="dashboard-noise"></div>
+
+    <section class="dashboard-hero">
+        <div class="hero-inner">
+            <div>
+                <span class="hero-eyebrow">
+                    <i class="fa-solid fa-water"></i>
+                    Dang's Beach Resort Command Center
+                </span>
+
+                <h1 class="hero-title">
+                    Resort overview<span>.</span>
+                </h1>
+
+                <p class="hero-copy">
+                    Monitor bookings, arrivals, revenue, facilities, and reservation movement in one animated and mobile-friendly admin dashboard.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="/admin/bookings" class="hero-btn">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Manage Bookings
+                    </a>
+
+                    <a href="/admin/reports" class="hero-btn ghost">
+                        <i class="fa-solid fa-chart-line"></i>
+                        View Reports
+                    </a>
+                </div>
+            </div>
+
+            <article class="hero-live-card">
+                <div class="live-card-icon">
+                    <i class="fa-solid fa-signal"></i>
+                </div>
+
+                <span class="live-card-label">
+                    Live Operations
+                </span>
+
+                <strong class="live-card-value">
+                    <%= totalBookings %>
+                </strong>
+
+                <p class="live-card-copy">
+                    Total bookings recorded in the resort system, including pending, approved, and rejected reservations.
+                </p>
+            </article>
         </div>
+    </section>
+
+    <section class="dashboard-overview-strip" aria-label="Dashboard quick overview">
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= registeredGuests %></strong>
+                <span>Registered Guests</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-umbrella-beach"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= activeFacilities %></strong>
+                <span>Active Facilities</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= approvedCount %></strong>
+                <span>Approved</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= pendingCount %></strong>
+                <span>Pending</span>
+            </div>
+        </article>
+    </section>
+
+    <div class="section-heading">
+        <div>
+            <span class="section-kicker">
+                <i class="fa-solid fa-gauge-high"></i>
+                Key Metrics
+            </span>
+
+            <h2>
+                Resort performance snapshot
+            </h2>
+        </div>
+
+        <p>
+            These cards summarize the current booking activity, arrivals, pending payments, and approved revenue.
+        </p>
     </div>
 
-    <!-- Bookings by Status Chart -->
-    <div class="admin-card" style="background:#fff; border-radius:20px; padding:28px; box-shadow:0 20px 50px rgba(0,0,0,0.1); transition: transform 0.3s;">
-        <h3 style="margin-top:0; color:#64748b; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">
-            Bookings by Status
-        </h3>
-        <div style="margin-top:24px;">
-            <canvas id="statusChart"></canvas>
-        </div>
+    <section class="stats-grid">
+        <article class="stat-card bookings">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <span class="stat-trend">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    Total
+                </span>
+            </div>
+
+            <p class="stat-label">Total Bookings</p>
+            <strong class="stat-value"><%= totalBookings %></strong>
+            <p class="stat-subtext">All reservations submitted by guests.</p>
+        </article>
+
+        <article class="stat-card arrivals">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-house-chimney-user"></i>
+                </div>
+
+                <span class="stat-trend">
+                    <i class="fa-solid fa-sun"></i>
+                    Today
+                </span>
+            </div>
+
+            <p class="stat-label">Today's Arrivals</p>
+            <strong class="stat-value"><%= todayArrivals %></strong>
+            <p class="stat-subtext">Guests expected based on today's booking date.</p>
+        </article>
+
+        <article class="stat-card pending">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+
+                <span class="stat-trend">
+                    <i class="fa-solid fa-clock"></i>
+                    Review
+                </span>
+            </div>
+
+            <p class="stat-label">Pending Payments</p>
+            <strong class="stat-value"><%= pendingPayments %></strong>
+            <p class="stat-subtext">Reservations waiting for payment verification.</p>
+        </article>
+
+        <article class="stat-card revenue">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-peso-sign"></i>
+                </div>
+
+                <span class="stat-trend">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Approved
+                </span>
+            </div>
+
+            <p class="stat-label">Total Revenue</p>
+            <strong class="stat-value">₱<%= pesoFormat(totalRevenue) %></strong>
+            <p class="stat-subtext">Revenue from approved bookings only.</p>
+        </article>
+    </section>
+
+    <div class="dashboard-grid">
+        <article class="admin-card">
+            <div class="card-inner">
+                <div class="card-header">
+                    <div>
+                        <span class="card-kicker">
+                            <i class="fa-solid fa-chart-area"></i>
+                            Revenue Analytics
+                        </span>
+
+                        <h3 class="card-title">
+                            Revenue Trend
+                        </h3>
+
+                        <p class="card-copy">
+                            Monthly revenue movement based on approved bookings.
+                        </p>
+                    </div>
+
+                    <span class="card-chip">
+                        <i class="fa-solid fa-calendar"></i>
+                        Latest Data
+                    </span>
+                </div>
+
+                <div class="chart-wrap">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </article>
+
+        <article class="admin-card">
+            <div class="card-inner">
+                <div class="card-header">
+                    <div>
+                        <span class="card-kicker">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Booking Status
+                        </span>
+
+                        <h3 class="card-title">
+                            Bookings by Status
+                        </h3>
+
+                        <p class="card-copy">
+                            Distribution of approved, pending, and rejected reservations.
+                        </p>
+                    </div>
+
+                    <span class="card-chip">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                        Live
+                    </span>
+                </div>
+
+                <div class="chart-wrap small">
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+                <div class="status-summary">
+                    <div class="status-row" style="--status-color:#10b981; --status-soft:rgba(16,185,129,0.14); --status-width:<%= approvedPercentage %>%;">
+                        <div class="status-main">
+                            <span class="status-label">
+                                <span class="status-dot"></span>
+                                Approved
+                            </span>
+                            <strong class="status-value"><%= approvedCount %></strong>
+                        </div>
+                        <div class="status-track"><span class="status-fill"></span></div>
+                    </div>
+
+                    <div class="status-row" style="--status-color:#f59e0b; --status-soft:rgba(245,158,11,0.16); --status-width:<%= pendingPercentage %>%;">
+                        <div class="status-main">
+                            <span class="status-label">
+                                <span class="status-dot"></span>
+                                Pending
+                            </span>
+                            <strong class="status-value"><%= pendingCount %></strong>
+                        </div>
+                        <div class="status-track"><span class="status-fill"></span></div>
+                    </div>
+
+                    <div class="status-row" style="--status-color:#f43f5e; --status-soft:rgba(244,63,94,0.14); --status-width:<%= rejectedPercentage %>%;">
+                        <div class="status-main">
+                            <span class="status-label">
+                                <span class="status-dot"></span>
+                                Rejected
+                            </span>
+                            <strong class="status-value"><%= rejectedCount %></strong>
+                        </div>
+                        <div class="status-track"><span class="status-fill"></span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
     </div>
+
+    <section class="insight-grid">
+        <article class="insight-card">
+            <div class="insight-icon">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+
+            <h3>Booking Visibility</h3>
+
+            <p>
+                Use the status chart to quickly check if reservations are moving from pending to approved.
+            </p>
+        </article>
+
+        <article class="insight-card">
+            <div class="insight-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <h3>Revenue Monitoring</h3>
+
+            <p>
+                Revenue only increases when reservations are approved, helping you track verified payments.
+            </p>
+        </article>
+
+        <article class="insight-card">
+            <div class="insight-icon">
+                <i class="fa-solid fa-people-roof"></i>
+            </div>
+
+            <h3>Guest Operations</h3>
+
+            <p>
+                Client and booking counts give a quick view of demand and resort activity.
+            </p>
+        </article>
+    </section>
+
+    <section class="activity-panel">
+        <article class="admin-card">
+            <div class="card-inner">
+                <div class="card-header">
+                    <div>
+                        <span class="card-kicker">
+                            <i class="fa-solid fa-bolt"></i>
+                            Quick Actions
+                        </span>
+
+                        <h3 class="card-title">
+                            Manage operations faster
+                        </h3>
+
+                        <p class="card-copy">
+                            Jump directly to the most important admin modules.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <a href="/admin/bookings" class="action-card">
+                        <span class="action-icon">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </span>
+
+                        <span>
+                            <strong>Review Bookings</strong>
+                            <span>Approve, reject, and track guest reservations.</span>
+                        </span>
+                    </a>
+
+                    <a href="/admin/facilities" class="action-card">
+                        <span class="action-icon">
+                            <i class="fa-solid fa-umbrella-beach"></i>
+                        </span>
+
+                        <span>
+                            <strong>Manage Facilities</strong>
+                            <span>Update rooms, prices, availability, and images.</span>
+                        </span>
+                    </a>
+
+                    <a href="/admin/clients" class="action-card">
+                        <span class="action-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </span>
+
+                        <span>
+                            <strong>View Clients</strong>
+                            <span>Open guest profiles and booking histories.</span>
+                        </span>
+                    </a>
+
+                    <a href="/admin/reports" class="action-card">
+                        <span class="action-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </span>
+
+                        <span>
+                            <strong>Open Reports</strong>
+                            <span>Analyze trends and export business summaries.</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </article>
+
+        <article class="admin-card">
+            <div class="card-inner">
+                <div class="card-header">
+                    <div>
+                        <span class="card-kicker">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                            System Pulse
+                        </span>
+
+                        <h3 class="card-title">
+                            Resort health
+                        </h3>
+
+                        <p class="card-copy">
+                            Quick operational pulse from current dashboard data.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="health-list">
+                    <div class="health-row">
+                        <div class="health-row-top">
+                            <span class="health-label">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                Booking Activity
+                            </span>
+                            <span class="health-value"><%= totalBookings > 0 ? 'Active' : 'Quiet' %></span>
+                        </div>
+                        <div class="health-track"><span class="health-fill" style="--health-width:<%= totalBookings > 0 ? 82 : 12 %>%;"></span></div>
+                    </div>
+
+                    <div class="health-row">
+                        <div class="health-row-top">
+                            <span class="health-label">
+                                <i class="fa-solid fa-credit-card"></i>
+                                Payment Review
+                            </span>
+                            <span class="health-value"><%= pendingPayments %> Pending</span>
+                        </div>
+                        <div class="health-track"><span class="health-fill" style="--health-width:<%= pendingPayments > 0 ? 65 : 14 %>%;"></span></div>
+                    </div>
+
+                    <div class="health-row">
+                        <div class="health-row-top">
+                            <span class="health-label">
+                                <i class="fa-solid fa-house"></i>
+                                Facility Coverage
+                            </span>
+                            <span class="health-value"><%= activeFacilities %> Listed</span>
+                        </div>
+                        <div class="health-track"><span class="health-fill" style="--health-width:<%= activeFacilities > 0 ? 76 : 10 %>%;"></span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="footer-dashboard">
+        <div class="footer-dashboard-content">
+            <div>
+                <h3>
+                    Keep the resort moving smoothly.
+                </h3>
+
+                <p>
+                    Review pending reservations, keep facilities updated, and use reports to understand guest demand.
+                </p>
+            </div>
+
+            <a href="/admin/settings" class="hero-btn">
+                <i class="fa-solid fa-gear"></i>
+                Open Settings
+            </a>
+        </div>
+    </section>
+
+    <button type="button" class="floating-refresh" onclick="window.location.reload()" title="Refresh dashboard">
+        <i class="fa-solid fa-rotate-right"></i>
+    </button>
+</div>
+
+<div 
+    id="dashboard-data"
+    style="display:none;"
+    data-chart="<%- encodeURIComponent(JSON.stringify(safeChartData)) %>"
+    data-revenue="<%- encodeURIComponent(JSON.stringify(safeRevenueTrend)) %>"
+    data-total-revenue="<%= totalRevenue %>">
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    // Revenue Chart
-    const revCtx = document.getElementById('revenueChart').getContext('2d');
-    new Chart(revCtx, {
-        type: 'line',
-        data: {
-            labels: ['May 9','May 10','May 11','May 12','May 13','May 14','May 15'],
-            datasets: [{
-                label:'Revenue',
-                data:[12000,19000,15000,8000,12000,25000,<%= stats.revenue %>],
-                borderColor:'#0ea5e9',
-                backgroundColor:'rgba(14,165,233,0.15)',
-                fill:true,
-                tension:0.4,
-                pointRadius:4,
-                pointBackgroundColor:'#0ea5e9'
-            }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            plugins:{ legend:{ display:false } },
-            scales:{
-                y:{ beginAtZero:true, grid:{ color:'#f1f5f9' } },
-                x:{ grid:{ display:false } }
-            } 
+document.addEventListener('DOMContentLoaded', function () {
+    const dataEl = document.getElementById('dashboard-data');
+
+    function parseSafeData(value) {
+        try {
+            return JSON.parse(decodeURIComponent(value || '[]'));
+        } catch (error) {
+            console.error('Dashboard data parse error:', error);
+            return [];
         }
-    });
+    }
 
-    // Status Chart
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const chartData = <%- JSON.stringify(stats.chartData || []) %>;
+    const chartData = parseSafeData(dataEl ? dataEl.dataset.chart : '[]');
+    const revenueTrend = parseSafeData(dataEl ? dataEl.dataset.revenue : '[]');
+    const totalRevenue = Number(dataEl ? dataEl.dataset.totalRevenue || 0 : 0);
 
-    const getCount = status => {
-        const found = chartData.find(item => item.status.toLowerCase() === status.toLowerCase());
-        return found ? found.count : 0;
-    };
+    function getStatusValue(item) {
+        return String(
+            item.status ||
+            item.booking_status ||
+            item.bookingStatus ||
+            item.reservation_status ||
+            ''
+        ).trim().toLowerCase();
+    }
 
-    new Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-            labels:['Approved','Pending','Rejected'],
-            datasets:[{
-                data:[getCount('approved'), getCount('pending'), getCount('rejected')],
-                backgroundColor:['#22c55e','#eab308','#ef4444'],
-                borderWidth:0,
-                cutout:'70%'
-            }]
-        },
-        options:{
-            responsive:true,
-            plugins:{
-                legend:{ 
-                    position:'bottom',
-                    labels:{ usePointStyle:true, padding:20, color:'#64748b' }
+    function getCountValue(item) {
+        return Number(
+            item.count ||
+            item.total ||
+            item.total_count ||
+            item.total_bookings ||
+            item.booking_count ||
+            0
+        );
+    }
+
+    function getCount(statusName) {
+        return chartData.reduce(function (total, item) {
+            const status = getStatusValue(item);
+            const count = getCountValue(item);
+
+            if (status === statusName) {
+                return total + count;
+            }
+
+            if (statusName === 'approved' && (status.includes('approve') || status.includes('confirm'))) {
+                return total + count;
+            }
+
+            if (statusName === 'pending' && (status.includes('pending') || status.includes('waiting') || status.includes('processing'))) {
+                return total + count;
+            }
+
+            if (
+                statusName === 'rejected' &&
+                (
+                    status.includes('reject') ||
+                    status.includes('cancel') ||
+                    status.includes('decline') ||
+                    status.includes('denied')
+                )
+            ) {
+                return total + count;
+            }
+
+            return total;
+        }, 0);
+    }
+
+    function formatPeso(value) {
+        return '₱' + Number(value || 0).toLocaleString('en-PH');
+    }
+
+    const revenueCanvas = document.getElementById('revenueChart');
+
+    if (revenueCanvas && window.Chart) {
+        const labels = revenueTrend.length > 0
+            ? revenueTrend.map(function (item) {
+                return item.month || item.label || 'N/A';
+            })
+            : ['Current Revenue'];
+
+        const revenueValues = revenueTrend.length > 0
+            ? revenueTrend.map(function (item) {
+                return Number(item.monthly_total || item.revenue || item.total_revenue || 0);
+            })
+            : [totalRevenue];
+
+        const bookingValues = revenueTrend.length > 0
+            ? revenueTrend.map(function (item) {
+                return Number(item.total_bookings || item.bookings || item.count || 0);
+            })
+            : [0];
+
+        new Chart(revenueCanvas.getContext('2d'), {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Bookings',
+                        data: bookingValues,
+                        backgroundColor: 'rgba(20, 184, 166, 0.72)',
+                        borderRadius: 12,
+                        yAxisID: 'yBookings'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Revenue',
+                        data: revenueValues,
+                        borderColor: '#0891b2',
+                        backgroundColor: 'rgba(8, 145, 178, 0.14)',
+                        fill: true,
+                        tension: 0.42,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#0891b2',
+                        pointBorderWidth: 3,
+                        yAxisID: 'yRevenue'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            color: '#64748b',
+                            font: {
+                                weight: '700'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                if (context.dataset.label === 'Revenue') {
+                                    return 'Revenue: ' + formatPeso(context.raw);
+                                }
+
+                                return 'Bookings: ' + Number(context.raw || 0).toLocaleString('en-PH');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    yRevenue: {
+                        type: 'linear',
+                        position: 'left',
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return formatPeso(value);
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(226,232,240,0.82)'
+                        }
+                    },
+                    yBookings: {
+                        type: 'linear',
+                        position: 'right',
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#64748b'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#64748b'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
                 }
             }
-        }
-    });
+        });
+    }
+
+    const statusCanvas = document.getElementById('statusChart');
+
+    if (statusCanvas && window.Chart) {
+        const approved = getCount('approved');
+        const pending = getCount('pending');
+        const rejected = getCount('rejected');
+        const statusTotal = approved + pending + rejected;
+
+        const centerTextPlugin = {
+            id: 'dashboardCenterText',
+            beforeDraw: function (chart) {
+                const chartArea = chart.chartArea;
+                const ctx = chart.ctx;
+
+                if (!chartArea) return;
+
+                const centerX = (chartArea.left + chartArea.right) / 2;
+                const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                ctx.font = '800 32px Inter, Arial, sans-serif';
+                ctx.fillStyle = '#0f172a';
+                ctx.fillText(statusTotal, centerX, centerY - 9);
+
+                ctx.font = '700 12px Inter, Arial, sans-serif';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText('Bookings', centerX, centerY + 18);
+
+                ctx.restore();
+            }
+        };
+
+        new Chart(statusCanvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: statusTotal > 0 ? ['Approved', 'Pending', 'Rejected'] : ['No Data'],
+                datasets: [{
+                    data: statusTotal > 0 ? [approved, pending, rejected] : [1],
+                    backgroundColor: statusTotal > 0 ? ['#10b981', '#f59e0b', '#f43f5e'] : ['#e2e8f0'],
+                    borderColor: '#ffffff',
+                    borderWidth: 6,
+                    hoverOffset: 12,
+                    cutout: '72%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 18,
+                            color: '#64748b',
+                            font: {
+                                weight: '700'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                if (statusTotal === 0) {
+                                    return 'No booking data yet';
+                                }
+
+                                const value = Number(context.raw || 0);
+                                const percent = Math.round((value / statusTotal) * 100);
+
+                                return context.label + ': ' + value + ' booking' + (value === 1 ? '' : 's') + ' (' + percent + '%)';
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [centerTextPlugin]
+        });
+    }
+});
 </script>

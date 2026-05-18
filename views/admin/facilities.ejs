@@ -1,247 +1,2084 @@
+<%
+    const safeRooms = typeof rooms !== 'undefined' && Array.isArray(rooms) ? rooms : [];
+
+    const totalFacilities = safeRooms.length;
+
+    const availableFacilities = safeRooms.filter(function (room) {
+        return String(room.status || '').toLowerCase() === 'available';
+    }).length;
+
+    const maintenanceFacilities = safeRooms.filter(function (room) {
+        const status = String(room.status || '').toLowerCase();
+        return status === 'maintenance' || status === 'inactive' || status === 'unavailable';
+    }).length;
+
+    const roomCount = safeRooms.filter(function (room) {
+        return String(room.type || '').toLowerCase() === 'room';
+    }).length;
+
+    const cottageCount = safeRooms.filter(function (room) {
+        return String(room.type || '').toLowerCase() === 'cottage';
+    }).length;
+
+    const hallCount = safeRooms.filter(function (room) {
+        return String(room.type || '').toLowerCase() === 'hall';
+    }).length;
+
+    const averagePrice = totalFacilities > 0 
+        ? safeRooms.reduce(function (sum, room) {
+            return sum + Number(room.price || 0);
+        }, 0) / totalFacilities 
+        : 0;
+
+    const pesoFormat = function (value) {
+        return Number(value || 0).toLocaleString('en-PH', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    };
+
+    const statusClass = function (status) {
+        const value = String(status || '').toLowerCase();
+
+        if (value === 'available') return 'active';
+        if (value === 'maintenance') return 'maintenance';
+        if (value === 'inactive' || value === 'unavailable') return 'inactive';
+
+        return 'neutral';
+    };
+
+    const typeIcon = function (type) {
+        const value = String(type || '').toLowerCase();
+
+        if (value === 'room') return 'fa-solid fa-bed';
+        if (value === 'cottage') return 'fa-solid fa-umbrella-beach';
+        if (value === 'hall') return 'fa-solid fa-building-columns';
+
+        return 'fa-solid fa-house';
+    };
+%>
+
+<link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+>
+
 <style>
-/* --- Main Container Card --- */
-.admin-card { 
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-    padding: 32px; 
-    border-radius: 20px; 
-    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-    border: none; 
-    transition: transform 0.3s ease;
-}
-.admin-card:hover { transform: translateY(-3px); }
+    :root {
+        --fac-font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --fac-font-display: 'Tenor Sans', Georgia, serif;
 
-/* --- Modern Table UI --- */
-.admin-table { 
-    width: 100%; 
-    border-collapse: separate; 
-    border-spacing: 0 12px; 
-    margin-top: -12px; 
-}
-.admin-table th { 
-    text-align: left; 
-    padding: 14px 24px; 
-    color: #475569; 
-    font-size: 0.75rem; 
-    text-transform: uppercase; 
-    letter-spacing: 0.05em;
-    font-weight: 700;
-    border: none;
-}
+        --fac-ocean-50: #ecfeff;
+        --fac-ocean-100: #cffafe;
+        --fac-ocean-200: #a5f3fc;
+        --fac-ocean-300: #67e8f9;
+        --fac-ocean-400: #22d3ee;
+        --fac-ocean-500: #06b6d4;
+        --fac-ocean-600: #0891b2;
+        --fac-ocean-700: #0e7490;
+        --fac-ocean-800: #155e75;
+        --fac-ocean-900: #164e63;
 
-.admin-table tbody tr { 
-    background: #fff; 
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    border-radius: 12px;
-}
-.admin-table tbody tr:hover { 
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    background: #f1f5f9;
-}
+        --fac-sea-50: #f0fdfa;
+        --fac-sea-100: #ccfbf1;
+        --fac-sea-200: #99f6e4;
+        --fac-sea-300: #5eead4;
+        --fac-sea-400: #2dd4bf;
+        --fac-sea-500: #14b8a6;
+        --fac-sea-600: #0d9488;
+        --fac-sea-700: #0f766e;
+        --fac-sea-800: #115e59;
+        --fac-sea-900: #134e4a;
 
-.admin-table td { 
-    padding: 16px 24px; 
-    vertical-align: middle;
-    border-top: none;
-    border-bottom: none;
-}
-.admin-table td:first-child { border-radius: 12px 0 0 12px; }
-.admin-table td:last-child { border-radius: 0 12px 12px 0; }
+        --fac-sand-50: #fffaf0;
+        --fac-sand-100: #fef3c7;
+        --fac-sand-200: #fde68a;
+        --fac-sand-300: #fcd34d;
+        --fac-sand-400: #fbbf24;
+        --fac-sand-500: #f59e0b;
+        --fac-sand-600: #d97706;
+        --fac-sand-700: #b45309;
+        --fac-sand-800: #92400e;
 
-/* --- Action Buttons --- */
-.btn-add { 
-    background: linear-gradient(135deg, #0ea5e9, #2563eb); 
-    color: white; 
-    border: none; 
-    padding: 12px 24px; 
-    border-radius: 12px; 
-    font-weight: 600; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    transition: transform 0.2s ease, background 0.3s;
-}
-.btn-add:hover { 
-    background: linear-gradient(135deg, #0369a1, #0c4a6e); 
-    transform: scale(1.05); 
-}
+        --fac-rose-50: #fff1f2;
+        --fac-rose-100: #ffe4e6;
+        --fac-rose-200: #fecdd3;
+        --fac-rose-500: #f43f5e;
+        --fac-rose-600: #e11d48;
+        --fac-rose-700: #be123c;
 
-.btn-edit { 
-    background: #e0f2fe; 
-    color: #0369a1; 
-    border: none; 
-    padding: 8px 16px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    transition: background 0.3s;
-}
-.btn-edit:hover { background: #bae6fd; }
+        --fac-emerald-50: #ecfdf5;
+        --fac-emerald-100: #d1fae5;
+        --fac-emerald-200: #a7f3d0;
+        --fac-emerald-500: #10b981;
+        --fac-emerald-600: #059669;
+        --fac-emerald-700: #047857;
 
-.btn-delete { 
-    background: #fee2e2; 
-    color: #dc2626; 
-    border: none; 
-    padding: 8px 16px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    transition: background 0.3s;
-}
-.btn-delete:hover { background: #fecaca; }
+        --fac-indigo-50: #eef2ff;
+        --fac-indigo-100: #e0e7ff;
+        --fac-indigo-500: #6366f1;
+        --fac-indigo-600: #4f46e5;
 
-/* --- Status Pills --- */
-.status-pill { 
-    padding: 6px 14px; 
-    border-radius: 99px; 
-    font-size: 0.75rem; 
-    font-weight: 700; 
-    text-transform: uppercase; 
-    letter-spacing: 0.02em; 
-    transition: background 0.3s, color 0.3s;
-}
-.status-pill.active { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-.status-pill.inactive { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        --fac-slate-50: #f8fafc;
+        --fac-slate-100: #f1f5f9;
+        --fac-slate-200: #e2e8f0;
+        --fac-slate-300: #cbd5e1;
+        --fac-slate-400: #94a3b8;
+        --fac-slate-500: #64748b;
+        --fac-slate-600: #475569;
+        --fac-slate-700: #334155;
+        --fac-slate-800: #1e293b;
+        --fac-slate-900: #0f172a;
+        --fac-slate-950: #020617;
 
-/* --- Badges --- */
-.badge { 
-    background: #f1f5f9; 
-    padding: 4px 10px; 
-    border-radius: 8px; 
-    font-size: 0.75rem; 
-    color: #475569; 
-    font-weight: 600; 
-}
+        --fac-white: #ffffff;
+        --fac-black: #000000;
 
-/* --- Modal --- */
-.modal-overlay { 
-    position: fixed; top:0; left:0; width:100%; height:100%; 
-    background: rgba(15, 23, 42, 0.5); 
-    display: none; align-items: center; justify-content: center; 
-    z-index: 1000; backdrop-filter: blur(6px); 
-}
-.modal-content { 
-    background: #ffffff; 
-    padding: 40px; 
-    border-radius: 24px; 
-    width: 450px; 
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
-    border: 1px solid #e2e8f0; 
-    transition: transform 0.3s ease;
-}
-.modal-content:hover { transform: translateY(-2px); }
+        --fac-card: rgba(255, 255, 255, 0.88);
+        --fac-card-solid: #ffffff;
+        --fac-card-muted: rgba(248, 250, 252, 0.82);
+        --fac-border: rgba(148, 163, 184, 0.22);
+        --fac-border-strong: rgba(148, 163, 184, 0.40);
 
-/* --- Form Fields --- */
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 0.85rem; color: #64748b; margin-bottom: 8px; font-weight: 600; }
-.form-group input, .form-group select { 
-    width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.9rem; 
-    font-family: inherit; background: #f8fafc; transition: border 0.2s ease;
-}
-.form-group input:focus, .form-group select:focus { border-color: #0ea5e9; outline: none; }
+        --fac-text-main: #0f172a;
+        --fac-text-soft: #475569;
+        --fac-text-muted: #94a3b8;
+        --fac-text-white: #f8fafc;
+
+        --fac-shadow-xs: 0 4px 12px rgba(15, 23, 42, 0.06);
+        --fac-shadow-sm: 0 10px 28px rgba(15, 23, 42, 0.08);
+        --fac-shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
+        --fac-shadow-lg: 0 30px 80px rgba(15, 23, 42, 0.16);
+        --fac-shadow-xl: 0 44px 120px rgba(15, 23, 42, 0.22);
+        --fac-shadow-ocean: 0 24px 56px rgba(8, 145, 178, 0.24);
+        --fac-shadow-teal: 0 24px 56px rgba(20, 184, 166, 0.22);
+
+        --fac-radius-xs: 8px;
+        --fac-radius-sm: 12px;
+        --fac-radius-md: 18px;
+        --fac-radius-lg: 24px;
+        --fac-radius-xl: 32px;
+        --fac-radius-2xl: 42px;
+        --fac-radius-full: 999px;
+
+        --fac-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --fac-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .facilities-page {
+        position: relative;
+        min-height: 100%;
+        color: var(--fac-text-main);
+        isolation: isolate;
+        overflow: hidden;
+        padding-bottom: 44px;
+    }
+
+    .facilities-page * {
+        box-sizing: border-box;
+    }
+
+    .facilities-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -4;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 8% 8%, rgba(103, 232, 249, 0.22), transparent 30%),
+            radial-gradient(circle at 92% 12%, rgba(45, 212, 191, 0.18), transparent 32%),
+            radial-gradient(circle at 52% 100%, rgba(251, 191, 36, 0.11), transparent 40%);
+    }
+
+    .facilities-page::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        pointer-events: none;
+        background-image:
+            linear-gradient(rgba(8, 145, 178, 0.038) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(8, 145, 178, 0.038) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black 0%, transparent 86%);
+    }
+
+    .fac-orb {
+        position: fixed;
+        z-index: -2;
+        pointer-events: none;
+        width: 420px;
+        height: 420px;
+        border-radius: var(--fac-radius-full);
+        filter: blur(26px);
+        opacity: 0.38;
+        animation: facOrbDrift 16s var(--fac-ease) infinite alternate;
+    }
+
+    .fac-orb.one {
+        top: -160px;
+        left: 18%;
+        background: rgba(34, 211, 238, 0.46);
+    }
+
+    .fac-orb.two {
+        right: -170px;
+        top: 28%;
+        background: rgba(20, 184, 166, 0.42);
+        animation-delay: -5s;
+    }
+
+    .fac-orb.three {
+        width: 510px;
+        height: 510px;
+        left: 34%;
+        bottom: -290px;
+        background: rgba(251, 191, 36, 0.18);
+        animation-delay: -9s;
+    }
+
+    .fac-noise {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.045;
+        background-image:
+            radial-gradient(circle at 25% 25%, #000 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, #000 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+
+    @keyframes facOrbDrift {
+        0% {
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate3d(42px, 32px, 0) scale(1.08);
+        }
+
+        100% {
+            transform: translate3d(-28px, 58px, 0) scale(0.96);
+        }
+    }
+
+    .facility-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 330px;
+        padding: clamp(28px, 4vw, 54px);
+        border-radius: var(--fac-radius-2xl);
+        color: white;
+        background:
+            linear-gradient(135deg, rgba(8, 145, 178, 0.96), rgba(20, 184, 166, 0.88)),
+            url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--fac-shadow-lg);
+        isolation: isolate;
+        animation: facHeroRise 0.76s var(--fac-ease) both;
+    }
+
+    .facility-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+            radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.24), transparent 23%),
+            linear-gradient(120deg, rgba(2, 6, 23, 0.24), transparent 58%);
+    }
+
+    .facility-hero::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        bottom: -160px;
+        width: 450px;
+        height: 450px;
+        border-radius: var(--fac-radius-full);
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        animation: facHeroOrb 8s ease-in-out infinite;
+    }
+
+    @keyframes facHeroRise {
+        from {
+            opacity: 0;
+            transform: translateY(28px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes facHeroOrb {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(-26px, -18px) scale(1.05);
+        }
+    }
+
+    .facility-hero-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 28px;
+        align-items: center;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 38px;
+        padding: 0 15px;
+        border-radius: var(--fac-radius-full);
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        backdrop-filter: blur(14px);
+    }
+
+    .hero-title {
+        margin: 20px 0 14px;
+        font-family: var(--fac-font-display);
+        font-size: clamp(2.3rem, 5vw, 4.6rem);
+        line-height: 0.98;
+        font-weight: 400;
+        letter-spacing: -0.055em;
+    }
+
+    .hero-title span {
+        color: var(--fac-sand-200);
+    }
+
+    .hero-copy {
+        max-width: 680px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: clamp(0.96rem, 1.5vw, 1.12rem);
+        line-height: 1.78;
+    }
+
+    .hero-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+    }
+
+    .hero-btn,
+    .btn-add {
+        min-height: 54px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: var(--fac-radius-full);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: var(--fac-slate-950);
+        text-decoration: none;
+        font-size: 0.80rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: white;
+        box-shadow: 0 18px 38px rgba(2, 6, 23, 0.20);
+        cursor: pointer;
+        transition:
+            transform 0.25s var(--fac-ease),
+            box-shadow 0.25s var(--fac-ease),
+            background 0.25s var(--fac-ease);
+    }
+
+    .hero-btn:hover,
+    .btn-add:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 24px 52px rgba(2, 6, 23, 0.26);
+    }
+
+    .hero-btn.ghost {
+        color: white;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(14px);
+    }
+
+    .btn-add.primary {
+        color: white;
+        background: linear-gradient(135deg, var(--fac-ocean-600), var(--fac-sea-500));
+        box-shadow: var(--fac-shadow-ocean);
+    }
+
+    .hero-live-card {
+        position: relative;
+        min-height: 250px;
+        padding: 24px;
+        border-radius: 34px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.10),
+            0 24px 60px rgba(2, 6, 23, 0.18);
+        backdrop-filter: blur(18px);
+        animation: facFloatCard 4s ease-in-out infinite;
+    }
+
+    .hero-live-card::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 190px;
+        height: 190px;
+        border-radius: var(--fac-radius-full);
+        background: rgba(255, 255, 255, 0.16);
+    }
+
+    @keyframes facFloatCard {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .live-card-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        color: var(--fac-slate-950);
+        background: linear-gradient(135deg, white, var(--fac-ocean-50));
+        box-shadow: 0 18px 44px rgba(2, 6, 23, 0.18);
+        margin-bottom: 18px;
+    }
+
+    .live-card-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 0.74rem;
+        font-weight: 950;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .live-card-value {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1;
+        font-weight: 950;
+    }
+
+    .live-card-copy {
+        margin: 14px 0 0;
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.7;
+        font-size: 0.90rem;
+    }
+
+    .facility-overview-strip {
+        position: relative;
+        z-index: 4;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin: -38px clamp(18px, 4vw, 42px) 42px;
+    }
+
+    .overview-pill {
+        min-height: 106px;
+        padding: 20px;
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--fac-shadow-md);
+        backdrop-filter: blur(18px);
+        position: relative;
+        overflow: hidden;
+        transition:
+            transform 0.28s var(--fac-ease),
+            box-shadow 0.28s var(--fac-ease);
+        animation: facStatPop 0.75s var(--fac-ease-bounce) both;
+    }
+
+    .overview-pill:nth-child(1) {
+        animation-delay: 0.12s;
+    }
+
+    .overview-pill:nth-child(2) {
+        animation-delay: 0.20s;
+    }
+
+    .overview-pill:nth-child(3) {
+        animation-delay: 0.28s;
+    }
+
+    .overview-pill:nth-child(4) {
+        animation-delay: 0.36s;
+    }
+
+    .overview-pill:hover {
+        transform: translateY(-7px);
+        box-shadow: var(--fac-shadow-lg);
+    }
+
+    .overview-pill::after {
+        content: "";
+        position: absolute;
+        right: -45px;
+        top: -45px;
+        width: 120px;
+        height: 120px;
+        border-radius: var(--fac-radius-full);
+        background: rgba(6, 182, 212, 0.10);
+    }
+
+    .overview-icon {
+        width: 54px;
+        height: 54px;
+        min-width: 54px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--fac-ocean-500), var(--fac-sea-500));
+        box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+    }
+
+    .overview-copy {
+        min-width: 0;
+    }
+
+    .overview-copy strong {
+        display: block;
+        color: var(--fac-text-main);
+        font-size: 1.48rem;
+        line-height: 1;
+        font-weight: 950;
+    }
+
+    .overview-copy span {
+        display: block;
+        margin-top: 8px;
+        color: var(--fac-text-muted);
+        font-size: 0.70rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    @keyframes facStatPop {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+        margin: 46px 0 22px;
+    }
+
+    .section-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--fac-ocean-700);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: var(--fac-text-main);
+        font-family: var(--fac-font-display);
+        font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+        font-weight: 400;
+        letter-spacing: -0.04em;
+    }
+
+    .section-heading p {
+        max-width: 460px;
+        margin: 0;
+        color: var(--fac-text-soft);
+        text-align: right;
+        line-height: 1.7;
+        font-size: 0.92rem;
+    }
+
+    .toolbar-card {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: minmax(240px, 1fr) minmax(170px, 240px) auto;
+        gap: 14px;
+        align-items: center;
+        padding: 18px;
+        border-radius: 28px;
+        margin-bottom: 22px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--fac-shadow-sm);
+        backdrop-filter: blur(18px);
+        animation: facCardRise 0.72s var(--fac-ease) both;
+    }
+
+    .search-wrap,
+    .filter-wrap {
+        position: relative;
+    }
+
+    .search-wrap i,
+    .filter-wrap i {
+        position: absolute;
+        top: 50%;
+        left: 16px;
+        transform: translateY(-50%);
+        color: var(--fac-ocean-600);
+        pointer-events: none;
+    }
+
+    .search-input,
+    .filter-select {
+        width: 100%;
+        min-height: 52px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 18px;
+        outline: none;
+        color: var(--fac-text-main);
+        background: rgba(248, 250, 252, 0.86);
+        padding: 0 16px 0 46px;
+        font-weight: 750;
+        transition:
+            border-color 0.25s var(--fac-ease),
+            box-shadow 0.25s var(--fac-ease),
+            background 0.25s var(--fac-ease);
+    }
+
+    .filter-select {
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .search-input:focus,
+    .filter-select:focus {
+        background: white;
+        border-color: rgba(6, 182, 212, 0.48);
+        box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.11);
+    }
+
+    .admin-card {
+        position: relative;
+        min-width: 0;
+        padding: 0;
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--fac-shadow-md);
+        backdrop-filter: blur(18px);
+        overflow: hidden;
+        animation: facCardRise 0.8s var(--fac-ease) both;
+    }
+
+    .admin-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.08), transparent 30%),
+            radial-gradient(circle at 100% 100%, rgba(20, 184, 166, 0.09), transparent 30%);
+    }
+
+    .admin-card-inner {
+        position: relative;
+        z-index: 2;
+        padding: 26px;
+    }
+
+    @keyframes facCardRise {
+        from {
+            opacity: 0;
+            transform: translateY(26px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .table-shell {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 28px;
+    }
+
+    .admin-table {
+        width: 100%;
+        min-width: 940px;
+        border-collapse: separate;
+        border-spacing: 0 14px;
+    }
+
+    .admin-table th {
+        padding: 0 20px 12px;
+        color: var(--fac-text-muted);
+        text-align: left;
+        font-size: 0.70rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .admin-table tbody tr {
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        transition:
+            transform 0.26s var(--fac-ease),
+            box-shadow 0.26s var(--fac-ease),
+            background 0.26s var(--fac-ease);
+    }
+
+    .admin-table tbody tr:hover {
+        transform: translateY(-4px);
+        background: white;
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    }
+
+    .admin-table td {
+        padding: 18px 20px;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .admin-table td:first-child {
+        border-radius: 22px 0 0 22px;
+    }
+
+    .admin-table td:last-child {
+        border-radius: 0 22px 22px 0;
+    }
+
+    .preview-frame {
+        width: 86px;
+        height: 64px;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, var(--fac-ocean-100), var(--fac-sea-100));
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+        border: 3px solid white;
+    }
+
+    .preview-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s var(--fac-ease);
+    }
+
+    .admin-table tbody tr:hover .preview-frame img,
+    .facility-card:hover .facility-card-image img {
+        transform: scale(1.08);
+    }
+
+    .facility-name-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .facility-title {
+        color: var(--fac-text-main);
+        font-size: 0.98rem;
+        font-weight: 950;
+        line-height: 1.2;
+    }
+
+    .facility-id {
+        color: var(--fac-text-muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .badge {
+        min-height: 38px;
+        padding: 0 13px;
+        border-radius: var(--fac-radius-full);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--fac-ocean-700);
+        background: var(--fac-ocean-50);
+        border: 1px solid rgba(6, 182, 212, 0.16);
+        font-size: 0.70rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .price-text {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .price-text strong {
+        color: var(--fac-text-main);
+        font-size: 1.02rem;
+        font-weight: 950;
+    }
+
+    .price-text span {
+        color: var(--fac-text-muted);
+        font-size: 0.70rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .status-pill {
+        min-height: 38px;
+        padding: 0 13px;
+        border-radius: var(--fac-radius-full);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.70rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        border: 1px solid transparent;
+    }
+
+    .status-pill.active {
+        color: var(--fac-emerald-700);
+        background: var(--fac-emerald-100);
+        border-color: rgba(16, 185, 129, 0.18);
+    }
+
+    .status-pill.maintenance {
+        color: var(--fac-sand-800);
+        background: var(--fac-sand-100);
+        border-color: rgba(245, 158, 11, 0.20);
+    }
+
+    .status-pill.inactive {
+        color: var(--fac-rose-700);
+        background: var(--fac-rose-100);
+        border-color: rgba(244, 63, 94, 0.18);
+    }
+
+    .status-pill.neutral {
+        color: var(--fac-slate-700);
+        background: var(--fac-slate-100);
+        border-color: rgba(148, 163, 184, 0.22);
+    }
+
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+    }
+
+    .btn-edit,
+    .btn-delete,
+    .btn-soft {
+        min-height: 42px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition:
+            transform 0.22s var(--fac-ease),
+            box-shadow 0.22s var(--fac-ease),
+            background 0.22s var(--fac-ease);
+    }
+
+    .btn-edit {
+        color: var(--fac-ocean-700);
+        background: var(--fac-ocean-50);
+        border: 1px solid rgba(6, 182, 212, 0.16);
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        background: var(--fac-ocean-100);
+        box-shadow: 0 12px 28px rgba(8, 145, 178, 0.15);
+    }
+
+    .btn-delete {
+        color: var(--fac-rose-700);
+        background: var(--fac-rose-50);
+        border: 1px solid rgba(244, 63, 94, 0.16);
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        background: var(--fac-rose-100);
+        box-shadow: 0 12px 28px rgba(225, 29, 72, 0.13);
+    }
+
+    .btn-soft {
+        color: var(--fac-text-soft);
+        background: var(--fac-slate-100);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .btn-soft:hover {
+        transform: translateY(-2px);
+        background: white;
+        box-shadow: var(--fac-shadow-xs);
+    }
+
+    .mobile-facility-grid {
+        display: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .facility-card {
+        position: relative;
+        border-radius: 30px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--fac-shadow-sm);
+        backdrop-filter: blur(18px);
+        transition:
+            transform 0.28s var(--fac-ease),
+            box-shadow 0.28s var(--fac-ease);
+    }
+
+    .facility-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--fac-shadow-md);
+    }
+
+    .facility-card-image {
+        position: relative;
+        height: 190px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--fac-ocean-100), var(--fac-sea-100));
+    }
+
+    .facility-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s var(--fac-ease);
+    }
+
+    .facility-card-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent, rgba(2, 6, 23, 0.45));
+    }
+
+    .facility-card-status {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+    }
+
+    .facility-card-price {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        z-index: 2;
+        padding: 9px 12px;
+        border-radius: 16px;
+        color: var(--fac-text-main);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+        font-weight: 950;
+    }
+
+    .facility-card-body {
+        padding: 20px;
+    }
+
+    .facility-card-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--fac-ocean-700);
+        font-size: 0.70rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .facility-card-title {
+        margin: 0;
+        color: var(--fac-text-main);
+        font-family: var(--fac-font-display);
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+    }
+
+    .facility-card-id {
+        margin-top: 8px;
+        color: var(--fac-text-muted);
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    .facility-card-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .empty-state {
+        position: relative;
+        padding: 56px 24px;
+        text-align: center;
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px dashed rgba(8, 145, 178, 0.30);
+        box-shadow: var(--fac-shadow-sm);
+        overflow: hidden;
+    }
+
+    .empty-state::before {
+        content: "";
+        position: absolute;
+        top: -120px;
+        right: -90px;
+        width: 240px;
+        height: 240px;
+        border-radius: var(--fac-radius-full);
+        background: rgba(6, 182, 212, 0.10);
+    }
+
+    .empty-icon {
+        width: 78px;
+        height: 78px;
+        margin: 0 auto 18px;
+        border-radius: 28px;
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 1.8rem;
+        background: linear-gradient(135deg, var(--fac-ocean-500), var(--fac-sea-500));
+        box-shadow: var(--fac-shadow-ocean);
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: var(--fac-text-main);
+        font-family: var(--fac-font-display);
+        font-size: 1.8rem;
+        font-weight: 400;
+    }
+
+    .empty-state p {
+        max-width: 460px;
+        margin: 0 auto 22px;
+        color: var(--fac-text-soft);
+        line-height: 1.7;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        background: rgba(15, 23, 42, 0.56);
+        backdrop-filter: blur(10px);
+    }
+
+    .modal-overlay.show {
+        display: flex;
+        animation: facFadeIn 0.24s ease both;
+    }
+
+    .modal-content {
+        position: relative;
+        width: min(560px, 100%);
+        max-height: calc(100vh - 44px);
+        overflow-y: auto;
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: var(--fac-shadow-xl);
+        animation: facModalPop 0.36s var(--fac-ease-bounce) both;
+    }
+
+    .modal-header {
+        position: relative;
+        padding: 28px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .modal-title-wrap {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .modal-icon {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(135deg, var(--fac-ocean-500), var(--fac-sea-500));
+        box-shadow: 0 16px 34px rgba(8, 145, 178, 0.22);
+    }
+
+    .modal-title {
+        margin: 0;
+        color: var(--fac-text-main);
+        font-size: 1.35rem;
+        font-weight: 950;
+        letter-spacing: -0.02em;
+    }
+
+    .modal-subtitle {
+        margin: 6px 0 0;
+        color: var(--fac-text-muted);
+        font-size: 0.86rem;
+        line-height: 1.55;
+    }
+
+    .modal-close {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: var(--fac-text-soft);
+        background: var(--fac-slate-100);
+        transition:
+            transform 0.22s var(--fac-ease),
+            background 0.22s var(--fac-ease);
+    }
+
+    .modal-close:hover {
+        transform: rotate(90deg);
+        color: white;
+        background: var(--fac-rose-500);
+    }
+
+    .facility-form {
+        padding: 26px 28px 28px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: var(--fac-ocean-700);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+    }
+
+    .field-shell {
+        position: relative;
+    }
+
+    .field-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--fac-ocean-600);
+        pointer-events: none;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        min-height: 54px;
+        padding: 0 16px 0 46px;
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 18px;
+        outline: none;
+        color: var(--fac-text-main);
+        background: rgba(248, 250, 252, 0.86);
+        font-weight: 750;
+        transition:
+            border-color 0.25s var(--fac-ease),
+            box-shadow 0.25s var(--fac-ease),
+            background 0.25s var(--fac-ease);
+    }
+
+    .form-group input[type="file"] {
+        padding: 15px;
+        cursor: pointer;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        background: white;
+        border-color: rgba(6, 182, 212, 0.48);
+        box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.11);
+    }
+
+    .image-upload-row {
+        display: grid;
+        grid-template-columns: 110px minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
+    }
+
+    .image-preview-wrap {
+        width: 110px;
+        height: 82px;
+        border-radius: 22px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--fac-ocean-100), var(--fac-sea-100));
+        border: 3px solid white;
+        box-shadow: var(--fac-shadow-sm);
+    }
+
+    .image-preview-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .form-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        z-index: 1100;
+        min-width: min(420px, calc(100% - 32px));
+        padding: 15px 16px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+        background: rgba(15, 23, 42, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: var(--fac-shadow-lg);
+        backdrop-filter: blur(18px);
+        transform: translate(-50%, 30px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform 0.28s var(--fac-ease),
+            opacity 0.28s var(--fac-ease);
+    }
+
+    .toast.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+
+    .toast i {
+        color: var(--fac-sand-300);
+    }
+
+    .footer-facilities {
+        position: relative;
+        margin-top: 28px;
+        padding: 28px;
+        border-radius: 34px;
+        color: white;
+        overflow: hidden;
+        background:
+            linear-gradient(135deg, var(--fac-slate-950), var(--fac-ocean-900) 52%, var(--fac-sea-800));
+        box-shadow: var(--fac-shadow-lg);
+    }
+
+    .footer-facilities::before {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -120px;
+        top: -150px;
+        border-radius: var(--fac-radius-full);
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-facilities-content {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .footer-facilities h3 {
+        margin: 0 0 8px;
+        font-family: var(--fac-font-display);
+        font-size: 1.8rem;
+        font-weight: 400;
+    }
+
+    .footer-facilities p {
+        margin: 0;
+        color: rgba(226, 232, 240, 0.76);
+        line-height: 1.7;
+    }
+
+    @keyframes facFadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes facModalPop {
+        from {
+            opacity: 0;
+            transform: translateY(22px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @media (max-width: 1280px) {
+        .facility-hero-inner {
+            grid-template-columns: 1fr;
+        }
+
+        .facility-overview-strip {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 20px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+
+    @media (max-width: 980px) {
+        .section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-heading p {
+            max-width: 100%;
+            text-align: left;
+        }
+
+        .toolbar-card {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-table {
+            display: none;
+        }
+
+        .mobile-facility-grid {
+            display: grid;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .facility-hero {
+            padding: 26px;
+            border-radius: 30px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.1rem, 12vw, 3.5rem);
+        }
+
+        .hero-actions {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .hero-btn,
+        .btn-add {
+            width: 100%;
+        }
+
+        .facility-overview-strip,
+        .mobile-facility-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-card-inner {
+            padding: 20px;
+        }
+
+        .form-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .image-upload-row {
+            grid-template-columns: 1fr;
+        }
+
+        .image-preview-wrap {
+            width: 100%;
+            height: 180px;
+        }
+
+        .footer-facilities-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .facility-hero {
+            padding: 22px;
+            border-radius: 26px;
+        }
+
+        .hero-eyebrow,
+        .section-kicker {
+            font-size: 0.62rem;
+            letter-spacing: 0.10em;
+        }
+
+        .hero-copy {
+            font-size: 0.92rem;
+        }
+
+        .overview-pill {
+            min-height: 94px;
+            border-radius: 24px;
+        }
+
+        .admin-card,
+        .facility-card,
+        .modal-content {
+            border-radius: 26px;
+        }
+
+        .modal-overlay {
+            padding: 14px;
+        }
+    }
+
+    @media print {
+        .fac-orb,
+        .fac-noise,
+        .hero-actions,
+        .toolbar-card,
+        .modal-overlay,
+        .toast {
+            display: none !important;
+        }
+
+        .facilities-page::before,
+        .facilities-page::after {
+            display: none !important;
+        }
+
+        .facility-hero,
+        .admin-card,
+        .facility-card,
+        .overview-pill,
+        .footer-facilities {
+            box-shadow: none !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .facilities-page *,
+        .facilities-page *::before,
+        .facilities-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 </style>
 
-<div class="admin-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <div>
-            <h2 style="margin: 0; color: #0f172a; font-size: 1.75rem;">Manage Facilities</h2>
-            <p style="margin: 5px 0 0; color: #64748b; font-size: 0.9rem;">View and manage your resort rooms and cottages</p>
+<div class="facilities-page">
+    <span class="fac-orb one"></span>
+    <span class="fac-orb two"></span>
+    <span class="fac-orb three"></span>
+    <div class="fac-noise"></div>
+
+    <section class="facility-hero">
+        <div class="facility-hero-inner">
+            <div>
+                <span class="hero-eyebrow">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                    Facility Management
+                </span>
+
+                <h1 class="hero-title">
+                    Manage resort spaces<span>.</span>
+                </h1>
+
+                <p class="hero-copy">
+                    View, add, update, and organize resort rooms, cottages, and halls with a cleaner animated admin interface.
+                </p>
+
+                <div class="hero-actions">
+                    <button type="button" class="hero-btn" onclick="openAddModal()">
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Facility
+                    </button>
+
+                    <a href="/admin/bookings" class="hero-btn ghost">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        View Bookings
+                    </a>
+                </div>
+            </div>
+
+            <article class="hero-live-card">
+                <div class="live-card-icon">
+                    <i class="fa-solid fa-house-chimney"></i>
+                </div>
+
+                <span class="live-card-label">
+                    Total Facilities
+                </span>
+
+                <strong class="live-card-value">
+                    <%= totalFacilities %>
+                </strong>
+
+                <p class="live-card-copy">
+                    Current rooms, cottages, and halls listed in Dang's Beach Resort system.
+                </p>
+            </article>
         </div>
-        <button class="btn-add" onclick="openAddModal()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Add New Facility
-        </button>
+    </section>
+
+    <section class="facility-overview-strip" aria-label="Facilities summary">
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= availableFacilities %></strong>
+                <span>Available</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= maintenanceFacilities %></strong>
+                <span>Maintenance</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-bed"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong><%= roomCount %></strong>
+                <span>Rooms</span>
+            </div>
+        </article>
+
+        <article class="overview-pill">
+            <div class="overview-icon">
+                <i class="fa-solid fa-peso-sign"></i>
+            </div>
+
+            <div class="overview-copy">
+                <strong>₱<%= pesoFormat(averagePrice) %></strong>
+                <span>Average Price</span>
+            </div>
+        </article>
+    </section>
+
+    <div class="section-heading">
+        <div>
+            <span class="section-kicker">
+                <i class="fa-solid fa-layer-group"></i>
+                Facility Inventory
+            </span>
+
+            <h2>
+                Rooms, cottages, and halls
+            </h2>
+        </div>
+
+        <p>
+            Search, filter, and manage every listed facility. The table view is used on desktop, while mobile shows card-style facility previews.
+        </p>
     </div>
 
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>Preview</th>
-                <th>Facility Name</th>
-                <th>Category</th>
-                <th>Pricing</th>
-                <th>Status</th>
-                <th style="text-align: center;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% rooms.forEach(room => { %>
-            <tr>
-                <td>
-                    <img src="<%= room.image_url || '/images/default-room.jpg' %>" 
-                         style="width: 70px; height: 50px; border-radius: 12px; object-fit: cover; border: 2px solid #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                </td>
-                <td>
-                    <div style="font-weight: 700; color: #1e293b; font-size: 1rem;"><%= room.name %></div>
-                    <div style="font-size: 0.75rem; color: #94a3b8;">ID: #REF-0<%= room.id %></div>
-                </td>
-                <td><span class="badge"><%= room.type %></span></td>
-                <td>
-                    <span style="font-weight: 700; color: #0f172a;">₱<%= room.price.toLocaleString() %></span>
-                    <span style="font-size: 0.7rem; color: #94a3b8;">/ night</span>
-                </td>
-                <td>
-                    <span class="status-pill <%= room.status === 'Available' ? 'active' : 'inactive' %>">
-                        <%= room.status %>
-                    </span>
-                </td>
-                <td style="text-align: center;">
-                    <div style="display: flex; gap: 8px; justify-content: center;">
-                        <button class="btn-edit" 
-                            onclick="openEditModal('<%= room.id %>', '<%= room.name %>', '<%= room.type %>', '<%= room.price %>', '<%= room.status %>', '<%= room.image_url %>')">
-                            Edit
-                        </button>
-                        <button class="btn-delete" onclick="confirmDelete('<%= room.id %>')">Delete</button>
-                    </div>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <section class="toolbar-card">
+        <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input 
+                type="search" 
+                id="facilitySearch" 
+                class="search-input" 
+                placeholder="Search facility name, type, or status..."
+            >
+        </div>
+
+        <div class="filter-wrap">
+            <i class="fa-solid fa-filter"></i>
+
+            <select id="facilityFilter" class="filter-select">
+                <option value="all">All Facilities</option>
+                <option value="available">Available</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="room">Rooms</option>
+                <option value="cottage">Cottages</option>
+                <option value="hall">Halls</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn-add primary" onclick="openAddModal()">
+            <i class="fa-solid fa-plus"></i>
+            Add Facility
+        </button>
+    </section>
+
+    <% if (safeRooms.length > 0) { %>
+        <section class="admin-card">
+            <div class="admin-card-inner">
+                <div class="table-shell">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Facility Name</th>
+                                <th>Category</th>
+                                <th>Pricing</th>
+                                <th>Status</th>
+                                <th style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="facilityTableBody">
+                            <% safeRooms.forEach(function (room) { 
+                                const roomStatusClass = statusClass(room.status);
+                                const facilityPayload = {
+                                    id: String(room.id || ''),
+                                    name: String(room.name || ''),
+                                    type: String(room.type || ''),
+                                    price: String(room.price || ''),
+                                    status: String(room.status || ''),
+                                    image_url: String(room.image_url || '')
+                                };
+                            %>
+                                <tr 
+                                    class="facility-row"
+                                    data-name="<%= String(room.name || '').toLowerCase() %>"
+                                    data-type="<%= String(room.type || '').toLowerCase() %>"
+                                    data-status="<%= String(room.status || '').toLowerCase() %>"
+                                >
+                                    <td>
+                                        <div class="preview-frame">
+                                            <img 
+                                                src="<%= room.image_url || '/images/default-room.jpg' %>" 
+                                                alt="<%= room.name || 'Facility image' %>"
+                                                onerror="this.onerror=null; this.src='/images/default-room.jpg';"
+                                            >
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="facility-name-cell">
+                                            <span class="facility-title">
+                                                <%= room.name || 'Unnamed Facility' %>
+                                            </span>
+
+                                            <span class="facility-id">
+                                                ID: #REF-0<%= room.id %>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge">
+                                            <i class="<%= typeIcon(room.type) %>"></i>
+                                            <%= room.type || 'Facility' %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="price-text">
+                                            <strong>₱<%= pesoFormat(room.price) %></strong>
+                                            <span>Per night</span>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-pill <%= roomStatusClass %>">
+                                            <i class="fa-solid <%= roomStatusClass === 'active' ? 'fa-circle-check' : roomStatusClass === 'maintenance' ? 'fa-screwdriver-wrench' : 'fa-circle-info' %>"></i>
+                                            <%= room.status || 'Unknown' %>
+                                        </span>
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        <div class="action-buttons">
+                                            <button 
+                                                type="button" 
+                                                class="btn-edit edit-facility-btn"
+                                                data-facility="<%- encodeURIComponent(JSON.stringify(facilityPayload)) %>"
+                                            >
+                                                <i class="fa-solid fa-pen"></i>
+                                                Edit
+                                            </button>
+
+                                            <button 
+                                                type="button" 
+                                                class="btn-delete" 
+                                                onclick="confirmDelete('<%= room.id %>')"
+                                            >
+                                                <i class="fa-solid fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mobile-facility-grid" id="mobileFacilityGrid">
+                    <% safeRooms.forEach(function (room) { 
+                        const roomStatusClass = statusClass(room.status);
+                        const facilityPayload = {
+                            id: String(room.id || ''),
+                            name: String(room.name || ''),
+                            type: String(room.type || ''),
+                            price: String(room.price || ''),
+                            status: String(room.status || ''),
+                            image_url: String(room.image_url || '')
+                        };
+                    %>
+                        <article 
+                            class="facility-card facility-row"
+                            data-name="<%= String(room.name || '').toLowerCase() %>"
+                            data-type="<%= String(room.type || '').toLowerCase() %>"
+                            data-status="<%= String(room.status || '').toLowerCase() %>"
+                        >
+                            <div class="facility-card-image">
+                                <img 
+                                    src="<%= room.image_url || '/images/default-room.jpg' %>" 
+                                    alt="<%= room.name || 'Facility image' %>"
+                                    onerror="this.onerror=null; this.src='/images/default-room.jpg';"
+                                >
+
+                                <div class="facility-card-status">
+                                    <span class="status-pill <%= roomStatusClass %>">
+                                        <i class="fa-solid <%= roomStatusClass === 'active' ? 'fa-circle-check' : roomStatusClass === 'maintenance' ? 'fa-screwdriver-wrench' : 'fa-circle-info' %>"></i>
+                                        <%= room.status || 'Unknown' %>
+                                    </span>
+                                </div>
+
+                                <div class="facility-card-price">
+                                    ₱<%= pesoFormat(room.price) %>
+                                </div>
+                            </div>
+
+                            <div class="facility-card-body">
+                                <span class="facility-card-type">
+                                    <i class="<%= typeIcon(room.type) %>"></i>
+                                    <%= room.type || 'Facility' %>
+                                </span>
+
+                                <h3 class="facility-card-title">
+                                    <%= room.name || 'Unnamed Facility' %>
+                                </h3>
+
+                                <div class="facility-card-id">
+                                    ID: #REF-0<%= room.id %>
+                                </div>
+
+                                <div class="facility-card-actions">
+                                    <button 
+                                        type="button" 
+                                        class="btn-edit edit-facility-btn"
+                                        data-facility="<%- encodeURIComponent(JSON.stringify(facilityPayload)) %>"
+                                    >
+                                        <i class="fa-solid fa-pen"></i>
+                                        Edit
+                                    </button>
+
+                                    <button 
+                                        type="button" 
+                                        class="btn-delete" 
+                                        onclick="confirmDelete('<%= room.id %>')"
+                                    >
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    <% }) %>
+                </div>
+            </div>
+        </section>
+    <% } else { %>
+        <section class="empty-state">
+            <div class="empty-icon">
+                <i class="fa-solid fa-hotel"></i>
+            </div>
+
+            <h3>No facilities yet</h3>
+
+            <p>
+                Add your first room, cottage, or hall so guests can start browsing and booking resort spaces.
+            </p>
+
+            <button type="button" class="btn-add primary" onclick="openAddModal()" style="margin:0 auto;">
+                <i class="fa-solid fa-plus"></i>
+                Add First Facility
+            </button>
+        </section>
+    <% } %>
+
+    <section class="footer-facilities">
+        <div class="footer-facilities-content">
+            <div>
+                <h3>
+                    Keep your listings updated.
+                </h3>
+
+                <p>
+                    Accurate facility details help guests choose the right space and reduce booking confusion.
+                </p>
+            </div>
+
+            <a href="/admin/reports" class="hero-btn">
+                <i class="fa-solid fa-chart-line"></i>
+                Open Reports
+            </a>
+        </div>
+    </section>
 </div>
 
 <div id="facilityModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 id="modalTitle" style="margin-top: 0; color: #0f172a;">Edit Facility</h3>
-        <form id="facilityForm" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Facility Image</label>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <img id="imagePreview" src="/images/default-room.jpg" style="width: 80px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
-                    <input type="file" name="image" id="field_image" accept="image/*" onchange="previewFile()">
+        <div class="modal-header">
+            <div class="modal-title-wrap">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                </div>
+
+                <div>
+                    <h3 id="modalTitle" class="modal-title">
+                        Edit Facility
+                    </h3>
+
+                    <p id="modalSubtitle" class="modal-subtitle">
+                        Update the selected facility details below.
+                    </p>
                 </div>
             </div>
+
+            <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="facilityForm" class="facility-form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label>Facility Name</label>
-                <input type="text" name="name" id="field_name" required>
+                <label for="field_image">
+                    <i class="fa-solid fa-image"></i>
+                    Facility Image
+                </label>
+
+                <div class="image-upload-row">
+                    <div class="image-preview-wrap">
+                        <img id="imagePreview" src="/images/default-room.jpg" alt="Image preview">
+                    </div>
+
+                    <input 
+                        type="file" 
+                        name="image" 
+                        id="field_image" 
+                        accept="image/*" 
+                        onchange="previewFile()"
+                    >
+                </div>
             </div>
+
             <div class="form-group">
-                <label>Type</label>
-                <select name="type" id="field_type">
-                    <option value="Room">Room</option>
-                    <option value="Cottage">Cottage</option>
-                    <option value="Hall">Hall</option>
-                </select>
+                <label for="field_name">
+                    <i class="fa-solid fa-signature"></i>
+                    Facility Name
+                </label>
+
+                <div class="field-shell">
+                    <i class="fa-solid fa-house field-icon"></i>
+
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="field_name" 
+                        placeholder="Enter facility name"
+                        required
+                    >
+                </div>
             </div>
+
             <div class="form-group">
-                <label>Price per Night (₱)</label>
-                <input type="number" name="price" id="field_price" required>
+                <label for="field_type">
+                    <i class="fa-solid fa-layer-group"></i>
+                    Type
+                </label>
+
+                <div class="field-shell">
+                    <i class="fa-solid fa-tag field-icon"></i>
+
+                    <select name="type" id="field_type">
+                        <option value="Room">Room</option>
+                        <option value="Cottage">Cottage</option>
+                        <option value="Hall">Hall</option>
+                    </select>
+                </div>
             </div>
+
             <div class="form-group">
-                <label>Status</label>
-                <select name="status" id="field_status">
-                    <option value="Available">Available</option>
-                    <option value="Maintenance">Maintenance</option>
-                </select>
+                <label for="field_price">
+                    <i class="fa-solid fa-peso-sign"></i>
+                    Price per Night
+                </label>
+
+                <div class="field-shell">
+                    <i class="fa-solid fa-peso-sign field-icon"></i>
+
+                    <input 
+                        type="number" 
+                        name="price" 
+                        id="field_price" 
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter price"
+                        required
+                    >
+                </div>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button type="submit" class="btn-add" id="submitBtn" style="flex: 1; justify-content: center;">Save Changes</button>
-                <button type="button" class="btn-delete" onclick="closeModal()" style="background: #94a3b8; flex: 1; color: white;">Cancel</button>
+
+            <div class="form-group">
+                <label for="field_status">
+                    <i class="fa-solid fa-toggle-on"></i>
+                    Status
+                </label>
+
+                <div class="field-shell">
+                    <i class="fa-solid fa-circle-check field-icon"></i>
+
+                    <select name="status" id="field_status">
+                        <option value="Available">Available</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-add primary" id="submitBtn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Changes
+                </button>
+
+                <button type="button" class="btn-soft" onclick="closeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </button>
             </div>
         </form>
     </div>
+</div>
+
+<div class="toast" id="facilityToast">
+    <i class="fa-solid fa-circle-info"></i>
+    <span id="facilityToastMessage">Facility action completed.</span>
 </div>
 
 <script>
@@ -249,46 +2086,156 @@
     const form = document.getElementById('facilityForm');
     const submitBtn = document.getElementById('submitBtn');
     const imagePreview = document.getElementById('imagePreview');
+    const facilitySearch = document.getElementById('facilitySearch');
+    const facilityFilter = document.getElementById('facilityFilter');
+    const facilityToast = document.getElementById('facilityToast');
+    const facilityToastMessage = document.getElementById('facilityToastMessage');
+
+    function showToast(message) {
+        if (!facilityToast || !facilityToastMessage) return;
+
+        facilityToastMessage.textContent = message;
+        facilityToast.classList.add('show');
+
+        setTimeout(function () {
+            facilityToast.classList.remove('show');
+        }, 2800);
+    }
 
     function previewFile() {
-        const file = document.querySelector('input[type=file]').files[0];
+        const fileInput = document.getElementById('field_image');
+        const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+
+        if (!file || !imagePreview) return;
+
         const reader = new FileReader();
-        reader.onloadend = () => imagePreview.src = reader.result;
-        if (file) reader.readAsDataURL(file);
+
+        reader.onloadend = function () {
+            imagePreview.src = reader.result;
+        };
+
+        reader.readAsDataURL(file);
     }
 
     function openAddModal() {
-        document.getElementById('modalTitle').innerText = "Add New Facility";
-        submitBtn.innerText = "Create Facility";
-        form.action = "/admin/facilities/add";
+        if (!modal || !form || !submitBtn) return;
+
+        document.getElementById('modalTitle').innerText = 'Add New Facility';
+        document.getElementById('modalSubtitle').innerText = 'Create a new room, cottage, or hall listing for your guests.';
+
+        submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Create Facility';
+        form.action = '/admin/facilities/add';
         form.reset();
-        imagePreview.src = '/images/default-room.jpg';
-        modal.style.display = 'flex';
+
+        if (imagePreview) {
+            imagePreview.src = '/images/default-room.jpg';
+        }
+
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(function () {
+            const nameField = document.getElementById('field_name');
+
+            if (nameField) {
+                nameField.focus();
+            }
+        }, 120);
     }
 
-    function openEditModal(id, name, type, price, status, imageUrl) {
-        document.getElementById('modalTitle').innerText = "Edit Facility";
-        submitBtn.innerText = "Save Changes";
-        form.action = `/admin/facilities/update/${id}`;
-        
-        document.getElementById('field_name').value = name;
-        document.getElementById('field_type').value = type;
-        document.getElementById('field_price').value = price;
-        document.getElementById('field_status').value = status;
-        imagePreview.src = imageUrl || '/images/default-room.jpg';
-        
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-        modal.style.display = 'none';
-    }
-
-    function confirmDelete(id) {
-        if (confirm("Are you sure you want to delete this facility?")) {
-            window.location.href = `/admin/facilities/delete/${id}`;
+    function openEditModalFromData(button) {
+        try {
+            const payload = JSON.parse(decodeURIComponent(button.dataset.facility || '{}'));
+            openEditModal(payload);
+        } catch (error) {
+            console.error('Failed to read facility data:', error);
+            showToast('Unable to open facility details.');
         }
     }
 
-    window.onclick = (event) => { if (event.target == modal) closeModal(); }
+    function openEditModal(facility) {
+        if (!modal || !form || !submitBtn || !facility) return;
+
+        document.getElementById('modalTitle').innerText = 'Edit Facility';
+        document.getElementById('modalSubtitle').innerText = 'Update the selected facility details below.';
+
+        submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+        form.action = '/admin/facilities/update/' + facility.id;
+
+        document.getElementById('field_name').value = facility.name || '';
+        document.getElementById('field_type').value = facility.type || 'Room';
+        document.getElementById('field_price').value = facility.price || '';
+        document.getElementById('field_status').value = facility.status || 'Available';
+
+        if (imagePreview) {
+            imagePreview.src = facility.image_url || '/images/default-room.jpg';
+        }
+
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (!modal) return;
+
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function confirmDelete(id) {
+        if (confirm('Are you sure you want to delete this facility?')) {
+            window.location.href = '/admin/facilities/delete/' + id;
+        }
+    }
+
+    function applyFacilityFilters() {
+        const keyword = facilitySearch ? facilitySearch.value.trim().toLowerCase() : '';
+        const filterValue = facilityFilter ? facilityFilter.value.toLowerCase() : 'all';
+        const facilityRows = document.querySelectorAll('.facility-row');
+
+        facilityRows.forEach(function (row) {
+            const name = row.dataset.name || '';
+            const type = row.dataset.type || '';
+            const status = row.dataset.status || '';
+
+            const matchesKeyword = !keyword || 
+                name.includes(keyword) || 
+                type.includes(keyword) || 
+                status.includes(keyword);
+
+            const matchesFilter = filterValue === 'all' || 
+                type === filterValue || 
+                status === filterValue;
+
+            row.style.display = matchesKeyword && matchesFilter ? '' : 'none';
+        });
+    }
+
+    document.querySelectorAll('.edit-facility-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            openEditModalFromData(button);
+        });
+    });
+
+    if (facilitySearch) {
+        facilitySearch.addEventListener('input', applyFacilityFilters);
+    }
+
+    if (facilityFilter) {
+        facilityFilter.addEventListener('change', applyFacilityFilters);
+    }
+
+    if (modal) {
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
 </script>

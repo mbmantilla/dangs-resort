@@ -65,34 +65,62 @@ const adminController = {
     // --- Reports ---
     getReports: (req, res) => {
         const revenueSql = `
-            SELECT DATE_FORMAT(booking_date, '%b %Y') AS month, 
-                   SUM(rooms.price) AS monthly_total,
-                   COUNT(b.id) AS total_bookings
+            SELECT 
+                DATE_FORMAT(booking_date, '%b %Y') AS month, 
+                SUM(rooms.price) AS monthly_total,
+                COUNT(b.id) AS total_bookings
             FROM bookings b
             JOIN rooms ON b.room_id = rooms.id
-            WHERE LOWER(b.status)='approved'
+            WHERE LOWER(TRIM(b.status)) = 'approved'
             GROUP BY month
             ORDER BY MIN(booking_date) ASC
             LIMIT 6
         `;
 
         const popularitySql = `
-            SELECT rooms.name, COUNT(bookings.id) AS total_bookings
+            SELECT 
+                rooms.name, 
+                COUNT(bookings.id) AS total_bookings
             FROM bookings
             JOIN rooms ON bookings.room_id = rooms.id
             GROUP BY rooms.name
             ORDER BY total_bookings DESC
         `;
 
+        const statusSql = `
+            SELECT 
+                LOWER(TRIM(COALESCE(NULLIF(status, ''), 'pending'))) AS status,
+                COUNT(*) AS count
+            FROM bookings
+            GROUP BY LOWER(TRIM(COALESCE(NULLIF(status, ''), 'pending')))
+        `;
+
         db.query(revenueSql, (err, revenueData) => {
-            if (err) console.error("Revenue Query Error:", err);
+            if (err) {
+                console.error("Revenue Query Error:", err);
+                revenueData = [];
+            }
+
             db.query(popularitySql, (err, popularityData) => {
-                if (err) console.error("Popularity Query Error:", err);
-                res.render('admin/reports',{ 
-                    revenueData: revenueData || [], 
-                    popularityData: popularityData || [], 
-                    chartData: revenueData || [], 
-                    layout: 'admin/layout' 
+                if (err) {
+                    console.error("Popularity Query Error:", err);
+                    popularityData = [];
+                }
+
+                db.query(statusSql, (err, chartData) => {
+                    if (err) {
+                        console.error("Booking Status Query Error:", err);
+                        chartData = [];
+                    }
+
+                    console.log("Reports Booking Status Data:", chartData);
+
+                    res.render('admin/reports', {
+                        revenueData: revenueData || [],
+                        popularityData: popularityData || [],
+                        chartData: chartData || [],
+                        layout: 'admin/layout'
+                    });
                 });
             });
         });
