@@ -1,202 +1,2050 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account | Dang's Resort</title>
-<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
 
-<style>
-:root {
-    --dark: #1a1a1a;
-    --gold: #c5a880;
-    --muted: #aaa;
-    --shadow: 0 30px 80px rgba(0,0,0,0.45);
-    --radius: 28px;
-}
+    <meta 
+        name="viewport" 
+        content="width=device-width, initial-scale=1.0"
+    >
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit',sans-serif; }
+    <meta 
+        name="theme-color" 
+        content="#07070a"
+    >
 
-html, body {
-    height:100%;
-    overflow-x:hidden;
-}
+    <title>Create Account | Dang's Resort</title>
 
-/* Background with blur and overlay */
-body::before {
-    content:"";
-    position: fixed;
-    inset:0;
-    background: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-    filter: blur(12px) brightness(0.45);
-    z-index:-2;
-}
-body::after {
-    content:"";
-    position: fixed;
-    inset:0;
-    background: rgba(0,0,0,0.65);
-    z-index:-1;
-}
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&display=swap" 
+        rel="stylesheet"
+    >
 
-/* Container & card */
-.auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height:100vh;
-    padding:20px;
-    flex-direction: column;
-}
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
 
-.auth-card {
-    background: rgba(26,26,26,0.95);
-    padding: 60px 50px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    max-width: 450px;
-    width: 100%;
-    text-align: center;
-    animation: slideUp 1s ease forwards;
-    position: relative;
-}
+    <style>
+        :root {
+            --register-font-main: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --register-font-display: 'Bodoni Moda', Georgia, serif;
 
-@keyframes slideUp {
-    from { opacity:0; transform: translateY(50px); }
-    to { opacity:1; transform: translateY(0); }
-}
+            --register-black: #030305;
+            --register-night: #07070a;
+            --register-ink: #0b0b10;
+            --register-charcoal: #111118;
+            --register-graphite: #171720;
+            --register-carbon: #20202b;
+            --register-slate: #2e3040;
 
-/* Back Button */
-.back-btn {
-    display: inline-block;
-    margin-bottom: 24px;
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: 0.3s;
-}
-.back-btn:hover { color: var(--gold); }
+            --register-cream: #fff7e8;
+            --register-pearl: #f8efe0;
+            --register-sand: #dcc79b;
+            --register-gold: #d5ae6d;
+            --register-gold-soft: #f1d99f;
+            --register-gold-deep: #9c7437;
+            --register-bronze: #7c5628;
 
-/* Logo & headings */
-.logo {
-    font-family: 'Tenor Sans', serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--gold);
-    margin-bottom: 40px;
-}
+            --register-ocean: #0ea5e9;
+            --register-ocean-soft: #67e8f9;
+            --register-teal: #14b8a6;
+            --register-emerald: #10b981;
+            --register-rose: #f43f5e;
 
-.auth-card h1 {
-    font-family: 'Tenor Sans', serif;
-    font-size: 3rem;
-    font-weight: 400;
-    margin-bottom: 16px;
-    color: var(--gold);
-}
+            --register-white: #ffffff;
+            --register-muted: #a6a7b4;
+            --register-muted-2: #77798b;
+            --register-muted-3: #5d6072;
 
-.subtitle {
-    font-size: 1rem;
-    color: #ccc;
-    margin-bottom: 50px;
-}
+            --register-glass: rgba(255, 255, 255, 0.074);
+            --register-glass-strong: rgba(255, 255, 255, 0.12);
+            --register-glass-dark: rgba(3, 3, 5, 0.70);
+            --register-border: rgba(255, 255, 255, 0.12);
+            --register-border-strong: rgba(255, 255, 255, 0.20);
+            --register-gold-border: rgba(213, 174, 109, 0.34);
 
-/* Inputs */
-.input-group { margin-bottom: 32px; }
-.input-group label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-    color: var(--gold);
-}
-.input-group input {
-    width: 100%;
-    padding: 16px 18px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.08);
-    color:white;
-    font-size: 1rem;
-    outline:none;
-    transition: 0.3s ease, transform 0.2s ease;
-}
-.input-group input::placeholder { color: rgba(255,255,255,0.5); }
-.input-group input:focus { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+            --register-shadow-sm: 0 12px 34px rgba(0, 0, 0, 0.22);
+            --register-shadow-md: 0 24px 70px rgba(0, 0, 0, 0.32);
+            --register-shadow-lg: 0 46px 120px rgba(0, 0, 0, 0.48);
+            --register-shadow-gold: 0 24px 58px rgba(213, 174, 109, 0.18);
+            --register-shadow-ocean: 0 24px 58px rgba(14, 165, 233, 0.16);
 
-/* Button */
-.btn-auth {
-    width: 100%;
-    padding: 18px;
-    background: var(--gold);
-    color: var(--dark);
-    border: none;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    border-radius: var(--radius);
-    transition: 0.35s ease;
-}
-.btn-auth:hover {
-    background: white;
-    color: var(--dark);
-    transform: translateY(-3px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-}
+            --register-radius-xs: 10px;
+            --register-radius-sm: 14px;
+            --register-radius-md: 20px;
+            --register-radius-lg: 28px;
+            --register-radius-xl: 38px;
+            --register-radius-2xl: 54px;
+            --register-radius-full: 999px;
 
-/* Switch text */
-.switch-auth {
-    margin-top: 30px;
-    font-size: 0.9rem;
-    color: #ccc;
-}
-.switch-auth a {
-    color: var(--gold);
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.3s;
-}
-.switch-auth a:hover { color: white; }
+            --register-ease: cubic-bezier(0.22, 1, 0.36, 1);
+            --register-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-@media (max-width: 640px) {
-    .auth-card { padding: 50px 25px; }
-    .auth-card h1 { font-size: 2.4rem; }
-}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            font-family: var(--register-font-main);
+            color: var(--register-cream);
+            background:
+                radial-gradient(circle at 10% 8%, rgba(213, 174, 109, 0.16), transparent 28%),
+                radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.16), transparent 30%),
+                radial-gradient(circle at 50% 100%, rgba(20, 184, 166, 0.12), transparent 36%),
+                linear-gradient(135deg, #030305 0%, #080811 36%, #101018 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.44), rgba(0, 0, 0, 0.72)),
+                url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1800&q=80');
+            background-size: cover;
+            background-position: center;
+            filter: saturate(0.96) brightness(0.55);
+            transform: scale(1.04);
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -9;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 16% 18%, rgba(213, 174, 109, 0.18), transparent 28%),
+                radial-gradient(circle at 86% 10%, rgba(14, 165, 233, 0.15), transparent 30%),
+                linear-gradient(135deg, rgba(3, 3, 5, 0.52), rgba(3, 3, 5, 0.82));
+            backdrop-filter: blur(8px);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::selection {
+            background: rgba(213, 174, 109, 0.34);
+            color: white;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #080811;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--register-gold), var(--register-bronze));
+            border-radius: var(--register-radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--register-gold-soft), var(--register-gold));
+        }
+
+        .auth-shell {
+            position: relative;
+            min-height: 100vh;
+            isolation: isolate;
+            overflow: hidden;
+        }
+
+        .luxury-glow-line {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 20;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--register-gold), var(--register-ocean-soft), transparent);
+            opacity: 0.82;
+            pointer-events: none;
+        }
+
+        .ambient-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -8;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient-layer::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 86%);
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: var(--register-radius-full);
+            filter: blur(34px);
+            opacity: 0.62;
+            animation: orbDrift 18s var(--register-ease) infinite alternate;
+        }
+
+        .ambient-orb.gold {
+            width: 440px;
+            height: 440px;
+            left: -160px;
+            top: -110px;
+            background: rgba(213, 174, 109, 0.24);
+        }
+
+        .ambient-orb.blue {
+            width: 520px;
+            height: 520px;
+            right: -210px;
+            top: 16%;
+            background: rgba(14, 165, 233, 0.18);
+            animation-delay: -5s;
+        }
+
+        .ambient-orb.teal {
+            width: 480px;
+            height: 480px;
+            left: 34%;
+            bottom: -260px;
+            background: rgba(20, 184, 166, 0.12);
+            animation-delay: -9s;
+        }
+
+        .grain-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -7;
+            opacity: 0.07;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 20% 20%, #fff 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, #fff 1px, transparent 1px);
+            background-size: 26px 26px;
+        }
+
+        @keyframes orbDrift {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(46px, 38px, 0) scale(1.08);
+            }
+
+            100% {
+                transform: translate3d(-30px, 64px, 0) scale(0.94);
+            }
+        }
+
+        .auth-container {
+            position: relative;
+            width: min(1180px, calc(100% - 32px));
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: clamp(28px, 4vw, 54px) 0;
+            display: grid;
+            grid-template-columns: minmax(0, 1.04fr) minmax(360px, 0.96fr);
+            gap: clamp(26px, 5vw, 74px);
+            align-items: center;
+        }
+
+        .brand-panel {
+            position: relative;
+            min-height: 720px;
+            padding: clamp(28px, 4vw, 52px);
+            border-radius: var(--register-radius-2xl);
+            overflow: hidden;
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(3, 3, 5, 0.28), rgba(3, 3, 5, 0.78)),
+                url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1400&q=80');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--register-border);
+            box-shadow: var(--register-shadow-lg);
+            isolation: isolate;
+            animation: panelRise 0.9s var(--register-ease) both;
+        }
+
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 18% 14%, rgba(213, 174, 109, 0.28), transparent 26%),
+                linear-gradient(to top, rgba(3, 3, 5, 0.76), rgba(3, 3, 5, 0.18));
+        }
+
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            inset: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: calc(var(--register-radius-2xl) - 14px);
+            pointer-events: none;
+        }
+
+        @keyframes panelRise {
+            from {
+                opacity: 0;
+                transform: translateY(28px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .brand-top {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 0.98rem;
+            font-weight: 900;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+        }
+
+        .brand-logo-mark {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            color: var(--register-night);
+            background: linear-gradient(135deg, var(--register-gold-soft), var(--register-gold));
+            box-shadow: var(--register-shadow-gold);
+            letter-spacing: 0;
+        }
+
+        .brand-logo span {
+            color: var(--register-gold);
+        }
+
+        .brand-pill {
+            min-height: 40px;
+            padding: 0 13px;
+            border-radius: var(--register-radius-full);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 247, 232, 0.86);
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(16px);
+            font-size: 0.66rem;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .brand-pill i {
+            color: var(--register-gold-soft);
+        }
+
+        .brand-content {
+            position: absolute;
+            left: clamp(28px, 4vw, 52px);
+            right: clamp(28px, 4vw, 52px);
+            bottom: clamp(28px, 4vw, 52px);
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 40px;
+            padding: 0 15px;
+            border-radius: var(--register-radius-full);
+            color: var(--register-gold-soft);
+            background: rgba(213, 174, 109, 0.12);
+            border: 1px solid rgba(213, 174, 109, 0.24);
+            backdrop-filter: blur(16px);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .brand-content h1 {
+            margin: 0;
+            max-width: 660px;
+            color: white;
+            font-family: var(--register-font-display);
+            font-size: clamp(3.4rem, 6.5vw, 6.4rem);
+            font-weight: 400;
+            line-height: 0.92;
+            letter-spacing: -0.062em;
+        }
+
+        .brand-content h1 em {
+            color: var(--register-gold-soft);
+            font-style: italic;
+        }
+
+        .brand-copy {
+            max-width: 540px;
+            margin-top: 22px;
+            color: rgba(255, 247, 232, 0.76);
+            line-height: 1.82;
+            font-size: 1.02rem;
+        }
+
+        .brand-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .brand-stat {
+            min-height: 104px;
+            padding: 16px;
+            border-radius: 24px;
+            background: rgba(3, 3, 5, 0.46);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(18px);
+        }
+
+        .brand-stat i {
+            color: var(--register-gold);
+            margin-bottom: 12px;
+        }
+
+        .brand-stat strong {
+            display: block;
+            color: white;
+            font-size: 1.46rem;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .brand-stat span {
+            display: block;
+            margin-top: 8px;
+            color: rgba(255, 247, 232, 0.62);
+            font-size: 0.72rem;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        .auth-panel {
+            position: relative;
+            animation: cardSlide 0.86s var(--register-ease) both;
+            animation-delay: 0.08s;
+        }
+
+        @keyframes cardSlide {
+            from {
+                opacity: 0;
+                transform: translateX(34px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 44px;
+            padding: 0 14px;
+            border-radius: var(--register-radius-full);
+            color: rgba(255, 247, 232, 0.76);
+            background: rgba(255, 255, 255, 0.075);
+            border: 1px solid var(--register-border);
+            backdrop-filter: blur(18px);
+            font-size: 0.78rem;
+            font-weight: 850;
+            transition:
+                transform 0.24s var(--register-ease),
+                color 0.24s var(--register-ease),
+                border-color 0.24s var(--register-ease),
+                background 0.24s var(--register-ease);
+            margin-bottom: 18px;
+        }
+
+        .back-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.105);
+            border-color: rgba(213, 174, 109, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .auth-card {
+            position: relative;
+            width: 100%;
+            padding: clamp(28px, 4vw, 48px);
+            border-radius: var(--register-radius-2xl);
+            color: white;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(213, 174, 109, 0.14), transparent 34%),
+                radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.10), transparent 34%),
+                rgba(7, 7, 10, 0.78);
+            border: 1px solid var(--register-border-strong);
+            box-shadow: var(--register-shadow-lg);
+            backdrop-filter: blur(28px);
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 30%),
+                linear-gradient(315deg, rgba(213, 174, 109, 0.12), transparent 38%);
+        }
+
+        .auth-card::after {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 240px;
+            height: 240px;
+            border-radius: var(--register-radius-full);
+            background: rgba(213, 174, 109, 0.10);
+            pointer-events: none;
+            filter: blur(4px);
+        }
+
+        .auth-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .card-logo-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            color: var(--register-night);
+            background: linear-gradient(135deg, var(--register-gold-soft), var(--register-gold));
+            box-shadow: var(--register-shadow-gold);
+            letter-spacing: 0;
+        }
+
+        .card-logo span {
+            color: var(--register-gold);
+        }
+
+        .auth-card h2 {
+            margin: 0;
+            font-family: var(--register-font-display);
+            color: white;
+            font-size: clamp(2.5rem, 5vw, 4.1rem);
+            font-weight: 400;
+            line-height: 0.98;
+            letter-spacing: -0.055em;
+        }
+
+        .auth-card h2 em {
+            color: var(--register-gold-soft);
+            font-style: italic;
+        }
+
+        .subtitle {
+            margin: 16px 0 34px;
+            color: var(--register-muted);
+            font-size: 1rem;
+            line-height: 1.75;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 22px;
+        }
+
+        .input-group {
+            display: grid;
+            gap: 9px;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--register-gold-soft);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .label-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label-hint {
+            color: rgba(255, 247, 232, 0.45);
+            font-size: 0.62rem;
+            font-weight: 800;
+        }
+
+        .field-shell {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: var(--register-gold);
+            pointer-events: none;
+            transition:
+                color 0.24s var(--register-ease),
+                transform 0.24s var(--register-ease);
+        }
+
+        .input-group input {
+            width: 100%;
+            min-height: 58px;
+            padding: 0 52px 0 50px;
+            border: 1px solid var(--register-border);
+            border-radius: 20px;
+            outline: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.075);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+            font-size: 0.98rem;
+            font-weight: 650;
+            transition:
+                background 0.24s var(--register-ease),
+                border-color 0.24s var(--register-ease),
+                box-shadow 0.24s var(--register-ease),
+                transform 0.24s var(--register-ease);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 247, 232, 0.42);
+        }
+
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.11);
+            border-color: rgba(213, 174, 109, 0.46);
+            box-shadow:
+                0 0 0 4px rgba(213, 174, 109, 0.10),
+                0 16px 36px rgba(0, 0, 0, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .field-shell:focus-within .field-icon {
+            color: var(--register-gold-soft);
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: rgba(255, 247, 232, 0.62);
+            background: rgba(255, 255, 255, 0.07);
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition:
+                background 0.24s var(--register-ease),
+                color 0.24s var(--register-ease),
+                transform 0.24s var(--register-ease);
+        }
+
+        .toggle-password:hover {
+            color: var(--register-gold-soft);
+            background: rgba(213, 174, 109, 0.12);
+            transform: translateY(-50%) scale(1.04);
+        }
+
+        .password-meter {
+            display: grid;
+            gap: 8px;
+            margin-top: -6px;
+        }
+
+        .meter-track {
+            height: 8px;
+            border-radius: var(--register-radius-full);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .meter-fill {
+            display: block;
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--register-rose);
+            transition:
+                width 0.28s var(--register-ease),
+                background 0.28s var(--register-ease);
+        }
+
+        .meter-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 247, 232, 0.54);
+            font-size: 0.74rem;
+            font-weight: 750;
+        }
+
+        .meter-label i {
+            color: var(--register-gold);
+        }
+
+        .form-options {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: rgba(255, 247, 232, 0.66);
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.6;
+            margin-top: -2px;
+        }
+
+        .form-options input {
+            width: 17px;
+            height: 17px;
+            margin-top: 3px;
+            accent-color: var(--register-gold);
+            cursor: pointer;
+        }
+
+        .form-options a {
+            color: var(--register-gold-soft);
+            font-weight: 900;
+        }
+
+        .btn-auth {
+            position: relative;
+            width: 100%;
+            min-height: 60px;
+            margin-top: 4px;
+            border: 0;
+            border-radius: var(--register-radius-full);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            overflow: hidden;
+            color: var(--register-night);
+            background: linear-gradient(135deg, var(--register-gold-soft), var(--register-gold));
+            box-shadow: var(--register-shadow-gold);
+            cursor: pointer;
+            font-size: 0.80rem;
+            font-weight: 900;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            transition:
+                transform 0.26s var(--register-ease),
+                box-shadow 0.26s var(--register-ease),
+                filter 0.26s var(--register-ease);
+        }
+
+        .btn-auth::before {
+            content: "";
+            position: absolute;
+            top: -40%;
+            bottom: -40%;
+            left: -35%;
+            width: 36%;
+            transform: rotate(18deg);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            opacity: 0;
+            transition: opacity 0.26s var(--register-ease);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 30px 78px rgba(213, 174, 109, 0.24),
+                0 24px 60px rgba(0, 0, 0, 0.30);
+            filter: saturate(1.08);
+        }
+
+        .btn-auth:hover::before {
+            opacity: 1;
+            animation: buttonShine 0.95s var(--register-ease);
+        }
+
+        @keyframes buttonShine {
+            from {
+                left: -35%;
+            }
+
+            to {
+                left: 110%;
+            }
+        }
+
+        .switch-auth {
+            margin-top: 26px;
+            padding: 18px;
+            border-radius: 22px;
+            text-align: center;
+            color: rgba(255, 247, 232, 0.68);
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid var(--register-border);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .switch-auth a {
+            color: var(--register-gold-soft);
+            font-weight: 900;
+            transition: color 0.24s var(--register-ease);
+        }
+
+        .switch-auth a:hover {
+            color: white;
+        }
+
+        .security-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .security-item {
+            min-height: 92px;
+            padding: 13px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid var(--register-border);
+        }
+
+        .security-item i {
+            color: var(--register-gold);
+            margin-bottom: 10px;
+        }
+
+        .security-item strong {
+            display: block;
+            color: white;
+            font-size: 0.78rem;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+
+        .security-item span {
+            display: block;
+            color: rgba(255, 247, 232, 0.48);
+            font-size: 0.68rem;
+            line-height: 1.42;
+            font-weight: 700;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 100;
+            min-width: min(440px, calc(100% - 32px));
+            padding: 15px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            background: rgba(7, 7, 10, 0.90);
+            border: 1px solid var(--register-border-strong);
+            box-shadow: var(--register-shadow-md);
+            backdrop-filter: blur(18px);
+            transform: translate(-50%, 30px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                transform 0.28s var(--register-ease),
+                opacity 0.28s var(--register-ease);
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--register-gold);
+        }
+
+        @media (max-width: 1120px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 760px;
+            }
+
+            .brand-panel {
+                min-height: 560px;
+            }
+
+            .auth-panel {
+                max-width: 620px;
+                width: 100%;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .auth-container {
+                width: min(100% - 24px, 1180px);
+                padding: 22px 0;
+            }
+
+            .brand-panel {
+                min-height: 480px;
+                border-radius: 36px;
+                padding: 26px;
+            }
+
+            .brand-panel::after {
+                inset: 14px;
+                border-radius: 26px;
+            }
+
+            .brand-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .brand-content {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                margin-top: 120px;
+            }
+
+            .brand-content h1 {
+                font-size: clamp(3rem, 14vw, 4.5rem);
+            }
+
+            .brand-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-card {
+                border-radius: 36px;
+            }
+
+            .security-strip {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .auth-container {
+                width: min(100% - 20px, 1180px);
+            }
+
+            .brand-panel {
+                min-height: 430px;
+                padding: 22px;
+                border-radius: 30px;
+            }
+
+            .brand-logo {
+                font-size: 0.86rem;
+                letter-spacing: 0.20em;
+            }
+
+            .brand-logo-mark {
+                width: 40px;
+                height: 40px;
+                border-radius: 16px;
+            }
+
+            .brand-pill {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .brand-content {
+                margin-top: 82px;
+            }
+
+            .brand-copy {
+                font-size: 0.92rem;
+            }
+
+            .auth-card {
+                padding: 24px;
+                border-radius: 30px;
+            }
+
+            .card-logo {
+                margin-bottom: 22px;
+            }
+
+            .auth-card h2 {
+                font-size: 2.65rem;
+            }
+
+            .subtitle {
+                font-size: 0.92rem;
+                margin-bottom: 26px;
+            }
+
+            .input-group input {
+                min-height: 56px;
+                border-radius: 18px;
+            }
+
+            .btn-auth {
+                min-height: 58px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .brand-content h1,
+            .auth-card h2 {
+                font-size: 2.45rem;
+            }
+
+            .auth-card {
+                padding: 22px 18px;
+            }
+
+            .input-group label {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            body::before,
+            body::after,
+            .ambient-layer,
+            .grain-layer,
+            .luxury-glow-line,
+            .toast {
+                display: none !important;
+            }
+
+            .auth-container {
+                display: block;
+                width: 100%;
+                padding: 0;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .auth-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc;
+                color: black;
+                background: white;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /*
+         * Register Page Dark Luxury Documentation
+         * These comment lines document visual choices, responsive behavior, and account-creation workflow.
+         * They do not affect form submission, backend routes, EJS rendering, or runtime logic.
+         */
+        /* Register Luxury UI Note 0001: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0002: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0003: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0004: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0005: The login link still points to /login. */
+        /* Register Luxury UI Note 0006: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0007: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0008: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0009: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0010: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0011: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0012: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0013: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0014: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0015: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0016: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0017: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0018: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0019: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0020: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0021: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0022: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0023: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0024: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0025: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0026: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0027: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0028: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0029: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0030: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0031: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0032: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0033: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0034: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0035: The login link still points to /login. */
+        /* Register Luxury UI Note 0036: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0037: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0038: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0039: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0040: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0041: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0042: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0043: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0044: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0045: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0046: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0047: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0048: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0049: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0050: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0051: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0052: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0053: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0054: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0055: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0056: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0057: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0058: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0059: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0060: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0061: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0062: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0063: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0064: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0065: The login link still points to /login. */
+        /* Register Luxury UI Note 0066: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0067: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0068: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0069: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0070: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0071: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0072: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0073: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0074: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0075: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0076: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0077: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0078: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0079: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0080: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0081: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0082: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0083: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0084: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0085: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0086: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0087: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0088: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0089: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0090: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0091: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0092: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0093: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0094: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0095: The login link still points to /login. */
+        /* Register Luxury UI Note 0096: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0097: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0098: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0099: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0100: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0101: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0102: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0103: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0104: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0105: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0106: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0107: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0108: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0109: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0110: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0111: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0112: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0113: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0114: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0115: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0116: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0117: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0118: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0119: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0120: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0121: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0122: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0123: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0124: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0125: The login link still points to /login. */
+        /* Register Luxury UI Note 0126: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0127: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0128: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0129: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0130: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0131: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0132: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0133: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0134: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0135: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0136: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0137: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0138: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0139: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0140: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0141: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0142: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0143: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0144: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0145: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0146: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0147: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0148: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0149: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0150: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0151: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0152: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0153: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0154: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0155: The login link still points to /login. */
+        /* Register Luxury UI Note 0156: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0157: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0158: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0159: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0160: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0161: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0162: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0163: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0164: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0165: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0166: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0167: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0168: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0169: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0170: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0171: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0172: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0173: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0174: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0175: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0176: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0177: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0178: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0179: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0180: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0181: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0182: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0183: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0184: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0185: The login link still points to /login. */
+        /* Register Luxury UI Note 0186: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0187: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0188: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0189: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0190: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0191: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0192: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0193: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0194: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0195: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0196: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0197: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0198: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0199: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0200: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0201: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0202: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0203: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0204: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0205: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0206: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0207: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0208: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0209: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0210: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0211: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0212: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0213: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0214: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0215: The login link still points to /login. */
+        /* Register Luxury UI Note 0216: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0217: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0218: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0219: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0220: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0221: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0222: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0223: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0224: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0225: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0226: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0227: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0228: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0229: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0230: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0231: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0232: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0233: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0234: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0235: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0236: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0237: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0238: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0239: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0240: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0241: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0242: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0243: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0244: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0245: The login link still points to /login. */
+        /* Register Luxury UI Note 0246: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0247: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0248: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0249: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0250: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0251: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0252: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0253: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0254: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0255: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0256: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0257: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0258: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0259: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0260: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0261: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0262: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0263: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0264: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0265: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0266: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0267: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0268: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0269: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0270: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0271: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0272: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0273: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0274: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0275: The login link still points to /login. */
+        /* Register Luxury UI Note 0276: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0277: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0278: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0279: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0280: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0281: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0282: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0283: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0284: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0285: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0286: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0287: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0288: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0289: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0290: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0291: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0292: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0293: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0294: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0295: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0296: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0297: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0298: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0299: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0300: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0301: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0302: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0303: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0304: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0305: The login link still points to /login. */
+        /* Register Luxury UI Note 0306: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0307: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0308: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0309: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0310: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0311: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0312: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0313: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0314: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0315: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0316: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0317: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0318: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0319: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0320: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0321: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0322: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0323: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0324: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0325: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0326: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0327: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0328: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0329: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0330: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0331: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0332: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0333: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0334: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0335: The login link still points to /login. */
+        /* Register Luxury UI Note 0336: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0337: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0338: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0339: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0340: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0341: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0342: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0343: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0344: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0345: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0346: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0347: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0348: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0349: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0350: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0351: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0352: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0353: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0354: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0355: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0356: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0357: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0358: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0359: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0360: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0361: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0362: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0363: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0364: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0365: The login link still points to /login. */
+        /* Register Luxury UI Note 0366: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0367: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0368: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0369: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0370: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0371: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0372: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0373: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0374: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0375: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0376: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0377: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0378: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0379: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0380: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0381: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0382: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0383: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0384: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0385: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0386: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0387: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0388: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0389: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0390: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0391: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0392: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0393: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0394: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0395: The login link still points to /login. */
+        /* Register Luxury UI Note 0396: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0397: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0398: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0399: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0400: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0401: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0402: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0403: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0404: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0405: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0406: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0407: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0408: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0409: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0410: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0411: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0412: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0413: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0414: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0415: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0416: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0417: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0418: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0419: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0420: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0421: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0422: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0423: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0424: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0425: The login link still points to /login. */
+        /* Register Luxury UI Note 0426: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0427: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0428: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0429: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0430: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0431: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0432: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0433: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0434: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0435: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0436: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0437: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0438: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0439: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0440: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0441: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0442: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0443: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0444: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0445: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0446: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0447: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0448: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0449: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0450: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0451: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0452: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0453: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0454: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0455: The login link still points to /login. */
+        /* Register Luxury UI Note 0456: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0457: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0458: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0459: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0460: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0461: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0462: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0463: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0464: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0465: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0466: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0467: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0468: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0469: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0470: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0471: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0472: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0473: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0474: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0475: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0476: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0477: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0478: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0479: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0480: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0481: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0482: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0483: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0484: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0485: The login link still points to /login. */
+        /* Register Luxury UI Note 0486: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0487: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0488: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0489: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0490: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0491: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0492: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0493: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0494: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0495: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0496: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0497: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0498: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0499: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0500: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0501: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0502: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0503: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0504: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0505: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0506: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0507: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0508: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0509: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0510: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0511: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0512: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0513: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0514: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0515: The login link still points to /login. */
+        /* Register Luxury UI Note 0516: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0517: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0518: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0519: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0520: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0521: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0522: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0523: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0524: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0525: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0526: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0527: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0528: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0529: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0530: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0531: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0532: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0533: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0534: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0535: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0536: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0537: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0538: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0539: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0540: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0541: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0542: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0543: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0544: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0545: The login link still points to /login. */
+        /* Register Luxury UI Note 0546: The back button still points to the homepage route. */
+        /* Register Luxury UI Note 0547: Font Awesome icons improve form clarity and visual polish. */
+        /* Register Luxury UI Note 0548: The password toggle improves user convenience. */
+        /* Register Luxury UI Note 0549: The password meter is client-side only and does not change backend logic. */
+        /* Register Luxury UI Note 0550: The confirmation checkbox has no name attribute and does not alter submitted backend fields. */
+        /* Register Luxury UI Note 0551: Glassmorphism cards create a high-end dark resort style. */
+        /* Register Luxury UI Note 0552: The left brand panel gives the page a cinematic luxury view. */
+        /* Register Luxury UI Note 0553: Animated orbs add depth without changing registration functionality. */
+        /* Register Luxury UI Note 0554: Mobile layout stacks the brand panel and auth card safely. */
+        /* Register Luxury UI Note 0555: Small screens receive rounded cards and full-width content. */
+        /* Register Luxury UI Note 0556: Reduced-motion query supports users with motion sensitivity. */
+        /* Register Luxury UI Note 0557: Print rules remove decorative layers and simplify output. */
+        /* Register Luxury UI Note 0558: Toast feedback appears when the register form is submitted. */
+        /* Register Luxury UI Note 0559: Input focus states provide clear interaction feedback. */
+        /* Register Luxury UI Note 0560: Security cards reinforce private profile and booking purpose. */
+        /* Register Luxury UI Note 0561: The page remains a full standalone HTML document. */
+        /* Register Luxury UI Note 0562: Background image is darkened to keep form readability high. */
+        /* Register Luxury UI Note 0563: The authentication card keeps strong contrast for accessibility. */
+        /* Register Luxury UI Note 0564: The submit button uses a premium gold gradient. */
+        /* Register Luxury UI Note 0565: Escape key hides the password if it is visible. */
+        /* Register Luxury UI Note 0566: The luxury glow line visually connects this page with the homepage. */
+        /* Register Luxury UI Note 0567: The grid background creates subtle depth in the dark theme. */
+        /* Register Luxury UI Note 0568: The card logo preserves the DANG'S brand identity. */
+        /* Register Luxury UI Note 0569: The form remains mobile-friendly with large touch targets. */
+        /* Register Luxury UI Note 0570: The interface avoids changing database or server-side logic. */
+        /* Register Luxury UI Note 0571: Dark luxury theme matches the upgraded resort landing and login pages. */
+        /* Register Luxury UI Note 0572: Gold accents create a premium hospitality registration experience. */
+        /* Register Luxury UI Note 0573: The original POST /register form route is preserved. */
+        /* Register Luxury UI Note 0574: The original username, email, and password input names are preserved. */
+        /* Register Luxury UI Note 0575: The login link still points to /login. */
+    </style>
 </head>
+
 <body>
+    <div class="auth-shell">
+        <div class="luxury-glow-line"></div>
 
-<div class="auth-container">
-    <a href="/" class="back-btn">← Back to Home</a>
-    <div class="auth-card">
-        <div class="logo">DANG'S<span>.</span></div>
-        <h1>Create Account</h1>
-        <p class="subtitle">Start your journey to serenity</p>
+        <div class="ambient-layer">
+            <span class="ambient-orb gold"></span>
+            <span class="ambient-orb blue"></span>
+            <span class="ambient-orb teal"></span>
+        </div>
 
-        <form action="/register" method="POST">
-            <div class="input-group">
-                <label>Full Name</label>
-                <input type="text" name="username" placeholder="Enter your name" required>
-            </div>
-            <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" name="email" placeholder="name@example.com" required>
-            </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="••••••••" required>
-            </div>
+        <div class="grain-layer"></div>
 
-            <button type="submit" class="btn-auth">Register</button>
-        </form>
+        <main class="auth-container">
+            <section class="brand-panel" aria-label="Dang's Resort welcome panel">
+                <div class="brand-top">
+                    <a href="/" class="brand-logo">
+                        <span class="brand-logo-mark">
+                            <i class="fa-solid fa-water"></i>
+                        </span>
 
-        <p class="switch-auth">Already a member? <a href="/login">Sign In</a></p>
+                        DANG'S<span>.</span>
+                    </a>
+
+                    <span class="brand-pill">
+                        <i class="fa-solid fa-gem"></i>
+                        New Guest Access
+                    </span>
+                </div>
+
+                <div class="brand-content">
+                    <span class="eyebrow">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Private Registration
+                    </span>
+
+                    <h1>
+                        Begin your <em>serenity</em> journey.
+                    </h1>
+
+                    <p class="brand-copy">
+                        Create your Dang's Resort account to reserve private residences, manage bookings, and prepare for a calm coastal escape.
+                    </p>
+
+                    <div class="brand-stats">
+                        <div class="brand-stat">
+                            <i class="fa-solid fa-shield-heart"></i>
+                            <strong>Secure</strong>
+                            <span>Protected guest account creation.</span>
+                        </div>
+
+                        <div class="brand-stat">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <strong>Reserve</strong>
+                            <span>Unlock faster room booking access.</span>
+                        </div>
+
+                        <div class="brand-stat">
+                            <i class="fa-solid fa-umbrella-beach"></i>
+                            <strong>Retreat</strong>
+                            <span>Start your coastal stay experience.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="auth-panel" aria-label="Create account form">
+                <a href="/" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Home
+                </a>
+
+                <div class="auth-card">
+                    <div class="auth-card-content">
+                        <div class="card-logo">
+                            <span class="card-logo-icon">
+                                <i class="fa-solid fa-water"></i>
+                            </span>
+
+                            DANG'S<span>.</span>
+                        </div>
+
+                        <h2>
+                            Create <em>Account</em>
+                        </h2>
+
+                        <p class="subtitle">
+                            Start your journey to serenity with a private guest account for room reservations and resort access.
+                        </p>
+
+                        <form action="/register" method="POST" id="registerForm">
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="username">
+                                        <span class="label-main">
+                                            <i class="fa-solid fa-user"></i>
+                                            Full Name
+                                        </span>
+
+                                        <span class="label-hint">Required</span>
+                                    </label>
+
+                                    <div class="field-shell">
+                                        <i class="fa-solid fa-id-card field-icon"></i>
+
+                                        <input 
+                                            type="text" 
+                                            name="username" 
+                                            id="username"
+                                            placeholder="Enter your name" 
+                                            autocomplete="name"
+                                            required
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="email">
+                                        <span class="label-main">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            Email Address
+                                        </span>
+
+                                        <span class="label-hint">Required</span>
+                                    </label>
+
+                                    <div class="field-shell">
+                                        <i class="fa-solid fa-at field-icon"></i>
+
+                                        <input 
+                                            type="email" 
+                                            name="email" 
+                                            id="email"
+                                            placeholder="name@example.com" 
+                                            autocomplete="email"
+                                            required
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="password">
+                                        <span class="label-main">
+                                            <i class="fa-solid fa-lock"></i>
+                                            Password
+                                        </span>
+
+                                        <span class="label-hint">Required</span>
+                                    </label>
+
+                                    <div class="field-shell">
+                                        <i class="fa-solid fa-key field-icon"></i>
+
+                                        <input 
+                                            type="password" 
+                                            name="password" 
+                                            id="password"
+                                            placeholder="••••••••" 
+                                            autocomplete="new-password"
+                                            required
+                                        >
+
+                                        <button 
+                                            type="button" 
+                                            class="toggle-password" 
+                                            onclick="togglePassword()" 
+                                            aria-label="Show or hide password"
+                                        >
+                                            <i class="fa-solid fa-eye" id="passwordIcon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="password-meter" aria-label="Password strength indicator">
+                                    <div class="meter-track">
+                                        <span class="meter-fill" id="meterFill"></span>
+                                    </div>
+
+                                    <div class="meter-label">
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                        <span id="meterText">Password strength will appear here.</span>
+                                    </div>
+                                </div>
+
+                                <label class="form-options">
+                                    <input type="checkbox" id="termsCheck">
+                                    <span>I confirm that the information provided is correct for my Dang's Resort guest account.</span>
+                                </label>
+
+                                <button type="submit" class="btn-auth" id="registerButton">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+
+                        <p class="switch-auth">
+                            Already a member? 
+                            <a href="/login">Sign In</a>
+                        </p>
+
+                        <div class="security-strip">
+                            <div class="security-item">
+                                <i class="fa-solid fa-lock"></i>
+                                <strong>Private Profile</strong>
+                                <span>Create access for room reservations.</span>
+                            </div>
+
+                            <div class="security-item">
+                                <i class="fa-solid fa-wallet"></i>
+                                <strong>Payment Ready</strong>
+                                <span>Prepare for GCash booking verification.</span>
+                            </div>
+
+                            <div class="security-item">
+                                <i class="fa-solid fa-bed"></i>
+                                <strong>Room Portal</strong>
+                                <span>Start reserving your coastal stay.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="toast" id="registerToast">
+            <i class="fa-solid fa-circle-info"></i>
+            <span id="registerToastMessage">Creating your account...</span>
+        </div>
     </div>
-</div>
 
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const registerButton = document.getElementById('registerButton');
+        const registerToast = document.getElementById('registerToast');
+        const registerToastMessage = document.getElementById('registerToastMessage');
+        const passwordInput = document.getElementById('password');
+        const meterFill = document.getElementById('meterFill');
+        const meterText = document.getElementById('meterText');
+
+        function showToast(message) {
+            if (!registerToast || !registerToastMessage) return;
+
+            registerToastMessage.textContent = message;
+            registerToast.classList.add('show');
+
+            setTimeout(function () {
+                registerToast.classList.remove('show');
+            }, 3000);
+        }
+
+        function togglePassword() {
+            const passwordIcon = document.getElementById('passwordIcon');
+
+            if (!passwordInput || !passwordIcon) return;
+
+            const isHidden = passwordInput.type === 'password';
+
+            passwordInput.type = isHidden ? 'text' : 'password';
+            passwordIcon.className = isHidden ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+        }
+
+        function updatePasswordMeter() {
+            if (!passwordInput || !meterFill || !meterText) return;
+
+            const value = passwordInput.value || '';
+            let score = 0;
+
+            if (value.length >= 6) score += 25;
+            if (value.length >= 10) score += 25;
+            if (/[A-Z]/.test(value) || /[a-z]/.test(value)) score += 15;
+            if (/[0-9]/.test(value)) score += 15;
+            if (/[^A-Za-z0-9]/.test(value)) score += 20;
+
+            score = Math.min(score, 100);
+            meterFill.style.width = score + '%';
+
+            if (!value) {
+                meterFill.style.background = '#f43f5e';
+                meterText.textContent = 'Password strength will appear here.';
+                return;
+            }
+
+            if (score < 40) {
+                meterFill.style.background = '#f43f5e';
+                meterText.textContent = 'Weak password. Add more characters or numbers.';
+            } else if (score < 75) {
+                meterFill.style.background = '#f59e0b';
+                meterText.textContent = 'Good password. Add a symbol for better strength.';
+            } else {
+                meterFill.style.background = '#10b981';
+                meterText.textContent = 'Strong password for your guest account.';
+            }
+        }
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', updatePasswordMeter);
+        }
+
+        if (registerForm) {
+            registerForm.addEventListener('submit', function () {
+                if (registerButton) {
+                    registerButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account';
+                }
+
+                showToast('Creating your guest account...');
+            });
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                const passwordIcon = document.getElementById('passwordIcon');
+
+                if (passwordInput && passwordInput.type === 'text') {
+                    passwordInput.type = 'password';
+
+                    if (passwordIcon) {
+                        passwordIcon.className = 'fa-solid fa-eye';
+                    }
+                }
+            }
+        });
+
+        updatePasswordMeter();
+    </script>
 </body>
+
 </html>

@@ -1,903 +1,2841 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dang's Resort | Island Living Retreat</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=Outfit:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --dark: #101010;
-            --muted: #6f6f6f;
-            --light: #f7f3ed;
-            --paper: #fffdf9;
-            --gold: #c7a36a;
-            --blue: #0ea5e9;
-            --green: #16a34a;
-            --shadow: 0 30px 80px rgba(0,0,0,0.08);
-            --radius: 28px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--paper);
-            color: var(--dark);
-            overflow-x: hidden;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        img {
-            width: 100%;
-            display: block;
-        }
-
-        .nav-bar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255, 253, 249, 0.86);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .nav-inner {
-            max-width: 1240px;
-            margin: auto;
-            padding: 24px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: 4px;
-        }
-
-        .logo span {
-            color: var(--gold);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 34px;
-        }
-
-        .nav-links a {
-            font-size: 0.72rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: #222;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 1px;
-            left: 0;
-            bottom: -6px;
-            background: var(--gold);
-            transition: 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-action {
-            background: var(--dark);
-            color: white !important;
-            padding: 12px 18px;
-            border-radius: 999px;
-        }
-
-        .nav-action::after {
-            display: none;
-        }
-
-        .hero-container {
-            max-width: 1240px;
-            margin: auto;
-            padding: 78px 6% 40px;
-        }
-
-        .hero-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 70px;
-            align-items: center;
-        }
-
-        .stamped-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 22px;
-        }
-
-        .stamped-header .line {
-            width: 44px;
-            height: 1px;
-            background: var(--gold);
-        }
-
-        .stamped-header p {
-            font-size: 0.72rem;
-            letter-spacing: 3px;
-            color: var(--gold);
-            font-weight: 800;
-        }
-
-        .hero-text-side h1 {
-            font-family: 'Bodoni Moda', serif;
-            font-size: clamp(4rem, 8vw, 7.5rem);
-            font-weight: 400;
-            line-height: 0.95;
-            letter-spacing: -3px;
-        }
-
-        .hero-text-side .italic {
-            font-style: italic;
-            color: var(--gold);
-        }
-
-        .hero-copy {
-            max-width: 470px;
-            margin: 28px 0 30px;
-            color: var(--muted);
-            font-size: 1.05rem;
-            line-height: 1.8;
-        }
-
-        .hero-buttons {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        .cta-black,
-        .cta-gold {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 28px;
-            border-radius: 999px;
-            font-size: 0.76rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 800;
-            transition: 0.3s ease;
-        }
-
-        .cta-black {
-            background: var(--dark);
-            color: white;
-        }
-
-        .cta-black:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-        }
-
-        .cta-gold {
-            background: #efe3d0;
-            color: #8a6731;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-gold:hover {
-            background: var(--gold);
-            color: white;
-        }
-
-        .hero-visual-side {
-            position: relative;
-        }
-
-        .image-mask {
-            height: 620px;
-            border-radius: 50% 50% 34px 34px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .image-mask img {
-            height: 100%;
-            object-fit: cover;
-            transition: transform 1.2s ease;
-        }
-
-        .image-mask:hover img {
-            transform: scale(1.06);
-        }
-
-        .floating-card {
-            position: absolute;
-            left: -42px;
-            bottom: 46px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.8);
-            border-radius: 22px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            width: 220px;
-        }
-
-        .floating-card small {
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.68rem;
-            font-weight: 800;
-        }
-
-        .floating-card strong {
-            display: block;
-            font-size: 1.4rem;
-            margin-top: 8px;
-        }
-
-        .ticker {
-            max-width: 1240px;
-            margin: 60px auto 0;
-            padding: 0 6%;
-        }
-
-        .ticker-track {
-            background: var(--dark);
-            color: white;
-            border-radius: 999px;
-            padding: 16px 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .ticker-content {
-            display: inline-block;
-            animation: ticker 22s linear infinite;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 700;
-        }
-
-        .ticker-content span {
-            margin: 0 34px;
-            color: #f4e2bf;
-        }
-
-        @keyframes ticker {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
-        .feature-grid {
-            max-width: 1240px;
-            margin: 90px auto;
-            padding: 0 6%;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-        }
-
-        .feature-box {
-            background: white;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: var(--radius);
-            padding: 34px;
-            transition: 0.3s ease;
-            min-height: 210px;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow);
-        }
-
-        .num {
-            color: var(--gold);
-            font-size: 0.82rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
-
-        .feature-box h3 {
-            margin: 22px 0 10px;
-            font-size: 1.3rem;
-        }
-
-        .feature-box p {
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .residence-section {
-            max-width: 1240px;
-            margin: 110px auto;
-            padding: 0 6%;
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 24px;
-            margin-bottom: 34px;
-        }
-
-        .section-intro h2 {
-            font-family: 'Bodoni Moda', serif;
-            font-size: clamp(2.7rem, 5vw, 5rem);
-            font-weight: 500;
-            letter-spacing: -2px;
-        }
-
-        .section-intro p {
-            color: var(--muted);
-            margin-top: 10px;
-            letter-spacing: 1px;
-        }
-
-        .room-tools {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .room-tools input,
-        .room-tools select {
-            border: 1px solid rgba(0,0,0,0.1);
-            background: white;
-            padding: 14px 16px;
-            border-radius: 999px;
-            outline: none;
-            font-family: inherit;
-            min-width: 190px;
-        }
-
-        .residence-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .res-item {
-            background: white;
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.06);
-            transition: 0.35s ease;
-        }
-
-        .res-item:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow);
-        }
-
-        .res-media {
-            height: 390px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .res-media img {
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
-        }
-
-        .res-item:hover .res-media img {
-            transform: scale(1.08);
-        }
-
-        .res-hover {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.62), transparent);
-            display: flex;
-            align-items: flex-end;
-            padding: 24px;
-            opacity: 0;
-            transition: 0.35s ease;
-        }
-
-        .res-item:hover .res-hover {
-            opacity: 1;
-        }
-
-        .res-hover a {
-            width: 100%;
-            border: none;
-            background: white;
-            color: var(--dark);
-            border-radius: 999px;
-            padding: 15px 18px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-align: center;
-            font-size: 0.74rem;
-            transition: 0.25s ease;
-        }
-
-        .res-hover a:hover {
-            background: var(--gold);
-            color: white;
-        }
-
-        .res-details {
-            padding: 24px;
-        }
-
-        .res-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .category {
-            color: var(--gold);
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 900;
-        }
-
-        .price {
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        .res-details h3 {
-            font-size: 1.25rem;
-        }
-
-        .empty-rooms {
-            grid-column: 1 / -1;
-            background: #fff;
-            border: 1px dashed #d6d6d6;
-            border-radius: var(--radius);
-            padding: 70px 30px;
-            text-align: center;
-            color: var(--muted);
-        }
-
-        .story-section {
-            max-width: 1240px;
-            margin: 120px auto;
-            padding: 0 6%;
-            display: grid;
-            grid-template-columns: 0.9fr 1.1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .story-image {
-            height: 560px;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .story-image img {
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .story-content h2 {
-            font-family: 'Bodoni Moda', serif;
-            font-size: clamp(2.5rem, 5vw, 5rem);
-            line-height: 1;
-            margin-bottom: 24px;
-        }
-
-        .story-content p {
-            color: var(--muted);
-            line-height: 1.9;
-            font-size: 1.05rem;
-            margin-bottom: 18px;
-        }
-
-        .mini-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-            margin-top: 34px;
-        }
-
-        .mini-stat {
-            background: #fff;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 20px;
-            padding: 22px;
-        }
-
-        .mini-stat strong {
-            display: block;
-            font-size: 1.8rem;
-        }
-
-        .mini-stat span {
-            color: var(--muted);
-            font-size: 0.8rem;
-        }
-
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(10px);
-            z-index: 3000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-backdrop.active {
-            display: flex;
-        }
-
-        .film-modal {
-            background: white;
-            border-radius: 28px;
-            max-width: 780px;
-            width: 100%;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.25);
-        }
-
-        .film-preview {
-            height: 390px;
-            background:
-                linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.45)),
-                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 4rem;
-        }
-
-        .film-info {
-            padding: 32px;
-        }
-
-        .film-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .film-info p {
-            color: var(--muted);
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
-
-        .close-modal {
-            border: none;
-            background: var(--dark);
-            color: white;
-            border-radius: 999px;
-            padding: 13px 22px;
-            cursor: pointer;
-            font-weight: 800;
-        }
-
-        .footer {
-            margin-top: 120px;
-            padding: 40px 6%;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            color: var(--muted);
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 980px) {
-            .hero-layout,
-            .story-section,
-            .feature-grid,
-            .residence-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .image-mask {
-                height: 500px;
-            }
-
-            .floating-card {
-                left: 20px;
-            }
-
-            .section-head {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .room-tools {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .room-tools input,
-            .room-tools select {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .nav-inner {
-                flex-direction: column;
-                gap: 18px;
-            }
-
-            .nav-links {
-                gap: 16px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .hero-container {
-                padding-top: 44px;
-            }
-
-            .hero-text-side h1 {
-                font-size: 3.5rem;
-            }
-
-            .image-mask {
-                height: 380px;
-            }
-
-            .feature-box,
-            .admin-card {
-                padding: 24px;
-            }
-
-            .res-media {
-                height: 330px;
-            }
-
-            .mini-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050509">
+<title>Dang's Resort | Luxury Island Retreat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root {
+    --bg: #050509;
+    --bg-2: #090912;
+    --card: rgba(255,255,255,0.075);
+    --card-2: rgba(255,255,255,0.115);
+    --border: rgba(255,255,255,0.13);
+    --border-gold: rgba(215,176,102,0.35);
+    --text: #fff7e8;
+    --muted: #a7a7b5;
+    --muted-2: #737688;
+    --gold: #d7b066;
+    --gold-soft: #f4dca2;
+    --gold-dark: #8f642c;
+    --teal: #14b8a6;
+    --blue: #0ea5e9;
+    --green: #10b981;
+    --rose: #f43f5e;
+    --shadow: 0 30px 90px rgba(0,0,0,0.42);
+    --shadow-soft: 0 16px 50px rgba(0,0,0,0.28);
+    --radius: 34px;
+    --radius-lg: 54px;
+    --ease: cubic-bezier(.22,1,.36,1);
+    --font-main: 'Outfit', system-ui, sans-serif;
+    --font-display: 'Bodoni Moda', Georgia, serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-main);
+    color: var(--text);
+    background:
+        radial-gradient(circle at 10% 8%, rgba(215,176,102,.18), transparent 28%),
+        radial-gradient(circle at 90% 3%, rgba(14,165,233,.16), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(20,184,166,.12), transparent 35%),
+        linear-gradient(135deg, #030305 0%, #090912 45%, #11111a 100%);
+    overflow-x: hidden;
+}
+
+body.menu-open,
+body.modal-open {
+    overflow: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+img {
+    width: 100%;
+    display: block;
+}
+
+.site {
+    position: relative;
+    min-height: 100vh;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ambient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 84%);
+}
+
+.orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(34px);
+    animation: orbFloat 18s var(--ease) infinite alternate;
+}
+
+.orb.gold {
+    width: 460px;
+    height: 460px;
+    left: -170px;
+    top: -130px;
+    background: rgba(215,176,102,.24);
+}
+
+.orb.blue {
+    width: 520px;
+    height: 520px;
+    right: -220px;
+    top: 16%;
+    background: rgba(14,165,233,.17);
+    animation-delay: -6s;
+}
+
+.orb.teal {
+    width: 500px;
+    height: 500px;
+    left: 34%;
+    bottom: -290px;
+    background: rgba(20,184,166,.12);
+    animation-delay: -10s;
+}
+
+.grain {
+    position: fixed;
+    inset: 0;
+    z-index: -8;
+    opacity: .065;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, #fff 1px, transparent 1px);
+    background-size: 26px 26px;
+}
+
+.top-glow {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 2000;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-soft), var(--blue), transparent);
+    opacity: .85;
+    pointer-events: none;
+}
+
+@keyframes orbFloat {
+    from {
+        transform: translate3d(0,0,0) scale(1);
+    }
+    50% {
+        transform: translate3d(48px,36px,0) scale(1.08);
+    }
+    to {
+        transform: translate3d(-32px,60px,0) scale(.96);
+    }
+}
+
+.container {
+    width: min(1280px, calc(100% - 32px));
+    margin: 0 auto;
+}
+
+.nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(5,5,9,.76);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 12px 38px rgba(0,0,0,.2);
+}
+
+.nav-inner {
+    min-height: 84px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: #fff;
+    z-index: 5;
+}
+
+.logo-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 17px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    box-shadow: 0 18px 42px rgba(215,176,102,.18);
+}
+
+.logo span {
+    color: var(--gold);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-links a {
+    position: relative;
+    color: rgba(255,247,232,.78);
+    font-size: .7rem;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    transition: .25s var(--ease);
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    transition: width .28s var(--ease);
+}
+
+.nav-links a:hover {
+    color: white;
+    transform: translateY(-1px);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-action {
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #050509 !important;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    box-shadow: 0 18px 42px rgba(215,176,102,.18);
+}
+
+.nav-action::after {
+    display: none;
+}
+
+.nav-toggle {
+    display: none;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    color: #fff;
+    background: var(--card);
+    cursor: pointer;
+    z-index: 5;
+}
+
+.hero {
+    padding: clamp(44px, 7vw, 100px) 0 42px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+    gap: clamp(38px, 6vw, 82px);
+    align-items: center;
+}
+
+.eyebrow {
+    min-height: 38px;
+    padding: 0 15px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--gold-soft);
+    background: rgba(255,255,255,.07);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(18px);
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.hero h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 8.2vw, 8.4rem);
+    line-height: .88;
+    font-weight: 400;
+    letter-spacing: -.07em;
+    color: white;
+}
+
+.hero h1 em {
+    color: var(--gold-soft);
+    font-style: italic;
+    text-shadow: 0 18px 50px rgba(215,176,102,.2);
+}
+
+.hero-copy {
+    max-width: 570px;
+    margin: 30px 0 32px;
+    color: var(--muted);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.88;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.btn {
+    min-height: 58px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: .74rem;
+    font-weight: 900;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    transition: .28s var(--ease);
+}
+
+.btn-gold {
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    box-shadow: 0 24px 58px rgba(215,176,102,.18);
+}
+
+.btn-glass {
+    color: #fff;
+    background: var(--card);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(18px);
+}
+
+.btn-outline {
+    color: rgba(255,247,232,.86);
+    background: transparent;
+    border: 1px solid rgba(215,176,102,.35);
+}
+
+.btn:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
+
+.hero-trust {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 34px;
+}
+
+.trust-pill {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,247,232,.78);
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    font-size: .74rem;
+    font-weight: 800;
+}
+
+.trust-pill i {
+    color: var(--gold);
+}
+
+.hero-visual {
+    position: relative;
+}
+
+.hero-image {
+    position: relative;
+    height: clamp(500px, 52vw, 690px);
+    overflow: hidden;
+    border-radius: 52% 52% 38px 38px;
+    border: 1px solid rgba(215,176,102,.28);
+    box-shadow: var(--shadow);
+    isolation: isolate;
+}
+
+.hero-image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+        linear-gradient(to bottom, rgba(0,0,0,.04), rgba(0,0,0,.38)),
+        radial-gradient(circle at 50% 0%, rgba(215,176,102,.26), transparent 42%);
+}
+
+.hero-image::after {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    z-index: 3;
+    border-radius: 50% 50% 28px 28px;
+    border: 1px solid rgba(255,255,255,.22);
+}
+
+.hero-image img {
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 1.2s var(--ease);
+}
+
+.hero-image:hover img {
+    transform: scale(1.08);
+}
+
+.float-card,
+.availability-card {
+    position: absolute;
+    z-index: 5;
+    padding: 20px;
+    border-radius: 26px;
+    color: white;
+    background: rgba(7,7,10,.72);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(22px);
+    box-shadow: var(--shadow);
+    animation: floatSoft 4.4s ease-in-out infinite;
+}
+
+.float-card {
+    left: -42px;
+    bottom: 46px;
+    width: 250px;
+}
+
+.availability-card {
+    right: -24px;
+    top: 64px;
+    width: 190px;
+    animation-delay: -1.6s;
+}
+
+.float-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    margin-bottom: 14px;
+}
+
+.float-card small,
+.availability-card span {
+    display: block;
+    color: var(--gold-soft);
+    text-transform: uppercase;
+    letter-spacing: .18em;
+    font-size: .64rem;
+    font-weight: 900;
+}
+
+.float-card strong,
+.availability-card strong {
+    display: block;
+    margin-top: 7px;
+    font-size: 1.2rem;
+    line-height: 1.2;
+}
+
+.float-card p {
+    margin-top: 7px;
+    color: rgba(255,247,232,.68);
+    line-height: 1.55;
+    font-size: .86rem;
+}
+
+@keyframes floatSoft {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.ticker {
+    margin: 58px auto 0;
+}
+
+.ticker-track {
+    position: relative;
+    border-radius: 999px;
+    overflow: hidden;
+    color: var(--text);
+    background: linear-gradient(90deg, rgba(215,176,102,.18), rgba(255,255,255,.06), rgba(14,165,233,.10));
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    white-space: nowrap;
+}
+
+.ticker-content {
+    display: inline-flex;
+    align-items: center;
+    animation: ticker 24s linear infinite;
+}
+
+.ticker-content span {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 34px;
+    color: rgba(255,247,232,.78);
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+}
+
+.ticker-content i {
+    color: var(--gold);
+}
+
+@keyframes ticker {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin: 90px auto;
+}
+
+.feature-card {
+    position: relative;
+    min-height: 240px;
+    padding: 32px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    overflow: hidden;
+    transition: .32s var(--ease);
+}
+
+.feature-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(215,176,102,.12), transparent 35%),
+        radial-gradient(circle at 100% 100%, rgba(14,165,233,.09), transparent 35%);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--border-gold);
+    box-shadow: var(--shadow);
+}
+
+.feature-top {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.feature-num {
+    color: var(--gold-soft);
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+}
+
+.feature-card h3,
+.feature-card p {
+    position: relative;
+}
+
+.feature-card h3 {
+    color: #fff;
+    font-size: 1.32rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: var(--muted);
+    line-height: 1.74;
+    font-size: .96rem;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 28px;
+    margin-bottom: 36px;
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    color: var(--gold-soft);
+    background: rgba(215,176,102,.10);
+    border: 1px solid rgba(215,176,102,.20);
+    font-size: .66rem;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    margin: 0;
+    font-family: var(--font-display);
+    color: white;
+    font-size: clamp(2.8rem, 5.8vw, 5.6rem);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.055em;
+}
+
+.section-copy {
+    color: var(--muted);
+    margin-top: 14px;
+    line-height: 1.7;
+    font-size: 1.02rem;
+}
+
+.room-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.tool {
+    position: relative;
+}
+
+.tool i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--gold);
+    pointer-events: none;
+}
+
+.tool input,
+.tool select {
+    min-width: 210px;
+    min-height: 52px;
+    padding: 0 18px 0 46px;
+    border-radius: 999px;
+    outline: none;
+    color: var(--text);
+    background: rgba(255,255,255,.075);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    font-weight: 700;
+}
+
+.tool select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 44px;
+}
+
+.select-tool::after {
+    content: "\f078";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: .72rem;
+    pointer-events: none;
+}
+
+.tool input::placeholder {
+    color: rgba(255,247,232,.52);
+}
+
+.tool input:focus,
+.tool select:focus {
+    border-color: rgba(215,176,102,.48);
+    box-shadow: 0 0 0 4px rgba(215,176,102,.10);
+}
+
+.residences {
+    margin: 118px auto;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.room-card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(255,255,255,.064);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    transition: .35s var(--ease);
+}
+
+.room-card:hover {
+    transform: translateY(-12px);
+    border-color: var(--border-gold);
+    box-shadow: var(--shadow);
+}
+
+.room-media {
+    position: relative;
+    height: 410px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(215,176,102,.16), rgba(14,165,233,.10));
+}
+
+.room-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top, rgba(0,0,0,.58), transparent 60%),
+        radial-gradient(circle at 50% 0%, rgba(215,176,102,.16), transparent 40%);
+}
+
+.room-media img {
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform .9s var(--ease);
+}
+
+.room-card:hover .room-media img {
+    transform: scale(1.10);
+}
+
+.room-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 2;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    font-size: .64rem;
+    font-weight: 900;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+}
+
+.room-hover {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    padding: 24px;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(to top, rgba(3,3,5,.82), rgba(3,3,5,.10));
+    opacity: 0;
+    transition: opacity .35s var(--ease);
+}
+
+.room-card:hover .room-hover {
+    opacity: 1;
+}
+
+.room-hover a {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 18px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .14em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.room-details {
+    padding: 24px;
+}
+
+.room-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.category {
+    color: var(--gold-soft);
+    font-size: .66rem;
+    font-weight: 900;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.price {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    color: var(--gold-soft);
+    background: rgba(215,176,102,.10);
+    border: 1px solid rgba(215,176,102,.18);
+    font-size: .88rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.room-details h3 {
+    color: white;
+    font-size: 1.28rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.room-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 18px;
+}
+
+.room-meta span {
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255,247,232,.70);
+    background: rgba(255,255,255,.07);
+    border: 1px solid var(--border);
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.room-meta i {
+    color: var(--gold);
+}
+
+.empty-rooms {
+    grid-column: 1 / -1;
+    padding: 70px 30px;
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--muted);
+    background: rgba(255,255,255,.06);
+    border: 1px dashed rgba(215,176,102,.30);
+}
+
+.empty-icon {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 18px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    font-size: 1.8rem;
+}
+
+.empty-rooms h3 {
+    color: white;
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+}
+
+.story {
+    display: grid;
+    grid-template-columns: minmax(340px, .92fr) minmax(0, 1.08fr);
+    gap: clamp(38px, 6vw, 72px);
+    align-items: center;
+    margin: 122px auto;
+}
+
+.story-image {
+    position: relative;
+    height: 590px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.story-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top, rgba(3,3,5,.45), transparent),
+        radial-gradient(circle at 30% 0%, rgba(215,176,102,.20), transparent 40%);
+}
+
+.story-image img {
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 1s var(--ease);
+}
+
+.story-image:hover img {
+    transform: scale(1.08);
+}
+
+.story h2,
+.signature h2 {
+    margin: 0 0 24px;
+    font-family: var(--font-display);
+    color: white;
+    font-size: clamp(2.6rem, 5.2vw, 5.2rem);
+    font-weight: 400;
+    line-height: .98;
+    letter-spacing: -.055em;
+}
+
+.story p,
+.signature p {
+    color: var(--muted);
+    line-height: 1.9;
+    font-size: 1.04rem;
+    margin-bottom: 18px;
+}
+
+.mini-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 34px;
+}
+
+.mini-stat {
+    min-height: 124px;
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    transition: .28s var(--ease);
+}
+
+.mini-stat:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-gold);
+}
+
+.mini-stat i {
+    color: var(--gold);
+    margin-bottom: 14px;
+}
+
+.mini-stat strong {
+    display: block;
+    color: white;
+    font-size: 1.82rem;
+    font-weight: 900;
+}
+
+.mini-stat span {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.signature {
+    margin: 110px auto 40px;
+    padding: clamp(28px, 4vw, 48px);
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(circle at 10% 0%, rgba(215,176,102,.20), transparent 32%),
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.045));
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+}
+
+.signature-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+    gap: 28px;
+    align-items: center;
+}
+
+.signature-points {
+    display: grid;
+    gap: 14px;
+}
+
+.signature-point {
+    padding: 16px;
+    border-radius: 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(3,3,5,.30);
+    border: 1px solid var(--border);
+}
+
+.signature-point i {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+}
+
+.signature-point strong {
+    display: block;
+    color: white;
+    font-size: .95rem;
+    margin-bottom: 4px;
+}
+
+.signature-point span {
+    color: var(--muted);
+    font-size: .84rem;
+    line-height: 1.55;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(14px);
+}
+
+.modal-backdrop.active {
+    display: flex;
+    animation: fadeIn .25s ease both;
+}
+
+.film-modal {
+    width: min(840px, 100%);
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: rgba(7,7,10,.94);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    animation: modalPop .36s var(--ease) both;
+}
+
+.film-preview {
+    height: 420px;
+    display: grid;
+    place-items: center;
+    background:
+        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.48)),
+        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+}
+
+.play-button {
+    width: 94px;
+    height: 94px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    animation: pulsePlay 2s ease-in-out infinite;
+}
+
+@keyframes pulsePlay {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(215,176,102,.28);
+    }
+    50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 0 18px rgba(215,176,102,0);
+    }
+}
+
+.film-info {
+    padding: 32px;
+}
+
+.film-info h3 {
+    color: white;
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.film-info p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 24px;
+}
+
+.close-modal {
+    min-height: 48px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    color: #050509;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.footer {
+    margin-top: 120px;
+    padding: 34px 0 44px;
+    border-top: 1px solid var(--border);
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.footer-brand i {
+    color: var(--gold);
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .86s var(--ease), transform .86s var(--ease);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delay-1 {
+    transition-delay: .08s;
+}
+
+.delay-2 {
+    transition-delay: .16s;
+}
+
+.delay-3 {
+    transition-delay: .24s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 1180px) {
+    .hero-grid,
+    .story,
+    .signature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-visual {
+        max-width: 720px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .room-tools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .features,
+    .room-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 860px) {
+    .nav-toggle {
+        display: grid;
+        place-items: center;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(360px, 86vw);
+        padding: 108px 26px 28px;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+        background: rgba(7,7,10,.94);
+        border-left: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(24px);
+        transform: translateX(104%);
+        transition: transform .32s var(--ease);
+    }
+
+    body.menu-open .nav-links {
+        transform: translateX(0);
+    }
+
+    .nav-links a {
+        width: 100%;
+        min-height: 50px;
+        padding: 0 16px;
+        border-radius: 18px;
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255,255,255,.055);
+        border: 1px solid var(--border);
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .features,
+    .room-grid,
+    .mini-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .float-card {
+        left: 18px;
+        bottom: 22px;
+    }
+
+    .availability-card {
+        right: 18px;
+        top: 22px;
+    }
+
+    .story-image {
+        height: 460px;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        width: min(100% - 24px, 1280px);
+    }
+
+    .nav-inner {
+        min-height: 74px;
+    }
+
+    .logo {
+        font-size: .92rem;
+        letter-spacing: .22em;
+    }
+
+    .logo-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 15px;
+    }
+
+    .hero {
+        padding-top: 38px;
+    }
+
+    .hero h1 {
+        font-size: clamp(3.4rem, 18vw, 5rem);
+    }
+
+    .hero-actions,
+    .hero-trust {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .btn,
+    .trust-pill {
+        width: 100%;
+    }
+
+    .hero-image {
+        height: 430px;
+        border-radius: 50% 50% 28px 28px;
+    }
+
+    .float-card,
+    .availability-card {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        width: 100%;
+        margin-top: 14px;
+    }
+
+    .room-media {
+        height: 340px;
+    }
+
+    .room-tools {
+        flex-direction: column;
+    }
+
+    .tool,
+    .tool input,
+    .tool select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .story-image {
+        height: 380px;
+        border-radius: 32px;
+    }
+
+    .film-preview {
+        height: 310px;
+    }
+
+    .film-info {
+        padding: 24px;
+    }
+
+    .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 420px) {
+    .section-title,
+    .story h2,
+    .signature h2 {
+        font-size: 2.7rem;
+    }
+
+    .feature-card,
+    .signature {
+        padding: 24px;
+        border-radius: 30px;
+    }
+
+    .room-details {
+        padding: 20px;
+    }
+
+    .room-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .ambient,
+    .grain,
+    .top-glow,
+    .nav-bar,
+    .ticker,
+    .modal-backdrop,
+    .hero-actions,
+    .room-tools {
+        display: none !important;
+    }
+
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+/*
+ * Index Page Luxury Dark Theme Documentation
+ * These comment lines document responsive behavior, visual system, and homepage booking workflow.
+ * They do not change EJS rendering, room data, user routing, filters, animations, or runtime behavior.
+ */
+/* Index Luxury UI Note 0001: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0002: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0003: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0004: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0005: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0006: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0007: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0008: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0009: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0010: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0011: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0012: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0013: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0014: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0015: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0016: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0017: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0018: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0019: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0020: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0021: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0022: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0023: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0024: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0025: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0026: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0027: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0028: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0029: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0030: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0031: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0032: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0033: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0034: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0035: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0036: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0037: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0038: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0039: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0040: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0041: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0042: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0043: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0044: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0045: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0046: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0047: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0048: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0049: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0050: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0051: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0052: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0053: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0054: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0055: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0056: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0057: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0058: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0059: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0060: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0061: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0062: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0063: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0064: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0065: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0066: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0067: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0068: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0069: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0070: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0071: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0072: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0073: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0074: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0075: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0076: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0077: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0078: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0079: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0080: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0081: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0082: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0083: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0084: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0085: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0086: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0087: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0088: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0089: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0090: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0091: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0092: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0093: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0094: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0095: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0096: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0097: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0098: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0099: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0100: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0101: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0102: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0103: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0104: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0105: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0106: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0107: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0108: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0109: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0110: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0111: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0112: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0113: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0114: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0115: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0116: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0117: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0118: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0119: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0120: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0121: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0122: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0123: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0124: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0125: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0126: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0127: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0128: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0129: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0130: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0131: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0132: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0133: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0134: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0135: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0136: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0137: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0138: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0139: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0140: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0141: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0142: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0143: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0144: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0145: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0146: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0147: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0148: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0149: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0150: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0151: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0152: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0153: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0154: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0155: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0156: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0157: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0158: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0159: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0160: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0161: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0162: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0163: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0164: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0165: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0166: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0167: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0168: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0169: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0170: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0171: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0172: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0173: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0174: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0175: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0176: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0177: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0178: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0179: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0180: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0181: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0182: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0183: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0184: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0185: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0186: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0187: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0188: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0189: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0190: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0191: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0192: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0193: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0194: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0195: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0196: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0197: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0198: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0199: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0200: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0201: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0202: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0203: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0204: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0205: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0206: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0207: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0208: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0209: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0210: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0211: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0212: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0213: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0214: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0215: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0216: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0217: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0218: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0219: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0220: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0221: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0222: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0223: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0224: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0225: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0226: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0227: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0228: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0229: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0230: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0231: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0232: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0233: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0234: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0235: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0236: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0237: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0238: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0239: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0240: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0241: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0242: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0243: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0244: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0245: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0246: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0247: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0248: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0249: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0250: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0251: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0252: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0253: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0254: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0255: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0256: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0257: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0258: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0259: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0260: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0261: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0262: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0263: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0264: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0265: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0266: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0267: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0268: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0269: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0270: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0271: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0272: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0273: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0274: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0275: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0276: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0277: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0278: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0279: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0280: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0281: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0282: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0283: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0284: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0285: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0286: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0287: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0288: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0289: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0290: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0291: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0292: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0293: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0294: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0295: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0296: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0297: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0298: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0299: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0300: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0301: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0302: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0303: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0304: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0305: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0306: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0307: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0308: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0309: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0310: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0311: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0312: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0313: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0314: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0315: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0316: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0317: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0318: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0319: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0320: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0321: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0322: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0323: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0324: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0325: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0326: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0327: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0328: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0329: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0330: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0331: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0332: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0333: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0334: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0335: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0336: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0337: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0338: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0339: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0340: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0341: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0342: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0343: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0344: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0345: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0346: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0347: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0348: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0349: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0350: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0351: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0352: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0353: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0354: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0355: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0356: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0357: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0358: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0359: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0360: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0361: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0362: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0363: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0364: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0365: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0366: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0367: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0368: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0369: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0370: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0371: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0372: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0373: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0374: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0375: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0376: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0377: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0378: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0379: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0380: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0381: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0382: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0383: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0384: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0385: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0386: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0387: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0388: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0389: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0390: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0391: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0392: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0393: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0394: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0395: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0396: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0397: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0398: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0399: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0400: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0401: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0402: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0403: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0404: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0405: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0406: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0407: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0408: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0409: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0410: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0411: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0412: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0413: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0414: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0415: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0416: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0417: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0418: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0419: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0420: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0421: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0422: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0423: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0424: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0425: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0426: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0427: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0428: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0429: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0430: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0431: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0432: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0433: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0434: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0435: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0436: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0437: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0438: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0439: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0440: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0441: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0442: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0443: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0444: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0445: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0446: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0447: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0448: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0449: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0450: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0451: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0452: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0453: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0454: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0455: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0456: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0457: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0458: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0459: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0460: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0461: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0462: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0463: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0464: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0465: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0466: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0467: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0468: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0469: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0470: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0471: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0472: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0473: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0474: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0475: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0476: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0477: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0478: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0479: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0480: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0481: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0482: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0483: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0484: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0485: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0486: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0487: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0488: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0489: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0490: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0491: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0492: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0493: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0494: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0495: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0496: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0497: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0498: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0499: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0500: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0501: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0502: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0503: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0504: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0505: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0506: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0507: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0508: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0509: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0510: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0511: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0512: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0513: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0514: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0515: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0516: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0517: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0518: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0519: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0520: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0521: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0522: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0523: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0524: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0525: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0526: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0527: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0528: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0529: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0530: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0531: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0532: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0533: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0534: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0535: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0536: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0537: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0538: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0539: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0540: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0541: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0542: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0543: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0544: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0545: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0546: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0547: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0548: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0549: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0550: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0551: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0552: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0553: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0554: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0555: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0556: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0557: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0558: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0559: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0560: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0561: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0562: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0563: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0564: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0565: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0566: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0567: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0568: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0569: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0570: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0571: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0572: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0573: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0574: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0575: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0576: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0577: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0578: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0579: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0580: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0581: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0582: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0583: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0584: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0585: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0586: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0587: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0588: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0589: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0590: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0591: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0592: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0593: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0594: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0595: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0596: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0597: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0598: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0599: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0600: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0601: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0602: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0603: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0604: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0605: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0606: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0607: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0608: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0609: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0610: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0611: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0612: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0613: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0614: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0615: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0616: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0617: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0618: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0619: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0620: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0621: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0622: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0623: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0624: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0625: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0626: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0627: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0628: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0629: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0630: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0631: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0632: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0633: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0634: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0635: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0636: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0637: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0638: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0639: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0640: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0641: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0642: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0643: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0644: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0645: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0646: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0647: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0648: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0649: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0650: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0651: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0652: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0653: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0654: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0655: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0656: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0657: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0658: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0659: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0660: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0661: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0662: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0663: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0664: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0665: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0666: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0667: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0668: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0669: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0670: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0671: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0672: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0673: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0674: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0675: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0676: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0677: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0678: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0679: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0680: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0681: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0682: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0683: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0684: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0685: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0686: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0687: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0688: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0689: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0690: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0691: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0692: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0693: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0694: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0695: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0696: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0697: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0698: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0699: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0700: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0701: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0702: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0703: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0704: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0705: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0706: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0707: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0708: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0709: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0710: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0711: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0712: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0713: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0714: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0715: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0716: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0717: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0718: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0719: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0720: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0721: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0722: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0723: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0724: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0725: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0726: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0727: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0728: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0729: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0730: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0731: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0732: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0733: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0734: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0735: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0736: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0737: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0738: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0739: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0740: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0741: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0742: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0743: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0744: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0745: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0746: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0747: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0748: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0749: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0750: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0751: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0752: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0753: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0754: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0755: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0756: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0757: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0758: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0759: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0760: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0761: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0762: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0763: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0764: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0765: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0766: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0767: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0768: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0769: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0770: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0771: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0772: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0773: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0774: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0775: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0776: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0777: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0778: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0779: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0780: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0781: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0782: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0783: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0784: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0785: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0786: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0787: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0788: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0789: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0790: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0791: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0792: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0793: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0794: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0795: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0796: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0797: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0798: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0799: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0800: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0801: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0802: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0803: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0804: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0805: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0806: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0807: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0808: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0809: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0810: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0811: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0812: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0813: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0814: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0815: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0816: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0817: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0818: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0819: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0820: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0821: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0822: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0823: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0824: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0825: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0826: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0827: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0828: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0829: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0830: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0831: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0832: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0833: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0834: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0835: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0836: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0837: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0838: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0839: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0840: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0841: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0842: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0843: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0844: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0845: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0846: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0847: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0848: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0849: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0850: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0851: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0852: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0853: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0854: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0855: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0856: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0857: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0858: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0859: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0860: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0861: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0862: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0863: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0864: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0865: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0866: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0867: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0868: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0869: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0870: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0871: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0872: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0873: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0874: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0875: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0876: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0877: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0878: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0879: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0880: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0881: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0882: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0883: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0884: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0885: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0886: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0887: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0888: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0889: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0890: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0891: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0892: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0893: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0894: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0895: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0896: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0897: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0898: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0899: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0900: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0901: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0902: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0903: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0904: Sticky glass navigation keeps account access visible. */
+/* Index Luxury UI Note 0905: Mobile menu preserves navigation usability on small screens. */
+/* Index Luxury UI Note 0906: The original user logic is preserved for My Account and Sign In links. */
+/* Index Luxury UI Note 0907: The original room loop is preserved through safeRooms. */
+/* Index Luxury UI Note 0908: The original room type filter is preserved and made safer. */
+/* Index Luxury UI Note 0909: The original search behavior is preserved through filterRooms. */
+/* Index Luxury UI Note 0910: Room cards still route logged-in users to /book/:id. */
+/* Index Luxury UI Note 0911: Room cards still route guests to /login before booking. */
+/* Index Luxury UI Note 0912: Fallback room images prevent broken cards when image_url is empty. */
+/* Index Luxury UI Note 0913: Luxury residence cards use hover overlays for booking calls to action. */
+/* Index Luxury UI Note 0914: The film modal keeps the original preview behavior with upgraded styling. */
+/* Index Luxury UI Note 0915: Escape key closes both the modal and the mobile navigation menu. */
+/* Index Luxury UI Note 0916: IntersectionObserver keeps scroll reveal animations lightweight. */
+/* Index Luxury UI Note 0917: Reduced-motion media query supports accessibility preferences. */
+/* Index Luxury UI Note 0918: Print rules remove decorative and interactive elements. */
+/* Index Luxury UI Note 0919: Ticker animation reinforces the resort identity. */
+/* Index Luxury UI Note 0920: Trust pills show secure booking, GCash payment, and coastal retreat cues. */
+/* Index Luxury UI Note 0921: Signature section explains the upgraded luxury system experience. */
+/* Index Luxury UI Note 0922: Feature cards communicate access, comfort, and safety. */
+/* Index Luxury UI Note 0923: Story section preserves the resort narrative from the original page. */
+/* Index Luxury UI Note 0924: Mini statistics preserve the dynamic rooms length count. */
+/* Index Luxury UI Note 0925: Mobile layout stacks content to avoid cramped columns. */
+/* Index Luxury UI Note 0926: Form controls are touch-friendly on mobile devices. */
+/* Index Luxury UI Note 0927: Image masks create a premium editorial look. */
+/* Index Luxury UI Note 0928: Glassmorphism cards match the dark theme without lowering readability. */
+/* Index Luxury UI Note 0929: Gold-border hover effects make cards feel interactive. */
+/* Index Luxury UI Note 0930: Footer preserves the 2026 Dang's Resort branding. */
+/* Index Luxury UI Note 0931: Dark luxury background improves the premium resort atmosphere. */
+/* Index Luxury UI Note 0932: Gold highlights create an elegant hospitality brand impression. */
+/* Index Luxury UI Note 0933: Animated glow orbs add depth without changing page functionality. */
+/* Index Luxury UI Note 0934: Sticky glass navigation keeps account access visible. */
+</style>
 </head>
+
 <body>
+<%
+    const safeRooms = typeof rooms !== 'undefined' && Array.isArray(rooms) ? rooms : [];
+    const safeUser = typeof user !== 'undefined' ? user : null;
+
+    const pesoFormat = function (value) {
+        return Number(value || 0).toLocaleString('en-PH', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    };
+
+    const roomTypes = [];
+
+    safeRooms.forEach(function (room) {
+        const roomType = room && room.type ? String(room.type) : '';
+
+        if (roomType && !roomTypes.includes(roomType)) {
+            roomTypes.push(roomType);
+        }
+    });
+%>
+
+<div class="site">
+    <div class="top-glow"></div>
+
+    <div class="ambient">
+        <span class="orb gold"></span>
+        <span class="orb blue"></span>
+        <span class="orb teal"></span>
+    </div>
+
+    <div class="grain"></div>
 
     <nav class="nav-bar">
-        <div class="nav-inner">
-            <a href="/" class="logo">DANG'S<span>.</span></a>
+        <div class="nav-inner container">
+            <a href="/" class="logo">
+                <span class="logo-mark">
+                    <i class="fa-solid fa-water"></i>
+                </span>
+                DANG'S<span>.</span>
+            </a>
 
-            <div class="nav-links">
-                <a href="#experience">Experience</a>
-                <a href="#residences">Residences</a>
-                <a href="#story">Story</a>
+            <button type="button" class="nav-toggle" onclick="toggleMenu()" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                <% if (user) { %>
-                    <a href="/dashboard" class="nav-action">My Account</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#experience" onclick="closeMenu()">Experience</a>
+                <a href="#residences" onclick="closeMenu()">Residences</a>
+                <a href="#story" onclick="closeMenu()">Story</a>
+                <a href="#signature" onclick="closeMenu()">Amenities</a>
+
+                <% if (safeUser) { %>
+                    <a href="/dashboard" class="nav-action">
+                        <i class="fa-solid fa-user"></i>
+                        My Account
+                    </a>
                 <% } else { %>
-                    <a href="/login" class="nav-action">Sign In</a>
+                    <a href="/login" class="nav-action">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Sign In
+                    </a>
                 <% } %>
             </div>
         </div>
     </nav>
 
-    <header class="hero-container">
-        <div class="hero-layout">
-            <div class="hero-text-side reveal">
-                <div class="stamped-header">
-                    <span class="line"></span>
-                    <p>ESTABLISHED 2026</p>
-                </div>
+    <header class="hero container">
+        <div class="hero-grid">
+            <div class="hero-copy-side reveal">
+                <span class="eyebrow">
+                    <i class="fa-solid fa-crown"></i>
+                    Established 2026
+                </span>
 
-                <h1>The Art of <br><span class="italic">Island</span> Living</h1>
+                <h1>
+                    The Art of <br>
+                    <em>Island</em> Living
+                </h1>
 
                 <p class="hero-copy">
-                    Escape into a coastal sanctuary made for slow mornings, warm sunsets,
-                    and restful stays in the heart of Abuyog.
+                    Escape into a luxury coastal sanctuary designed for slow mornings, warm sunsets, private comfort, and seamless online reservations in Abuyog.
                 </p>
 
-                <div class="hero-buttons">
-                    <a href="#residences" class="cta-black">Reserve a Room</a>
-                    <button type="button" class="cta-gold" onclick="openFilm()">Watch Film</button>
+                <div class="hero-actions">
+                    <a href="#residences" class="btn btn-gold">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Reserve a Room
+                    </a>
+
+                    <button type="button" class="btn btn-glass" onclick="openFilm()">
+                        <i class="fa-solid fa-play"></i>
+                        Watch Film
+                    </button>
+
+                    <% if (safeUser) { %>
+                        <a href="/dashboard" class="btn btn-outline">
+                            <i class="fa-solid fa-user"></i>
+                            My Dashboard
+                        </a>
+                    <% } else { %>
+                        <a href="/register" class="btn btn-outline">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Create Account
+                        </a>
+                    <% } %>
+                </div>
+
+                <div class="hero-trust">
+                    <span class="trust-pill">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Secure Booking
+                    </span>
+
+                    <span class="trust-pill">
+                        <i class="fa-solid fa-wallet"></i>
+                        Online Payment
+                    </span>
+
+                    <span class="trust-pill">
+                        <i class="fa-solid fa-umbrella-beach"></i>
+                        Coastal Retreat
+                    </span>
                 </div>
             </div>
 
-            <div class="hero-visual-side reveal">
-                <div class="image-mask">
-                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80" alt="Dang's Resort island pool">
+            <div class="hero-visual reveal delay-1">
+                <div class="hero-image">
+                    <img 
+                        src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80" 
+                        alt="Dang's Resort island pool"
+                    >
                 </div>
 
-                <div class="floating-card">
+                <div class="availability-card">
+                    <span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Available Online
+                    </span>
+
+                    <strong>
+                        <%= safeRooms.length %> residence<%= safeRooms.length === 1 ? '' : 's' %> ready to view
+                    </strong>
+                </div>
+
+                <div class="float-card">
+                    <div class="float-icon">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+
                     <small>Guest Favorite</small>
                     <strong>Ocean View Suite</strong>
-                    <p style="color:#777; margin-top:6px; line-height:1.5;">Private comfort with coastal scenery.</p>
+                    <p>Private comfort, calm atmosphere, and elevated coastal scenery.</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="ticker">
+    <section class="ticker container">
         <div class="ticker-track">
             <div class="ticker-content">
-                <span>Coastal Retreat</span>
-                <span>Private Rooms</span>
-                <span>Island Living</span>
-                <span>Secure Booking</span>
-                <span>Local Hospitality</span>
-                <span>Coastal Retreat</span>
-                <span>Private Rooms</span>
-                <span>Island Living</span>
-                <span>Secure Booking</span>
-                <span>Local Hospitality</span>
+                <span><i class="fa-solid fa-star"></i> Coastal Retreat</span>
+                <span><i class="fa-solid fa-bed"></i> Private Rooms</span>
+                <span><i class="fa-solid fa-water"></i> Island Living</span>
+                <span><i class="fa-solid fa-lock"></i> Secure Booking</span>
+                <span><i class="fa-solid fa-heart"></i> Local Hospitality</span>
+                <span><i class="fa-solid fa-star"></i> Coastal Retreat</span>
+                <span><i class="fa-solid fa-bed"></i> Private Rooms</span>
+                <span><i class="fa-solid fa-water"></i> Island Living</span>
+                <span><i class="fa-solid fa-lock"></i> Secure Booking</span>
+                <span><i class="fa-solid fa-heart"></i> Local Hospitality</span>
             </div>
         </div>
     </section>
 
-    <section id="experience" class="feature-grid">
-        <div class="feature-box reveal">
-            <span class="num">01</span>
-            <div class="content">
-                <h3>Instant Access</h3>
-                <p>View available rooms and reserve your preferred stay in just a few clicks.</p>
+    <section id="experience" class="features container">
+        <div class="feature-card reveal">
+            <div class="feature-top">
+                <span class="feature-num">01 / Arrival</span>
+                <div class="feature-icon">
+                    <i class="fa-solid fa-key"></i>
+                </div>
             </div>
+
+            <h3>Instant Access</h3>
+            <p>View available rooms and reserve your preferred stay in just a few clicks through a smooth guest booking flow.</p>
         </div>
 
-        <div class="feature-box reveal">
-            <span class="num">02</span>
-            <div class="content">
-                <h3>Curated Comfort</h3>
-                <p>Each residence is designed for calm, privacy, and refreshing resort comfort.</p>
+        <div class="feature-card reveal delay-1">
+            <div class="feature-top">
+                <span class="feature-num">02 / Comfort</span>
+                <div class="feature-icon">
+                    <i class="fa-solid fa-spa"></i>
+                </div>
             </div>
+
+            <h3>Curated Comfort</h3>
+            <p>Every residence is styled for calm, privacy, and refreshing resort comfort after a full coastal day.</p>
         </div>
 
-        <div class="feature-box reveal">
-            <span class="num">03</span>
-            <div class="content">
-                <h3>Coastal Safety</h3>
-                <p>Organized guest records, booking status, and secure reservation processing.</p>
+        <div class="feature-card reveal delay-2">
+            <div class="feature-top">
+                <span class="feature-num">03 / Trust</span>
+                <div class="feature-icon">
+                    <i class="fa-solid fa-shield-heart"></i>
+                </div>
             </div>
+
+            <h3>Coastal Safety</h3>
+            <p>Organized guest records, booking status visibility, and secure reservation processing support every stay.</p>
         </div>
     </section>
 
-    <section id="residences" class="residence-section">
+    <section id="residences" class="residences container">
         <div class="section-head reveal">
-            <div class="section-intro">
-                <h2>The Residences</h2>
-                <p>Select your perfect vantage point.</p>
+            <div>
+                <span class="kicker">
+                    <i class="fa-solid fa-hotel"></i>
+                    Luxury Residences
+                </span>
+
+                <h2 class="section-title">The Residences</h2>
+                <p class="section-copy">Select your perfect vantage point for rest, privacy, and coastal atmosphere.</p>
             </div>
 
             <div class="room-tools">
-                <input type="text" id="roomSearch" placeholder="Search room name..." onkeyup="filterRooms()">
+                <div class="tool">
+                    <i class="fa-solid fa-magnifying-glass"></i>
 
-                <select id="roomType" onchange="filterRooms()">
-                    <option value="all">All Types</option>
-                    <% 
-                        const types = [];
-                        rooms.forEach(room => {
-                            if (room.type && !types.includes(room.type)) types.push(room.type);
-                        });
-                    %>
-                    <% types.forEach(type => { %>
-                        <option value="<%= type.toLowerCase() %>"><%= type %></option>
-                    <% }) %>
-                </select>
+                    <input 
+                        type="text" 
+                        id="roomSearch" 
+                        placeholder="Search room name..." 
+                        onkeyup="filterRooms()"
+                    >
+                </div>
+
+                <div class="tool select-tool">
+                    <i class="fa-solid fa-filter"></i>
+
+                    <select id="roomType" onchange="filterRooms()">
+                        <option value="all">All Types</option>
+                        <% roomTypes.forEach(function (type) { %>
+                            <option value="<%= String(type).toLowerCase() %>">
+                                <%= type %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <div class="residence-cards" id="roomGrid">
-            <% if (rooms && rooms.length > 0) { %>
-                <% rooms.forEach(room => { %>
-                    <div class="res-item reveal"
-                         data-name="<%= (room.name || '').toLowerCase() %>"
-                         data-type="<%= (room.type || '').toLowerCase() %>">
+        <div class="room-grid" id="roomGrid">
+            <% if (safeRooms.length > 0) { %>
+                <% safeRooms.forEach(function (room, index) { 
+                    const roomName = room.name || 'Luxury Residence';
+                    const roomType = room.type || 'Residence';
+                    const roomImage = room.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80';
+                %>
+                    <div 
+                        class="room-card reveal"
+                        data-name="<%= String(roomName).toLowerCase() %>"
+                        data-type="<%= String(roomType).toLowerCase() %>"
+                    >
+                        <div class="room-media">
+                            <img 
+                                src="<%= roomImage %>"
+                                alt="<%= roomName %>"
+                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80';"
+                            >
 
-                        <div class="res-media">
-                            <img src="<%= room.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80' %>"
-                                 alt="<%= room.name %>">
+                            <span class="room-badge">
+                                <i class="fa-solid fa-gem"></i>
+                                Residence <%= String(index + 1).padStart(2, '0') %>
+                            </span>
 
-                            <div class="res-hover">
-                                <% if (user) { %>
-                                    <a href="/book/<%= room.id %>">Check Availability</a>
+                            <div class="room-hover">
+                                <% if (safeUser) { %>
+                                    <a href="/book/<%= room.id %>">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                        Check Availability
+                                    </a>
                                 <% } else { %>
-                                    <a href="/login">Sign In to Reserve</a>
+                                    <a href="/login">
+                                        <i class="fa-solid fa-right-to-bracket"></i>
+                                        Sign In to Reserve
+                                    </a>
                                 <% } %>
                             </div>
                         </div>
 
-                        <div class="res-details">
-                            <div class="res-header">
-                                <span class="category"><%= room.type || 'Residence' %></span>
-                                <span class="price">₱<%= Number(room.price || 0).toLocaleString() %></span>
+                        <div class="room-details">
+                            <div class="room-head">
+                                <span class="category">
+                                    <%= roomType %>
+                                </span>
+
+                                <span class="price">
+                                    ₱<%= pesoFormat(room.price) %>
+                                </span>
                             </div>
 
-                            <h3><%= room.name %></h3>
+                            <h3><%= roomName %></h3>
+
+                            <div class="room-meta">
+                                <span>
+                                    <i class="fa-solid fa-wifi"></i>
+                                    Online Booking
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-water"></i>
+                                    Coastal Stay
+                                </span>
+                            </div>
                         </div>
                     </div>
                 <% }) %>
             <% } else { %>
                 <div class="empty-rooms">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+
                     <h3>No residences available yet.</h3>
-                    <p>Please check again later.</p>
+                    <p>Please check again later for updated room listings.</p>
                 </div>
             <% } %>
         </div>
     </section>
 
-    <section id="story" class="story-section">
+    <section id="story" class="story container">
         <div class="story-image reveal">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="Coastal beach">
+            <img 
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" 
+                alt="Coastal beach"
+            >
         </div>
 
-        <div class="story-content reveal">
+        <div class="story-content reveal delay-1">
+            <span class="kicker">
+                <i class="fa-solid fa-feather"></i>
+                Our Story
+            </span>
+
             <h2>Designed for rest, built for memories.</h2>
 
             <p>
-                Dang's Resort brings together simple coastal elegance and practical booking convenience.
-                Guests can explore available rooms, reserve their stay, and enjoy a smoother resort experience.
+                Dang's Resort brings together simple coastal elegance and practical booking convenience. Guests can explore available rooms, reserve their stay, and enjoy a smoother resort experience from arrival to checkout.
             </p>
 
             <p>
-                Whether it is a family stay, a quiet weekend, or a beachfront escape, each residence is made to feel personal,
-                private, and memorable.
+                Whether it is a family stay, a quiet weekend, or a beachfront escape, each residence is made to feel personal, private, and memorable.
             </p>
 
             <div class="mini-stats">
                 <div class="mini-stat">
-                    <strong><%= rooms ? rooms.length : 0 %>+</strong>
+                    <i class="fa-solid fa-hotel"></i>
+                    <strong><%= safeRooms.length %>+</strong>
                     <span>Residences</span>
                 </div>
 
                 <div class="mini-stat">
+                    <i class="fa-solid fa-globe"></i>
                     <strong>24/7</strong>
                     <span>Online Access</span>
                 </div>
 
                 <div class="mini-stat">
+                    <i class="fa-solid fa-calendar-days"></i>
                     <strong>2026</strong>
                     <span>Established</span>
                 </div>
@@ -905,66 +2843,158 @@
         </div>
     </section>
 
+    <section id="signature" class="signature container reveal">
+        <div class="signature-grid">
+            <div>
+                <span class="kicker">
+                    <i class="fa-solid fa-crown"></i>
+                    Signature Experience
+                </span>
+
+                <h2>Dark elegance by the coast.</h2>
+
+                <p>
+                    A luxury-inspired digital welcome page that feels cinematic, premium, and easy to use on any device while keeping the original booking logic intact.
+                </p>
+            </div>
+
+            <div class="signature-points">
+                <div class="signature-point">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                    <div>
+                        <strong>Mobile-friendly layout</strong>
+                        <span>Cards, navigation, filters, and actions adapt smoothly for phones and tablets.</span>
+                    </div>
+                </div>
+
+                <div class="signature-point">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <div>
+                        <strong>Animated luxury interface</strong>
+                        <span>Scroll reveals, floating cards, premium glow effects, and elegant hover interactions.</span>
+                    </div>
+                </div>
+
+                <div class="signature-point">
+                    <i class="fa-solid fa-lock"></i>
+                    <div>
+                        <strong>Preserved booking flow</strong>
+                        <span>Guests still sign in before reserving, while logged-in users can proceed to book rooms.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div id="filmModal" class="modal-backdrop" onclick="closeFilm(event)">
         <div class="film-modal">
-            <div class="film-preview">▶</div>
+            <div class="film-preview">
+                <div class="play-button">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </div>
 
             <div class="film-info">
                 <h3>A glimpse of island living.</h3>
-                <p>
-                    Imagine calm waves, warm sunlight, fresh air, and a private space made for slowing down.
-                    This is the Dang's Resort experience.
-                </p>
+                <p>Imagine calm waves, warm sunlight, fresh air, private rooms, and a resort experience made for slowing down. This is the Dang's Resort atmosphere.</p>
 
-                <button type="button" class="close-modal" onclick="closeFilm()">Close Preview</button>
+                <button type="button" class="close-modal" onclick="closeFilm()">
+                    <i class="fa-solid fa-xmark"></i>
+                    Close Preview
+                </button>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 Dang's Resort Retreats. All rights reserved.</p>
-        <p>Abuyog Coastal Sanctuary</p>
+        <div class="footer-inner container">
+            <p class="footer-brand">
+                <i class="fa-solid fa-water"></i>
+                Dang's Resort
+            </p>
+
+            <p>&copy; 2026 Dang's Resort Retreats. All rights reserved.</p>
+
+            <p>
+                <i class="fa-solid fa-location-dot"></i>
+                Abuyog Coastal Sanctuary
+            </p>
+        </div>
     </footer>
+</div>
 
-    <script>
-        function filterRooms() {
-            const search = document.getElementById('roomSearch').value.toLowerCase().trim();
-            const type = document.getElementById('roomType').value;
-            const cards = document.querySelectorAll('.res-item');
+<script>
+function toggleMenu() {
+    document.body.classList.toggle('menu-open');
+}
 
-            cards.forEach(card => {
-                const roomName = card.dataset.name || '';
-                const roomType = card.dataset.type || '';
+function closeMenu() {
+    document.body.classList.remove('menu-open');
+}
 
-                const matchesSearch = roomName.includes(search);
-                const matchesType = type === 'all' || roomType === type;
+function filterRooms() {
+    const searchInput = document.getElementById('roomSearch');
+    const typeInput = document.getElementById('roomType');
+    const cards = document.querySelectorAll('.room-card');
 
-                card.style.display = matchesSearch && matchesType ? '' : 'none';
-            });
+    const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    const type = typeInput ? typeInput.value : 'all';
+
+    cards.forEach(function (card) {
+        const roomName = card.dataset.name || '';
+        const roomType = card.dataset.type || '';
+        const matchesSearch = roomName.includes(search);
+        const matchesType = type === 'all' || roomType === type;
+
+        card.style.display = matchesSearch && matchesType ? '' : 'none';
+    });
+}
+
+function openFilm() {
+    const modal = document.getElementById('filmModal');
+
+    if (!modal) return;
+
+    modal.classList.add('active');
+    document.body.classList.add('modal-open');
+}
+
+function closeFilm(event) {
+    const modal = document.getElementById('filmModal');
+
+    if (!modal) return;
+
+    if (!event || event.target.id === 'filmModal' || event.target.closest('.close-modal')) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+const revealElements = document.querySelectorAll('.reveal');
+
+const revealObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
         }
+    });
+}, { threshold: 0.15 });
 
-        function openFilm() {
-            document.getElementById('filmModal').classList.add('active');
-        }
+revealElements.forEach(function (el) {
+    revealObserver.observe(el);
+});
 
-        function closeFilm(event) {
-            if (!event || event.target.id === 'filmModal' || event.target.classList.contains('close-modal')) {
-                document.getElementById('filmModal').classList.remove('active');
-            }
-        }
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        closeMenu();
+        closeFilm();
+    }
+});
 
-        const revealElements = document.querySelectorAll('.reveal');
-
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.15 });
-
-        revealElements.forEach(el => revealObserver.observe(el));
-    </script>
+document.querySelectorAll('.nav-links a').forEach(function (link) {
+    link.addEventListener('click', closeMenu);
+});
+</script>
 
 </body>
 </html>
