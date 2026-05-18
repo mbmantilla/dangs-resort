@@ -176,6 +176,23 @@ const adminController = {
         });
     },
 
+        deleteFacility: (req, res) => {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).send("Missing facility ID");
+        }
+
+        db.query("DELETE FROM rooms WHERE id = ?", [id], (err) => {
+            if (err) {
+                console.error("Delete facility error:", err);
+                return res.status(500).send("Error deleting facility: " + err.message);
+            }
+
+            res.redirect('/admin/facilities?success=deleted');
+        });
+    },
+
     // --- Bookings ---
     getBookings: (req,res)=>{
         const sql=`SELECT b.id AS booking_id, b.booking_date, b.ref_code, b.status, b.guest_name, b.phone,
